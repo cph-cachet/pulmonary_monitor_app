@@ -1,3 +1,6 @@
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
 name: pulmonary_monitor_app
 description: Monitoring of pulmonary (i.e. respiratory) health
 
@@ -11,7 +14,10 @@ description: Monitoring of pulmonary (i.e. respiratory) health
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 0.1.0
+author:  CACHET Team <cph.cachet@gmail.com>
+homepage: https://github.com/cph-cachet/pulmonary_monitor_app
+
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -19,18 +25,34 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  flutter_launcher_icons: ^0.7.3
+  carp_mobile_sensing: ^0.6.1
+  #carp_communication_package: ^0.6.1
+  #carp_connectivity_package: ^0.1.0
+  carp_context_package: ^0.6.1
+  carp_survey_package: ^0.1.0
+  carp_audio_package: ^0.6.1
+  carp_backend: ^0.6.0
+  #carp_health_package: ^0.6.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+
+# Is used to change the default app launch icons on iOS and Android.
+# To install:
+#  1. import the 'flutter_launcher_icons' package above
+#  2. add the 'flutter_icons:' section below
+#  3. run 'flutter pub get'
+#  3. run 'flutter pub pub run flutter_launcher_icons:main'
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/lungs.png"
+
+
 
 # The following section is specific to Flutter.
 flutter:
@@ -41,9 +63,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+   - assets/study.png
+   - assets/cachet_logo.png
+   - assets/logo.png
+   - assets/lungs.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
