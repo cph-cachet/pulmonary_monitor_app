@@ -3,7 +3,6 @@ part of pulmonary_monitor_app;
 /// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   Study study;
-  final String testStudyId = "2";
 
   StudyController controller;
   StudyManager mock = new StudyMock();
@@ -12,7 +11,7 @@ class Sensing {
   List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
 
   Sensing() : super() {
-    // create/load and register external sampling packages
+    // create and register external sampling packages
     //SamplingPackageRegistry.register(ConnectivitySamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
@@ -20,14 +19,14 @@ class Sensing {
     SamplingPackageRegistry.register(SurveySamplingPackage());
     //SamplingPackageRegistry.register(HealthSamplingPackage());
 
-    // create/load and register external data managers
+    // create and register external data managers
     DataManagerRegistry.register(CarpDataManager());
   }
 
   /// Start sensing.
   Future<void> start() async {
     // Get the study.
-    study = await mock.getStudy(testStudyId);
+    study = await mock.getStudy(settings.studyId);
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
     controller = StudyController(study);
@@ -56,23 +55,12 @@ class Sensing {
 
 /// Used as a mock [StudyManager] to generate a local [Study].
 class StudyMock implements StudyManager {
-  final String username = "researcher@example.com";
-  final String password = "password";
-  final String uri = "http://staging.carp.cachet.dk:8080";
-  final String clientID = "carp";
-  final String clientSecret = "carp";
-
-  String studyId;
-
   Future<void> initialize() {}
 
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    //return _getTestingStudy(studyId);
-    //return _getSurveyStudy(studyId);
-
-    return _getHealthStudy('#6-health');
+    return _getPulmonaryStudy(studyId);
 
     //return _getCoverageStudy('#5-coverage');
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
@@ -83,28 +71,32 @@ class StudyMock implements StudyManager {
     //return _getESenseStudy(studyId);
   }
 
-  Future<Study> _getTestingStudy(String studyId) async {
+  Future<Study> _getPulmonaryStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = 'Test - iOS - #1'
-            ..description = 'This is a study for testing and debugging -- especially on iOS.'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FIREBASE_DATABSE)
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      //SensorSamplingPackage.ACCELEROMETER,
-//                      //SensorSamplingPackage.GYROSCOPE,
-//                      SensorSamplingPackage.LIGHT,
-//                      SensorSamplingPackage.PEDOMETER,
-//                    ],
-//                  ))
+      _study = Study(studyId, settings.userId)
+            ..name = 'The CACHET Pulmonary Study'
+            ..description = "With the Pulmonary Monitor you can monitor your respiratory health. "
+                "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
+                "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
+                "Before you start, please also fill in the demographich survey. "
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.common().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      //SensorSamplingPackage.ACCELEROMETER,
+                      //SensorSamplingPackage.GYROSCOPE,
+                      SensorSamplingPackage.LIGHT,
+                      SensorSamplingPackage.PEDOMETER,
+                    ],
+                  ))
+            //TODO - add when the RxDart issue w. survey package is fixed
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
 //                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                  ..measures = SamplingSchema.common().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
 //                      ConnectivitySamplingPackage.BLUETOOTH,
@@ -115,29 +107,29 @@ class StudyMock implements StudyManager {
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task()
-//              ..measures = SamplingSchema.debug().getMeasureList(
+//              ..measures = SamplingSchema.common().getMeasureList(
 //                namespace: NameSpace.CARP,
 //                types: [
 //                  AppsSamplingPackage.APP_USAGE,
 //                  AppsSamplingPackage.APPS,
 //                ],
 //              ))
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      DeviceSamplingPackage.MEMORY,
-//                      DeviceSamplingPackage.DEVICE,
-//                      DeviceSamplingPackage.BATTERY,
-//                      DeviceSamplingPackage.SCREEN,
-//                    ],
-//                  ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 20 * 1000),
+                ImmediateTrigger(),
                 Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
+                  ..measures = SamplingSchema.common().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      DeviceSamplingPackage.MEMORY,
+                      DeviceSamplingPackage.DEVICE,
+                      DeviceSamplingPackage.BATTERY,
+                      DeviceSamplingPackage.SCREEN,
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 60 * 60 * 1000), // collect local weather and air quality once pr. hour
+                Task()
+                  ..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.WEATHER,
@@ -147,90 +139,13 @@ class StudyMock implements StudyManager {
             ..addTriggerTask(
                 ImmediateTrigger(),
                 Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
+                  ..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
-                      ContextSamplingPackage.LOCATION,
+                      //ContextSamplingPackage.LOCATION,
                       ContextSamplingPackage.GEOLOCATION,
-                      //ContextSamplingPackage.ACTIVITY,
-                      ContextSamplingPackage.GEOFENCE,
-                    ],
-                  ))
-            ..addTriggerTask(
-                DelayedTrigger(delay: 30 * 1000),
-                Task('WHO-5 Survey')
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      SurveySamplingPackage.SURVEY,
-                    ],
-                  ))
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      AudioSamplingPackage.NOISE,
-//                    ],
-//                  ))
-//            ..addTriggerTask(
-//                PeriodicTrigger(period: 1 * 53 * 1000, duration: 2 * 1000),
-//                Task('Audio')
-//                  ..measures
-//                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      CommunicationSamplingPackage.CALENDAR,
-//                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-//                      CommunicationSamplingPackage.TEXT_MESSAGE,
-//                      CommunicationSamplingPackage.PHONE_LOG,
-//                      CommunicationSamplingPackage.TELEPHONY,
-//                    ],
-//                  ))
-//            ..addTriggerTask(
-//                DelayedTrigger(delay: 10 * 1000),
-//                Task('eSense')
-//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-//                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-//                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
-          //
-          ;
-    }
-    return _study;
-  }
-
-  Future<Study> _getSurveyStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = 'Survey Demo - #2'
-            ..description = 'This is a study for testing and debugging user surveys -- especially on iOS.'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-            ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 20 * 1000),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
-                    ],
-                  ))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.LOCATION,
-                      ContextSamplingPackage.GEOLOCATION,
-                      //ContextSamplingPackage.ACTIVITY,
-                      ContextSamplingPackage.GEOFENCE,
+                      //ContextSamplingPackage.ACTIVITY,  //TODO - update when Thomas' new package is loaded
+                      //ContextSamplingPackage.GEOFENCE,
                     ],
                   ))
             ..addTriggerTask(
@@ -244,260 +159,43 @@ class StudyMock implements StudyManager {
                     onSurveyTriggered: bloc.onSurveyTriggered,
                     onSurveySubmit: bloc.onSurveySubmit,
                   )))
-          //
-          ;
-    }
-    return _study;
-  }
-
-  Future<Study> _getHealthStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = studyId
-            ..description = 'This is a study for testing the HEALTH Package...'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                  ..measures = SamplingSchema.common().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
-//                      SensorSamplingPackage.LIGHT, // 60 s
-//                      //ConnectivitySamplingPackage.BLUETOOTH, // 60 s
-//                      //ConnectivitySamplingPackage.WIFI, // 60 s
-//                      DeviceSamplingPackage.MEMORY, // 60 s
-//                      ContextSamplingPackage.LOCATION, // 30 s
-//                      //AudioSamplingPackage.NOISE, // 60 s
+//                      AudioSamplingPackage.NOISE,
 //                    ],
 //                  ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 20 * 1000),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
-                    ],
-                  ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 5 * 60 * 1000), // 5 min
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      AppsSamplingPackage.APP_USAGE, // 60 s
-                    ],
-                  ))
+                PeriodicTrigger(period: 5 * 60 * 1000, duration: 60 * 1000),
+                Task('Audio')
+                  ..measures
+                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
 //            ..addTriggerTask(
-//                //PeriodicTrigger(period: 5 * 1000), // 5 sec
-//                DelayedTrigger(delay: 5 * 1000), // 5 sec
+//                PeriodicTrigger(period: 60 * 60 * 100),
+//                Task('Health')
+//                  ..addMeasure(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+//                      HealthDataType.STEPS, Duration(hours: 1)))
+//                  ..addMeasure(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+//                      HealthDataType.HEART_RATE, Duration(hours: 1))))
+
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
 //                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                  ..measures = SamplingSchema.common().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
-//                      HealthSamplingPackage.HEALTH,
+//                      CommunicationSamplingPackage.CALENDAR,
+//                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+//                      CommunicationSamplingPackage.TEXT_MESSAGE,
+//                      CommunicationSamplingPackage.PHONE_LOG,
+//                      CommunicationSamplingPackage.TELEPHONY,
 //                    ],
 //                  ))
           //
           ;
-    }
-    return _study;
-  }
-
-  Future<Study> _getCoverageStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = studyId
-            ..description = 'This is a study for testing the coverage of sampling.'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      SensorSamplingPackage.LIGHT, // 60 s
-                      //ConnectivitySamplingPackage.BLUETOOTH, // 60 s
-                      //ConnectivitySamplingPackage.WIFI, // 60 s
-                      DeviceSamplingPackage.MEMORY, // 60 s
-                      ContextSamplingPackage.LOCATION, // 30 s
-                      AudioSamplingPackage.NOISE, // 60 s
-                    ],
-                  ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 5 * 60 * 1000), // 5 min
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      AppsSamplingPackage.APP_USAGE, // 60 s
-                    ],
-                  ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 10 * 60 * 1000), // 10 min
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
-                    ],
-                  ))
-          //
-          ;
-    }
-    return _study;
-  }
-
-  Future<Study> _getESenseStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = 'CARP Mobile Sensing - eSense sampling demo'
-            ..description =
-                'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-//        ..addTriggerTask(
-//            ImmediateTrigger(),
-//            Task('eSense')
-//              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-//                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-//              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-//                  name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
-//        ..addTriggerTask(
-//            ImmediateTrigger(),
-//            Task('Context')
-//              ..measures = SamplingSchema.common().getMeasureList([
-//                ContextSamplingPackage.LOCATION,
-//                ContextSamplingPackage.ACTIVITY,
-//                SensorSamplingPackage.PEDOMETER,
-//              ], namespace: NameSpace.CARP))
-//        ..addTriggerTask(
-//            ImmediateTrigger(),
-//            Task('Noise')
-//              ..measures.add(NoiseMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.NOISE),
-//                  name: 'Ambient Noise', enabled: true, frequency: 37 * 1000, duration: 5 * 1000)))
-//        // audio recording and noise is conflicting... can't run at the same time...
-////            ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-////                name: "Audio", frequency: 1 * 53 * 1000, duration: 4 * 1000, studyId: studyId)))
-//        ..addTriggerTask(
-//            PeriodicTrigger(period: 1 * 60 * 1000, duration: 2000),
-//            Task('Weather')
-//              ..measures =
-//                  SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([ContextSamplingPackage.WEATHER]))
-//        ..addTriggerTask(
-//            DelayedTrigger(delay: 10 * 1000),
-//            Task('Bluetooth')
-//              ..measures.add(PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
-//                  name: 'Nearby Devices (Bluetooth Scan)',
-//                  enabled: true,
-//                  frequency: 1 * 30 * 1000,
-//                  duration: 2 * 1000)));
-            ..addTriggerTask(
-                PeriodicTrigger(period: 2 * 60 * 1000),
-                Task('Weather')
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.WEATHER,
-                    ],
-                  ))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task('Context')
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.LOCATION,
-                      ContextSamplingPackage.ACTIVITY,
-                      ContextSamplingPackage.GEOFENCE,
-                    ],
-                  ))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task('Connectivity')
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      AudioSamplingPackage.NOISE,
-                      //ConnectivitySamplingPackage.BLUETOOTH,
-                      //ConnectivitySamplingPackage.WIFI,
-                    ],
-                  ))
-//            ..addTriggerTask(
-//                DelayedTrigger(delay: 10 * 1000),
-//                Task('eSense')
-//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-//                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-//                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
-          //
-          ;
-    }
-    return _study;
-  }
-
-  Future<Study> _getAudioStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = 'CARP Mobile Sensing - audio measures'
-            ..description = 'This is a study ...'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-//        ..addTriggerTask(
-//            ImmediateTrigger(),
-//            Task()
-//              ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-//                  name: "Audio", frequency: 1 * 60 * 1000, duration: 4 * 1000, studyId: studyId)))
-          ;
-    }
-    return _study;
-  }
-
-  Future<Study> _getAllMeasuresStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-        ..name = 'CARP Mobile Sensing - all measures available'
-        ..description = 'This is a study of with all possible measures available in CARP Mobile Sensing'
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(ImmediateTrigger(),
-            Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
-    }
-    return _study;
-  }
-
-  Future<Study> _getAllProbesAsAwareCarpUploadStudy(String studyId) async {
-    return await _getAllProbesAsAwareStudy(studyId)
-      ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP);
-  }
-
-  Future<Study> _getAllProbesAsAwareStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, username)
-        ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
-        ..description = aware.description
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
-        ..addTriggerTask(
-            DelayedTrigger(delay: 10 * 1000),
-            Task()
-              ..measures = SamplingSchema.debug().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  //ConnectivitySamplingPackage.BLUETOOTH,
-                  //ConnectivitySamplingPackage.WIFI,
-                  //ConnectivitySamplingPackage.CONNECTIVITY,
-                ],
-              ))
-        ..addTriggerTask(
-            PeriodicTrigger(period: 60 * 60 * 1000),
-            Task()
-              ..measures = SamplingSchema.debug().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  ContextSamplingPackage.WEATHER,
-                ],
-              ));
     }
     return _study;
   }
@@ -513,11 +211,11 @@ class StudyMock implements StudyManager {
       case DataEndPointTypes.CARP:
         return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
             name: 'CARP Staging Server',
-            uri: uri,
-            clientId: clientID,
-            clientSecret: clientSecret,
-            email: username,
-            password: password);
+            uri: settings.uri,
+            clientId: settings.clientID,
+            clientSecret: settings.clientSecret,
+            email: settings.username,
+            password: settings.password);
 //        return CarpDataEndPoint(
 //          CarpUploadMethod.BATCH_DATA_POINT,
 //          name: 'CARP Staging Server',
