@@ -19,10 +19,9 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   int _selectedIndex = 0;
 
   final _pages = [
-    StudyVisualization(),
-    ProbesList(),
+    TaskList(),
     DataVisualization(),
-    SurveyVisualization(),
+    StudyVisualization(),
   ];
 
   void initState() {
@@ -41,19 +40,18 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Tasks')),
+          BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('Data')),
           BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Study')),
-          BottomNavigationBarItem(icon: Icon(Icons.adb), title: Text('Probes')),
-          BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('DataViz')),
-          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Survey')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _restart,
-        tooltip: 'Restart study & probes',
-        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-      ),
+//      floatingActionButton: new FloatingActionButton(
+//        onPressed: _restart,
+//        tooltip: 'Restart study & probes',
+//        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+//      ),
     );
   }
 

@@ -4,14 +4,19 @@ class SensingBLoC {
   final Sensing sensing = Sensing();
   SurveyPage surveyPage;
 
+  List<UserTask> _tasks = List<UserTask>();
+
+  /// the list of available task for the user to fill out.
+  List<UserTask> get tasks => _tasks;
+
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning => (sensing.controller != null) && sensing.controller.executor.state == ProbeState.resumed;
 
   /// Get the study for this app.
   StudyModel get study => sensing.study != null ? StudyModel(sensing.study) : null;
 
-  /// Get a list of running probes
-  Iterable<ProbeModel> get runningProbes => sensing.runningProbes.map((probe) => ProbeModel(probe));
+  /// Get a list of tasks for the user
+  Iterable<UserTaskModel> get userTasks => tasks.map((task) => UserTaskModel(task));
 
   /// Get the data model for this study.
   DataModel get data => null;
@@ -28,9 +33,15 @@ class SensingBLoC {
 
   void dispose() async => sensing.stop();
 
-  void onSurveyTriggered(SurveyPage surveyPage) => this.surveyPage = surveyPage;
+  void onWHO5SurveyTriggered(SurveyPage surveyPage) {
+    print(' onWHO5SurveyTriggered : $surveyPage');
+    _tasks.add(SurveyUserTask(UserTaskType.daily_survey, "WHO Well-Being Index",
+        description:
+            "Please indicate for each of the five statements which is closest to how you have been feeling over the last two weeks.",
+        survey: surveyPage));
+  }
 
-  void onSurveySubmit(RPTaskResult result) => this.surveyPage = null;
+  void onSurveySubmit(RPTaskResult result) {}
 }
 
 final bloc = SensingBLoC();

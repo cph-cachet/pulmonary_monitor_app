@@ -117,15 +117,6 @@ class _StudyVizState extends State<StudyVisualization> {
                 _StudyControllerLine(study.userID, heading: 'User'),
                 _StudyControllerLine(study.samplingStrategy, heading: 'Sampling Strategy'),
                 _StudyControllerLine(study.dataEndpoint, heading: 'Data Endpoint'),
-                StreamBuilder<ProbeState>(
-                    stream: study.studyExecutorStateEvents,
-                    initialData: ProbeState.created,
-                    builder: (context, AsyncSnapshot<ProbeState> snapshot) {
-                      if (snapshot.hasData)
-                        return _StudyControllerLine(probeStateLabel(snapshot.data), heading: 'State');
-                      else
-                        return _StudyControllerLine(probeStateLabel(ProbeState.initialized), heading: 'State');
-                    }),
                 StreamBuilder<Datum>(
                     stream: study.samplingEvents,
                     builder: (context, AsyncSnapshot<Datum> snapshot) {

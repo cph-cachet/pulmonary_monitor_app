@@ -1,6 +1,6 @@
 part of pulmonary_monitor_app;
 
-/// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements the sensing layer incl. setting up a [Study] with [MeasureTask]s and [Measure]s.
 class Sensing {
   Study study;
 
@@ -149,14 +149,15 @@ class StudyMock implements StudyManager {
                     ],
                   ))
             ..addTriggerTask(
-                DelayedTrigger(delay: 30 * 1000),
+                // TODO make this a recurrent scheduled trigger, once pr. day
+                PeriodicTrigger(period: 60 * 1000),
                 Task('WHO-5 Survey')
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: 'WHO5',
                     enabled: true,
-                    surveyTask: who5Task,
-                    onSurveyTriggered: bloc.onSurveyTriggered,
+                    surveyTask: surveys.who5,
+                    onSurveyTriggered: bloc.onWHO5SurveyTriggered,
                     onSurveySubmit: bloc.onSurveySubmit,
                   )))
 //            ..addTriggerTask(
