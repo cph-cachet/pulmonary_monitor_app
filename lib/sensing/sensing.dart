@@ -74,7 +74,7 @@ class StudyMock implements StudyManager {
   Future<Study> _getPulmonaryStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, settings.userId)
-            ..name = 'The CACHET Pulmonary Study'
+            ..name = 'Pulmonary Monitor'
             ..description = "With the Pulmonary Monitor you can monitor your respiratory health. "
                 "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
                 "You will also be able to fill in a simple daily survey to help us understand how you're doing. "

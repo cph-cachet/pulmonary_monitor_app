@@ -20,8 +20,8 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
 
   final _pages = [
     TaskList(),
-    DataVisualization(),
     StudyVisualization(),
+    DataVisualization(),
   ];
 
   void initState() {
@@ -41,8 +41,8 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Tasks')),
-          BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('Data')),
           BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Study')),
+          BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('Data')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

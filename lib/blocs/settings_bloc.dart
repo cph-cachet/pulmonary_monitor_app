@@ -14,10 +14,11 @@ class SettingsBLoC {
   String get username => "researcher@example.com";
 
   /// The CARP password.
-  String get password => "...";
+  String get password => "..."; //decrypt("lkjhf98sdvhcksdmnfewoiywefhowieyurpo2hjr");
 
   /// The URI of the CARP server.
   String get uri => "http://staging.carp.cachet.dk:8080";
+
   String get clientID => "carp";
   String get clientSecret => "carp";
 }
