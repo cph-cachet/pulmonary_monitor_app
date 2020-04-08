@@ -2,6 +2,8 @@ library pulmonary_monitor_app;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pulmonary_monitor_app/myapp.dart';
+
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -14,6 +16,9 @@ import 'package:carp_audio_package/audio.dart';
 //import 'package:carp_health_package/health_package.dart';
 import 'package:carp_backend/carp_backend.dart';
 
+part 'audio_recording.dart';
+part 'read_aloud.dart';
+part 'breathing.dart';
 part 'app.dart';
 part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
@@ -31,5 +36,5 @@ part 'ui/study_viz.dart';
 part 'ui/cachet.dart';
 
 void main() {
-  runApp(App());
+  runApp(MyApp());
 }
