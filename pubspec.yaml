@@ -20,7 +20,7 @@ homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -31,9 +31,11 @@ dependencies:
   #carp_communication_package: ^0.6.1
   #carp_connectivity_package: ^0.1.0
   carp_context_package: ^0.6.1
-  carp_survey_package: ^0.1.0
+  carp_survey_package: ^0.6.0
   carp_audio_package: ^0.6.1
   carp_backend: ^0.6.0
+
+  research_package: ^0.2.0+1
   #carp_health_package: ^0.6.1
 
 dev_dependencies:
@@ -65,11 +67,21 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/study.png
-   - assets/cachet_logo.png
-   - assets/logo.png
-   - assets/lungs.png
-   - assets/running.png
+  - assets/study.png
+  - assets/cachet_logo.png
+  - assets/logo.png
+  - assets/lungs.png
+  - assets/running.png
+  - assets/images/cachet.png
+  - assets/images/survey.png
+  - assets/images/waving-hand.png
+  - assets/images/very-sad.png
+  - assets/images/sad.png
+  - assets/images/ok.png
+  - assets/images/happy.png
+  - assets/images/very-happy.png
+  - assets/lang/da.json
+  - assets/lang/en.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
