@@ -2,7 +2,12 @@ library pulmonary_monitor_app;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pulmonary_monitor_app/myapp.dart';
+
+import 'package:research_package/research_package.dart';
+import 'research_package_objects/infomed_consent_objects.dart';
+import 'research_package_objects/linear_survey_objects.dart';
+import 'dart:convert';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'dart:async';
 import 'package:uuid/uuid.dart';
@@ -11,7 +16,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 //import 'package:carp_communication_package/communication.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_survey_package/survey.dart';
-import 'package:research_package/research_package.dart';
 import 'package:carp_audio_package/audio.dart';
 //import 'package:carp_health_package/health_package.dart';
 import 'package:carp_backend/carp_backend.dart';
@@ -20,6 +24,7 @@ part 'audio_recording.dart';
 part 'read_aloud.dart';
 part 'breathing.dart';
 part 'app.dart';
+part 'myapp.dart';
 part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
 part 'sensing/user_task.dart';
@@ -33,8 +38,10 @@ part 'ui/task_list.dart';
 part 'ui/data_viz.dart';
 part 'ui/survey_ui.dart';
 part 'ui/study_viz.dart';
+part 'ui/informed_consent_page.dart';
+part 'ui/linear_survey_page.dart';
 part 'ui/cachet.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }

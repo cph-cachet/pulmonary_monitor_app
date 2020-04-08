@@ -1,11 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:pulmonary_monitor_app/main.dart';
-
-import 'informed_consent_page.dart';
-import 'linear_survey_page.dart';
-import 'navigable_survey_page.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:research_package/research_package.dart';
+part of pulmonary_monitor_app;
 
 class MyApp extends StatelessWidget {
   @override
@@ -40,9 +33,7 @@ class MyApp extends StatelessWidget {
         // from the list (English, in this case).
         return supportedLocales.first;
       },
-      theme: ThemeData.light().copyWith(
-          primaryColor: Colors.deepPurple,
-          accentColor: Colors.deepOrangeAccent),
+      theme: ThemeData.light().copyWith(primaryColor: Colors.deepPurple, accentColor: Colors.deepOrangeAccent),
       title: 'Monitoring of pulmonary health',
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
@@ -70,8 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 8),
                 child: Text(
                   "Monitoring you pulmonary health and help reasercher in building breathing and audio based machin leanring model for early detection of resparatory condtions  ",
                   textAlign: TextAlign.center,
@@ -90,8 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => InformedConsentPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
                   },
                 ),
               ),
@@ -107,8 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => LinearSurveyPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LinearSurveyPage()));
                   },
                 ),
               ),
@@ -124,8 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => Breathing()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Breathing()));
                   },
                 ),
               ),
@@ -141,8 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Audio_recording()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Audio_recording()));
                   },
                 ),
               ),
@@ -158,8 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => Read_aloud()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Read_aloud()));
                   },
                 ),
               ),

@@ -1,11 +1,4 @@
-//import 'dart:js';
-
-import 'package:flutter/material.dart';
-import 'package:research_package/research_package.dart';
-
-import 'linear_survey_page.dart';
-import 'research_package_objects/infomed_consent_objects.dart';
-import 'dart:convert';
+part of pulmonary_monitor_app;
 
 class InformedConsentPage extends StatefulWidget {
   @override
@@ -13,15 +6,13 @@ class InformedConsentPage extends StatefulWidget {
 }
 
 class _InformedConsentPage extends State<InformedConsentPage> {
-  String _encode(Object object) =>
-      const JsonEncoder.withIndent(' ').convert(object);
+  String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
   void resultCallback(RPTaskResult result, BuildContext context) {
     // Do anything with the result
     print(_encode(result));
 
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LinearSurveyPage()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LinearSurveyPage()));
   }
 
   @override

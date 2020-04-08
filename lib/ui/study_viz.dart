@@ -55,7 +55,7 @@ class _StudyVizState extends State<StudyVisualization> {
                   Theme.of(context).platform == TargetPlatform.iOS ? Icons.more_horiz : Icons.more_vert,
                 ),
                 tooltip: 'Settings',
-                onPressed: _showSettings,
+                onPressed: _showInformedConsent,
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -128,6 +128,10 @@ class _StudyVizState extends State<StudyVisualization> {
         ),
       ),
     );
+  }
+
+  void _showInformedConsent() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
   }
 
   void _showSettings() {
