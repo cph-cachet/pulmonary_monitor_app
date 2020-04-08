@@ -156,7 +156,7 @@ class StudyMock implements StudyManager {
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: 'WHO5',
                     enabled: true,
-                    surveyTask: surveys.who5,
+                    surveyTask: surveys.who5.survey,
                     onSurveyTriggered: bloc.onWHO5SurveyTriggered,
                     onSurveySubmit: bloc.onSurveySubmit,
                   )))

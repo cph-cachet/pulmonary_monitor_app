@@ -35,9 +35,10 @@ class SensingBLoC {
 
   void onWHO5SurveyTriggered(SurveyPage surveyPage) {
     print(' onWHO5SurveyTriggered : $surveyPage');
-    _tasks.add(SurveyUserTask(UserTaskType.daily_survey, "WHO Well-Being Index",
-        description:
-            "Please indicate for each of the five statements which is closest to how you have been feeling over the last two weeks.",
+    _tasks.add(SurveyUserTask(
+        type: UserTaskType.daily_survey,
+        heading: surveys.who5.title,
+        description: surveys.who5.description,
         survey: surveyPage));
   }
 

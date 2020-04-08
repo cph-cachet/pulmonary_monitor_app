@@ -58,18 +58,22 @@ class _TaskListState extends State<TaskList> {
               subtitle: Text(task.description),
               trailing: task.stateIcon,
             ),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  child: const Text('PRESS HERE TO FINISH TASK'),
-                  onPressed: () {/* ... */},
-                ),
+            // TODO - only add button if there is a task to do. Might be an info card.
+            (task.task.state == UserTaskState.created)
+                ? ButtonBar(
+                    children: <Widget>[
+                      FlatButton(
+                        child: const Text('PRESS HERE TO FINISH TASK'),
+                        onPressed: () => task.task.onPressed(context),
+//                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LinearSurveyPage())),
+                      ),
 //                FlatButton(
 //                  child: const Text('LISTEN'),
 //                  onPressed: () {/* ... */},
 //                ),
-              ],
-            ),
+                    ],
+                  )
+                : Text(""),
           ],
         ),
       ),

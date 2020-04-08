@@ -110,11 +110,11 @@ class _StudyVizState extends State<StudyVisualization> {
               Container(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   width: 72.0,
-                  child: Icon(Icons.settings, size: 50, color: CACHET.CACHET_BLUE)),
+                  child: Icon(Icons.lightbulb_outline, size: 50, color: CACHET.CACHET_BLUE)),
               Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 _StudyControllerLine(study.description),
-                _StudyControllerLine(study.userID, heading: 'User'),
+                _StudyControllerLine(study.userID, heading: 'User ID'),
                 _StudyControllerLine(study.samplingStrategy, heading: 'Sampling Strategy'),
                 _StudyControllerLine(study.dataEndpoint, heading: 'Data Endpoint'),
                 StreamBuilder<Datum>(
