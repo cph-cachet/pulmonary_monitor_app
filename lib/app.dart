@@ -19,15 +19,15 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   int _selectedIndex = 0;
 
   final _pages = [
-    TaskList(),
     StudyVisualization(),
+    TaskList(),
     DataVisualization(),
   ];
 
-  void initState() async {
+  void initState() {
     super.initState();
-    await settings.init();
-    await bloc.init();
+    settings.init();
+    bloc.init();
     bloc.start();
   }
 
@@ -41,8 +41,8 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Tasks')),
           BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Study')),
+          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Tasks')),
           BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('Data')),
         ],
         currentIndex: _selectedIndex,

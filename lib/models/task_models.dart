@@ -20,6 +20,9 @@ class UserTaskModel {
   ///A printer-friendly description of this task.
   String get description => task.description;
 
+  ///A printer-friendly description of this task.
+  int get minutesToComplete => task.minutesToComplete;
+
   /// The icon for the state of this task.
   Icon get stateIcon => taskStateIcon[state];
 
@@ -29,9 +32,21 @@ class UserTaskModel {
 }
 
 Map<UserTaskType, Icon> get taskTypeIcon => {
-      UserTaskType.demographic_survey: Icon(Icons.person, color: CACHET.ORANGE),
-      UserTaskType.daily_survey: Icon(Icons.question_answer, color: CACHET.CYAN),
-      UserTaskType.audio_recording: Icon(Icons.record_voice_over, color: CACHET.GREEN),
+      UserTaskType.demographic_survey: Icon(
+        Icons.person,
+        color: CACHET.ORANGE,
+        size: 40,
+      ),
+      UserTaskType.daily_survey: Icon(
+        Icons.description,
+        color: CACHET.ORANGE,
+        size: 40,
+      ),
+      UserTaskType.audio_recording: Icon(
+        Icons.record_voice_over,
+        color: CACHET.GREEN,
+        size: 40,
+      ),
     };
 
 taskStateLabel(UserTaskState state) {

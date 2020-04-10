@@ -73,7 +73,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getPulmonaryStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, settings.userId)
+      _study = Study(studyId, await settings.userId)
             ..name = 'Pulmonary Monitor'
             ..description = "With the Pulmonary Monitor you can monitor your respiratory health. "
                 "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
@@ -148,6 +148,17 @@ class StudyMock implements StudyManager {
                       //ContextSamplingPackage.GEOFENCE,
                     ],
                   ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task('Demographics Survey')
+                  ..measures.add(RPTaskMeasure(
+                    MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+                    name: 'DEMO',
+                    enabled: true,
+                    surveyTask: surveys.demographics.survey,
+                    onSurveyTriggered: bloc.onDemographicsSurveyTriggered,
+                    onSurveySubmit: bloc.onSurveySubmit,
+                  )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
                 PeriodicTrigger(period: 60 * 1000),

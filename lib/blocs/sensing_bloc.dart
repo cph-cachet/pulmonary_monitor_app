@@ -35,11 +35,32 @@ class SensingBLoC {
 
   void onWHO5SurveyTriggered(SurveyPage surveyPage) {
     print(' onWHO5SurveyTriggered : $surveyPage');
-    _tasks.add(SurveyUserTask(
+
+    SurveyUserTask task = SurveyUserTask(
         type: UserTaskType.daily_survey,
         heading: surveys.who5.title,
         description: surveys.who5.description,
-        survey: surveyPage));
+        minutesToComplete: surveys.who5.minutesToComplete,
+        survey: surveyPage);
+
+    surveyPage.resultCallback = task.resultCallback;
+
+    _tasks.add(task);
+  }
+
+  void onDemographicsSurveyTriggered(SurveyPage surveyPage) {
+    print(' onDemographicsSurveyTriggered : $surveyPage');
+
+    SurveyUserTask task = SurveyUserTask(
+        type: UserTaskType.demographic_survey,
+        heading: surveys.demographics.title,
+        description: surveys.demographics.description,
+        minutesToComplete: surveys.demographics.minutesToComplete,
+        survey: surveyPage);
+
+    surveyPage.resultCallback = task.resultCallback;
+
+    _tasks.add(task);
   }
 
   void onSurveySubmit(RPTaskResult result) {}

@@ -29,12 +29,12 @@ dependencies:
   uuid: ^2.0.0
   shared_preferences: ^0.5.6
 
-  carp_mobile_sensing: ^0.6.1
+  carp_mobile_sensing: ^0.6.5
   #carp_communication_package: ^0.6.1
   #carp_connectivity_package: ^0.1.0
-  carp_context_package: ^0.6.1
-  carp_survey_package: ^0.6.0
-  carp_audio_package: ^0.6.1
+  carp_context_package: ^0.6.5
+  carp_survey_package: ^0.6.5
+  carp_audio_package: ^0.6.5
   carp_backend: ^0.6.0
 
   research_package: ^0.2.0+1

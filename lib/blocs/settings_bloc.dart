@@ -4,10 +4,14 @@ class SettingsBLoC {
   static const String USER_UI_KEY = "user_id";
 
   SharedPreferences _preferences;
-  SharedPreferences get preferences => _preferences;
 
   Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
+  }
+
+  Future<SharedPreferences> get preferences async {
+    if (_preferences == null) _preferences = await SharedPreferences.getInstance();
+    return _preferences;
   }
 
   String _userId;
@@ -15,12 +19,12 @@ class SettingsBLoC {
   /// The unique anonymous user id.
   ///
   /// This id is stored on the phone in-between session and should therefore be the same for the same phone.
-  String get userId {
+  Future<String> get userId async {
     if (_userId == null) {
-      _userId = preferences.get(USER_UI_KEY);
+      _userId = (await preferences).get(USER_UI_KEY);
       if (_userId == null) {
         _userId = Uuid().v4();
-        preferences.setString(USER_UI_KEY, _userId);
+        (await preferences).setString(USER_UI_KEY, _userId);
       }
     }
     return _userId;
