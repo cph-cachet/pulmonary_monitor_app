@@ -1,12 +1,30 @@
 part of pulmonary_monitor_app;
 
 class SettingsBLoC {
-  // Generate a unique and anonymous user id for this user.
-  // TODO - should be persisted between app restarts
-  String _userId = Uuid().v4();
+  static const String USER_UI_KEY = "user_id";
+
+  SharedPreferences _preferences;
+  SharedPreferences get preferences => _preferences;
+
+  Future<void> init() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
+
+  String _userId;
 
   /// The unique anonymous user id.
-  String get userId => _userId;
+  ///
+  /// This id is stored on the phone in-between session and should therefore be the same for the same phone.
+  String get userId {
+    if (_userId == null) {
+      _userId = preferences.get(USER_UI_KEY);
+      if (_userId == null) {
+        _userId = Uuid().v4();
+        preferences.setString(USER_UI_KEY, _userId);
+      }
+    }
+    return _userId;
+  }
 
   String get studyId => "2";
 

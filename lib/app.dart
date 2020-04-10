@@ -24,9 +24,10 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
     DataVisualization(),
   ];
 
-  void initState() {
+  void initState() async {
     super.initState();
-    bloc.init();
+    await settings.init();
+    await bloc.init();
     bloc.start();
   }
 

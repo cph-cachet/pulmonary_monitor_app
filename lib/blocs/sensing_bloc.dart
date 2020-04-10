@@ -21,9 +21,9 @@ class SensingBLoC {
   /// Get the data model for this study.
   DataModel get data => null;
 
-  void init() async {}
+  Future<void> init() async {}
 
-  void start() async => await sensing.start();
+  Future<void> start() async => sensing.start();
 
   void pause() => sensing.controller.pause();
 
