@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 /// Enumerates the different types of tasks.
-enum UserTaskType { demographic_survey, daily_survey, audio_recording }
+enum UserTaskType { demographic_survey, daily_survey, audio_recording, sensing }
 
 /// Enumerates the different states of a task.
 enum UserTaskState { created, resumed, paused, done }
@@ -24,7 +24,7 @@ class UserTask {
 
   /// The callback that is called when the task is finished.
   void onDone() {
-    // default implementation is no-op
+    state = UserTaskState.done;
   }
 
   /// The state of this task.
@@ -71,8 +71,32 @@ class SurveyUserTask extends UserTask {
   }
 
   void resultCallback(RPTaskResult result) => onDone();
+}
 
-  void onDone() {
+class SensingUserTask extends UserTask {
+  TaskExecutor executor;
+
+  SensingUserTask({
+    @required UserTaskType type,
+    String heading,
+    String description,
+    int minutesToComplete,
+    UserTaskState state = UserTaskState.created,
+    @required this.executor,
+  })  : assert(type != null),
+        assert(heading != null),
+        assert(executor != null),
+        super(
+          type: type,
+          heading: heading,
+          description: description,
+          minutesToComplete: minutesToComplete,
+          state: state,
+        );
+
+  void onPressed(BuildContext context) {
+    print(">>> onPressed in SensingUserTask, executor: $executor, state: ${executor.state}");
+    if (executor != null) executor.start();
     state = UserTaskState.done;
   }
 }

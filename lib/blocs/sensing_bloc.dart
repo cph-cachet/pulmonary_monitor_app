@@ -34,7 +34,7 @@ class SensingBLoC {
   void dispose() async => sensing.stop();
 
   void onWHO5SurveyTriggered(SurveyPage surveyPage) {
-    print(' onWHO5SurveyTriggered : $surveyPage');
+    print('>>> onWHO5SurveyTriggered : $surveyPage');
 
     SurveyUserTask task = SurveyUserTask(
         type: UserTaskType.daily_survey,
@@ -49,7 +49,7 @@ class SensingBLoC {
   }
 
   void onDemographicsSurveyTriggered(SurveyPage surveyPage) {
-    print(' onDemographicsSurveyTriggered : $surveyPage');
+    print('>>> onDemographicsSurveyTriggered : $surveyPage');
 
     SurveyUserTask task = SurveyUserTask(
         type: UserTaskType.demographic_survey,
@@ -64,6 +64,19 @@ class SensingBLoC {
   }
 
   void onSurveySubmit(RPTaskResult result) {}
+
+  void onAppTaskStart(TaskExecutor executor) {
+    print('>>> onAppTaskStart : $executor');
+
+    SensingUserTask task = SensingUserTask(
+      type: UserTaskType.sensing,
+      heading: executor.task.name,
+      description: "Sensing task",
+      executor: executor,
+    );
+
+    _tasks.add(task);
+  }
 }
 
 final bloc = SensingBLoC();

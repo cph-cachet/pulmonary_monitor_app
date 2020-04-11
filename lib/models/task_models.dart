@@ -23,6 +23,9 @@ class UserTaskModel {
   ///A printer-friendly description of this task.
   int get minutesToComplete => task.minutesToComplete;
 
+  String get fullDescription =>
+      description + ((minutesToComplete != null) ? "\nAbout ${task.minutesToComplete} minutes to complete" : "");
+
   /// The icon for the state of this task.
   Icon get stateIcon => taskStateIcon[state];
 
@@ -45,6 +48,11 @@ Map<UserTaskType, Icon> get taskTypeIcon => {
       UserTaskType.audio_recording: Icon(
         Icons.record_voice_over,
         color: CACHET.GREEN,
+        size: 40,
+      ),
+      UserTaskType.sensing: Icon(
+        Icons.settings_input_antenna,
+        color: CACHET.CACHET_BLUE,
         size: 40,
       ),
     };

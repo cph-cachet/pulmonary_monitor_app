@@ -126,10 +126,22 @@ class StudyMock implements StudyManager {
                       DeviceSamplingPackage.SCREEN,
                     ],
                   ))
+//            ..addTriggerTask(
+//                PeriodicTrigger(period: 60 * 60 * 1000), // collect local weather and air quality once pr. hour
+//                Task()
+//                  ..measures = SamplingSchema.common().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      ContextSamplingPackage.WEATHER,
+//                      ContextSamplingPackage.AIR_QUALITY,
+//                    ],
+//                  ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 60 * 60 * 1000), // collect local weather and air quality once pr. hour
-                Task()
-                  ..measures = SamplingSchema.common().getMeasureList(
+                ImmediateTrigger(), // collect local weather and air quality as an app task
+                AppTask(
+                  name: "Local weather and air quality",
+                  onStart: bloc.onAppTaskStart,
+                )..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.WEATHER,
@@ -150,7 +162,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task('Demographics Survey')
+                AppTask(name: 'Demographics Survey')
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: 'DEMO',
@@ -162,7 +174,7 @@ class StudyMock implements StudyManager {
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
                 PeriodicTrigger(period: 60 * 1000),
-                Task('WHO-5 Survey')
+                Task(name: 'WHO-5 Survey')
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: 'WHO5',
@@ -182,7 +194,7 @@ class StudyMock implements StudyManager {
 //                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 5 * 60 * 1000, duration: 60 * 1000),
-                Task('Audio')
+                Task(name: 'Audio')
                   ..measures
                       .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
 //            ..addTriggerTask(

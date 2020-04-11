@@ -55,7 +55,7 @@ class _TaskListState extends State<TaskList> {
             ListTile(
               leading: task.typeIcon,
               title: Text(task.heading),
-              subtitle: Text('${task.description}\nAbout ${task.minutesToComplete} minutes to complete'),
+              subtitle: Text(task.fullDescription),
               trailing: task.stateIcon,
             ),
             // TODO - only add button if there is a task to do. Might be an info card.
