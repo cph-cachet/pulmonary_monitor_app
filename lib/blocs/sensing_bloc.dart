@@ -2,7 +2,7 @@ part of pulmonary_monitor_app;
 
 class SensingBLoC {
   final Sensing sensing = Sensing();
-  SurveyPage surveyPage;
+  //SurveyPage surveyPage;
 
   List<UserTask> _tasks = List<UserTask>();
 
@@ -33,49 +33,33 @@ class SensingBLoC {
 
   void dispose() async => sensing.stop();
 
-  void onWHO5SurveyTriggered(SurveyPage surveyPage) {
-    print('>>> onWHO5SurveyTriggered : $surveyPage');
+  void addSensingTask(TaskExecutor executor) {
+    AppTask _task = (executor.task as AppTask);
+    print('>>> addSensingTask : $executor');
 
-    SurveyUserTask task = SurveyUserTask(
-        type: UserTaskType.daily_survey,
-        heading: surveys.who5.title,
-        description: surveys.who5.description,
-        minutesToComplete: surveys.who5.minutesToComplete,
-        survey: surveyPage);
-
-    surveyPage.resultCallback = task.resultCallback;
-
-    _tasks.add(task);
-  }
-
-  void onDemographicsSurveyTriggered(SurveyPage surveyPage) {
-    print('>>> onDemographicsSurveyTriggered : $surveyPage');
-
-    SurveyUserTask task = SurveyUserTask(
-        type: UserTaskType.demographic_survey,
-        heading: surveys.demographics.title,
-        description: surveys.demographics.description,
-        minutesToComplete: surveys.demographics.minutesToComplete,
-        survey: surveyPage);
-
-    surveyPage.resultCallback = task.resultCallback;
-
-    _tasks.add(task);
-  }
-
-  void onSurveySubmit(RPTaskResult result) {}
-
-  void onAppTaskStart(TaskExecutor executor) {
-    print('>>> onAppTaskStart : $executor');
-
-    SensingUserTask task = SensingUserTask(
+    final SensingUserTask _userTask = SensingUserTask(
       type: UserTaskType.sensing,
-      heading: executor.task.name,
-      description: "Sensing task",
+      heading: _task.name,
+      description: _task.description,
       executor: executor,
     );
 
-    _tasks.add(task);
+    _tasks.add(_userTask);
+  }
+
+  void addTaskWithSurvey(TaskExecutor executor) {
+    AppTask _task = (executor.task as AppTask);
+    print('>>> addTaskWithSurvey - executor : $executor, task : $_task');
+
+    final SurveyUserTask _userTask = SurveyUserTask(
+      type: UserTaskType.daily_survey,
+      heading: _task.name,
+      description: _task.description,
+      minutesToComplete: _task.minutesToComplete,
+      executor: executor,
+    );
+
+    _tasks.add(_userTask);
   }
 }
 

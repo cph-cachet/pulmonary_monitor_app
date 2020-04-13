@@ -80,18 +80,18 @@ class StudyMock implements StudyManager {
                 "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
                 "Before you start, please also fill in the demographich survey. "
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.common().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      //SensorSamplingPackage.ACCELEROMETER,
-                      //SensorSamplingPackage.GYROSCOPE,
-                      SensorSamplingPackage.LIGHT,
-                      SensorSamplingPackage.PEDOMETER,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.common().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      //SensorSamplingPackage.ACCELEROMETER,
+//                      //SensorSamplingPackage.GYROSCOPE,
+//                      SensorSamplingPackage.LIGHT,
+//                      SensorSamplingPackage.PEDOMETER,
+//                    ],
+//                  ))
             //TODO - add when the RxDart issue w. survey package is fixed
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
@@ -126,26 +126,39 @@ class StudyMock implements StudyManager {
                       DeviceSamplingPackage.SCREEN,
                     ],
                   ))
-//            ..addTriggerTask(
-//                PeriodicTrigger(period: 60 * 60 * 1000), // collect local weather and air quality once pr. hour
-//                Task()
-//                  ..measures = SamplingSchema.common().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      ContextSamplingPackage.WEATHER,
-//                      ContextSamplingPackage.AIR_QUALITY,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 20 * 1000), // collect local weather and air quality once pr. hour
+                Task()
+                  ..measures = SamplingSchema.common().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
             ..addTriggerTask(
                 ImmediateTrigger(), // collect local weather and air quality as an app task
                 AppTask(
-                  name: "Local weather and air quality",
-                  onStart: bloc.onAppTaskStart,
+                  name: "Weather & Air Quality",
+                  description: "Collect local weather and air quality",
+                  onStart: bloc.addSensingTask,
                 )..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.WEATHER,
                       ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(), // collect local weather and air quality as an app task
+                AppTask(
+                  name: "Device",
+                  description: "Collect device info",
+                  onStart: bloc.addSensingTask,
+                )..measures = SamplingSchema.common().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      DeviceSamplingPackage.DEVICE,
                     ],
                   ))
             ..addTriggerTask(
@@ -162,27 +175,49 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                AppTask(name: 'Demographics Survey')
+                AppTask(
+                  name: surveys.demographics.title,
+                  description: surveys.demographics.description,
+                  minutesToComplete: surveys.demographics.minutesToComplete,
+                  onStart: bloc.addTaskWithSurvey,
+                )
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
-                    name: 'DEMO',
+                    name: surveys.demographics.title,
                     enabled: true,
                     surveyTask: surveys.demographics.survey,
-                    onSurveyTriggered: bloc.onDemographicsSurveyTriggered,
-                    onSurveySubmit: bloc.onSurveySubmit,
+                  ))
+                  ..measures.add(Measure(
+                    MeasureType(NameSpace.CARP, DeviceSamplingPackage.DEVICE),
+                    name: "Device info",
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
-                PeriodicTrigger(period: 60 * 1000),
-                Task(name: 'WHO-5 Survey')
-                  ..measures.add(RPTaskMeasure(
+                PeriodicTrigger(period: 20 * 1000),
+                AppTask(
+                  name: surveys.who5.title,
+                  description: surveys.who5.description,
+                  minutesToComplete: surveys.who5.minutesToComplete,
+                  //onStart: bloc.addTaskWithSurvey,
+                  onResume: bloc.addTaskWithSurvey,
+                )..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
-                    name: 'WHO5',
+                    name: surveys.who5.title,
                     enabled: true,
                     surveyTask: surveys.who5.survey,
-                    onSurveyTriggered: bloc.onWHO5SurveyTriggered,
-                    onSurveySubmit: bloc.onSurveySubmit,
                   )))
+//            ..addTriggerTask(
+//                // TODO make this a recurrent scheduled trigger, once pr. day
+//                PeriodicTrigger(period: 60 * 1000),
+//                Task(name: 'WHO-5 Survey')
+//                  ..measures.add(RPTaskMeasure(
+//                    MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+//                    name: 'WHO5',
+//                    enabled: true,
+//                    surveyTask: surveys.who5.survey,
+//                    onSurveyTriggered: bloc.onWHO5SurveyTriggered,
+//                    onSurveySubmit: bloc.onSurveySubmit,
+//                  )))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()

@@ -37,7 +37,6 @@ part 'blocs/sensing_bloc.dart';
 part 'blocs/settings_bloc.dart';
 part 'ui/task_list.dart';
 part 'ui/data_viz.dart';
-part 'ui/survey_ui.dart';
 part 'ui/study_viz.dart';
 part 'ui/informed_consent_page.dart';
 part 'ui/linear_survey_page.dart';
