@@ -150,7 +150,7 @@ class StudyMock implements StudyManager {
                     ],
                   ))
             ..addTriggerTask(
-                ImmediateTrigger(), // collect local weather and air quality as an app task
+                ImmediateTrigger(),
                 AppTask(
                   name: "Device",
                   description: "Collect device info",
@@ -188,23 +188,28 @@ class StudyMock implements StudyManager {
                     surveyTask: surveys.demographics.survey,
                   ))
                   ..measures.add(Measure(
-                    MeasureType(NameSpace.CARP, DeviceSamplingPackage.DEVICE),
-                    name: "Device info",
+                    MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    name: "Current location",
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
                 PeriodicTrigger(period: 20 * 1000),
                 AppTask(
-                  name: surveys.who5.title,
-                  description: surveys.who5.description,
-                  minutesToComplete: surveys.who5.minutesToComplete,
+                  name: surveys.symptoms.title,
+                  description: surveys.symptoms.description,
+                  minutesToComplete: surveys.symptoms.minutesToComplete,
                   //onStart: bloc.addTaskWithSurvey,
                   onResume: bloc.addTaskWithSurvey,
-                )..measures.add(RPTaskMeasure(
+                )
+                  ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
-                    name: surveys.who5.title,
+                    name: surveys.symptoms.title,
                     enabled: true,
-                    surveyTask: surveys.who5.survey,
+                    surveyTask: surveys.symptoms.survey,
+                  ))
+                  ..measures.add(Measure(
+                    MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    name: "Current location",
                   )))
 //            ..addTriggerTask(
 //                // TODO make this a recurrent scheduled trigger, once pr. day

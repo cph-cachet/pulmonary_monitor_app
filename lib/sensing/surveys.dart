@@ -8,6 +8,9 @@ class _Surveys {
 
   Survey _demographics = _DemographicSurvey();
   Survey get demographics => _demographics;
+
+  Survey _symptoms = _SymptomsSurvey();
+  Survey get symptoms => _symptoms;
 }
 
 abstract class Survey {
@@ -84,14 +87,14 @@ class _DemographicSurvey implements Survey {
   String get description => "A short 4-item survey on your background.";
   int get minutesToComplete => 2;
 
-  final RPChoiceAnswerFormat _sex_choices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
+  final RPChoiceAnswerFormat _sexChoices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
     RPChoice.withParams("Femal", 1),
     RPChoice.withParams("Male", 2),
     RPChoice.withParams("Other", 3),
     RPChoice.withParams("Prefer not to say", 4),
   ]);
 
-  final RPChoiceAnswerFormat _age_choices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
+  final RPChoiceAnswerFormat _ageChoices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
     RPChoice.withParams("Under 20", 1),
     RPChoice.withParams("20-29", 2),
     RPChoice.withParams("30-39", 3),
@@ -104,7 +107,7 @@ class _DemographicSurvey implements Survey {
     RPChoice.withParams("Prefer not to say", 10),
   ]);
 
-  final RPChoiceAnswerFormat _medical_choices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.MultipleChoice, [
+  final RPChoiceAnswerFormat _medicalChoices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.MultipleChoice, [
     RPChoice.withParams("None", 1),
     RPChoice.withParams("Asthma", 2),
     RPChoice.withParams("Cystic fibrosis", 3),
@@ -125,7 +128,7 @@ class _DemographicSurvey implements Survey {
     RPChoice.withParams("Prefer not to say", 18),
   ]);
 
-  final RPChoiceAnswerFormat _smoke_choices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
+  final RPChoiceAnswerFormat _smokeChoices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
     RPChoice.withParams("Never smoked", 1),
     RPChoice.withParams("Ex-smoker", 2),
     RPChoice.withParams("Current smoker (less than once a day", 3),
@@ -139,22 +142,52 @@ class _DemographicSurvey implements Survey {
         RPQuestionStep.withAnswerFormat(
           "demo_1",
           "Which is your biological sex?",
-          _sex_choices,
+          _sexChoices,
         ),
         RPQuestionStep.withAnswerFormat(
           "demo_2",
           "How old are you?",
-          _age_choices,
+          _ageChoices,
         ),
         RPQuestionStep.withAnswerFormat(
           "demo_3",
           "Do you have any of these medical conditions? (can choose more than one)",
-          _medical_choices,
+          _medicalChoices,
         ),
         RPQuestionStep.withAnswerFormat(
           "demo_4",
           "Do you, or have you, ever smoked (including e-cigarettes)?",
-          _smoke_choices,
+          _smokeChoices,
+        ),
+      ]);
+}
+
+class _SymptomsSurvey implements Survey {
+  String get title => "Symptoms";
+  String get description => "A short 1-item survey on your daily symptoms.";
+  int get minutesToComplete => 1;
+
+  RPChoiceAnswerFormat _symptomsChoices = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.MultipleChoice, [
+    RPChoice.withParams("None", 1),
+    RPChoice.withParams("Fever (warmer than usual)", 2),
+    RPChoice.withParams("Dry cough", 3),
+    RPChoice.withParams("Wet cough", 4),
+    RPChoice.withParams("Sore throat, runny or blocked nose", 5),
+    RPChoice.withParams("Loss of taste and smell", 6),
+    RPChoice.withParams("Difficulty breathing or feeling short of breath", 7),
+    RPChoice.withParams("Tightness in your chest", 8),
+    RPChoice.withParams("Dizziness, confusion or vertigo", 9),
+    RPChoice.withParams("Headache", 10),
+    RPChoice.withParams("Muscle aches", 11),
+    RPChoice.withParams("Chills", 12),
+    RPChoice.withParams("Prefer not to say", 13),
+  ]);
+
+  RPTask get survey => RPOrderedTask("symptoms_survey", [
+        RPQuestionStep.withAnswerFormat(
+          "sym_1",
+          "Do you have any of the following symptoms today? (can select multiples)",
+          _symptomsChoices,
         ),
       ]);
 }

@@ -69,6 +69,10 @@ class SensingUserTask extends UserTask {
     executor?.start();
     onDone();
   }
+
+  void onDone() {
+    super.onDone();
+  }
 }
 
 class SurveyUserTask extends UserTask {
