@@ -10,6 +10,10 @@ class UserTask {
   final UserTaskType type;
   final String heading;
   final String description;
+  final String instructions;
+
+  StreamController<UserTaskState> _stateController = StreamController<UserTaskState>();
+  Stream<UserTaskState> get stateEvents => _stateController.stream.asBroadcastStream();
 
   /// How many minutes will it take to complete this task?
   final int minutesToComplete;
@@ -27,19 +31,26 @@ class UserTask {
     state = UserTaskState.done;
   }
 
+  UserTaskState _state = UserTaskState.created;
+
   /// The state of this task.
-  UserTaskState state;
+  UserTaskState get state => _state;
+
+  set state(UserTaskState state) {
+    _state = state;
+    _stateController.add(state);
+  }
 
   UserTask({
     @required this.type,
     @required this.heading,
     this.description,
+    this.instructions,
     this.minutesToComplete,
-    this.state = UserTaskState.created,
-    //@required this.onPressed,
   })  : assert(type != null),
         assert(heading != null) {
     timestamp = DateTime.now();
+    state = UserTaskState.created;
   }
 }
 
@@ -50,8 +61,8 @@ class SensingUserTask extends UserTask {
     @required UserTaskType type,
     String heading,
     String description,
+    String instructions,
     int minutesToComplete,
-    UserTaskState state = UserTaskState.created,
     @required this.executor,
   })  : assert(type != null),
         assert(heading != null),
@@ -60,13 +71,13 @@ class SensingUserTask extends UserTask {
           type: type,
           heading: heading,
           description: description,
+          instructions: instructions,
           minutesToComplete: minutesToComplete,
-          state: state,
         );
 
   void onPressed(BuildContext context) {
     print(">>> onPressed in SensingUserTask, executor: $executor, state: ${executor?.state}");
-    executor?.start();
+    executor?.resume();
     onDone();
   }
 
@@ -75,8 +86,7 @@ class SensingUserTask extends UserTask {
   }
 }
 
-class SurveyUserTask extends UserTask {
-  TaskExecutor executor;
+class SurveyUserTask extends SensingUserTask {
   BuildContext _context;
   SurveyProbe mySurveyProbe;
 
@@ -84,18 +94,19 @@ class SurveyUserTask extends UserTask {
     @required UserTaskType type,
     String heading,
     String description,
+    String instructions,
     int minutesToComplete,
-    UserTaskState state = UserTaskState.created,
-    @required this.executor,
+    @required TaskExecutor executor,
   })  : assert(type != null),
         assert(heading != null),
         assert(executor != null),
         super(
           type: type,
           heading: heading,
-          description: Uuid().v1().toString(),
+          description: description,
+          instructions: instructions,
           minutesToComplete: minutesToComplete,
-          state: state,
+          executor: executor,
         ) {
     // looking for the survey probe (i.e. a [SurveyProbe]) in this executor
     // we need to add the callback functions to it
@@ -108,8 +119,6 @@ class SurveyUserTask extends UserTask {
   }
 
   void onPressed(BuildContext context) {
-    print(">>> onPressed in NewSurveyUserTask, executor: $executor, state: ${executor?.state}, _context: $_context");
-
     // check if this task is created (i.e. new) before starting it
     // TODO - allow for resuming paused tasks?
     if (state == UserTaskState.created) {
@@ -117,23 +126,81 @@ class SurveyUserTask extends UserTask {
       mySurveyProbe.onSurveyTriggered = onSurveyTriggered;
       mySurveyProbe.onSurveySubmit = onSurveySubmit;
 
-      if (executor?.state == ProbeState.initialized)
-        executor?.start();
-      else
-        executor?.resume();
+      executor?.resume();
 
       state = UserTaskState.done;
     }
   }
 
   void onSurveyTriggered(SurveyPage surveyPage) {
-    print(">>> onSurveyTriggered in NewSurveyUserTask, _context: $_context, surveyPage: ${surveyPage}");
     Navigator.of(_context).push(MaterialPageRoute(builder: (context) => surveyPage));
   }
 
   void onSurveySubmit(RPTaskResult result) {
-    print(">>> onSurveySubmit in NewSurveyUserTask, result: $result");
     executor?.pause();
     onDone();
+  }
+}
+
+class AudioUserTask extends SensingUserTask {
+  StreamController<int> _countDownController = StreamController<int>();
+  Stream<int> get countDownEvents => _countDownController.stream.asBroadcastStream();
+
+  /// Duration of audio recording in seconds.
+  int recordingDuration;
+
+  AudioUserTask({
+    @required UserTaskType type,
+    String heading,
+    String description,
+    String instructions,
+    int minutesToComplete,
+    this.recordingDuration = 30,
+    @required TaskExecutor executor,
+  })  : assert(type != null),
+        assert(heading != null),
+        assert(executor != null),
+        super(
+          type: type,
+          heading: heading,
+          description: description,
+          instructions: instructions,
+          minutesToComplete: minutesToComplete,
+          executor: executor,
+        );
+
+  void onPressed(BuildContext context) {
+    // check if this task is created (i.e. new) before starting it
+    // TODO - allow for resuming paused tasks?
+    if (state == UserTaskState.created) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AudioMeasurePage(audioUserTask: this)));
+    }
+  }
+
+  /// Callback when recording is to start.
+  void onRecord() {
+    // only allow to start recording if not already started.
+    if (state == UserTaskState.created) {
+      state = UserTaskState.resumed;
+      executor?.resume();
+
+      Timer.periodic(new Duration(seconds: 1), (timer) {
+        _countDownController.add(--recordingDuration);
+
+        if (recordingDuration == 0) {
+          timer.cancel();
+          _countDownController.close();
+
+          executor?.pause();
+          state = UserTaskState.done;
+        }
+      });
+    }
+  }
+
+  /// Callback when recording is to stop.
+  void onStop() {
+    state = UserTaskState.done;
+    executor?.pause();
   }
 }

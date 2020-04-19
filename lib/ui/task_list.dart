@@ -49,6 +49,10 @@ class _TaskListState extends State<TaskList> {
   Widget _buildTaskCard(BuildContext context, UserTaskModel task) {
     return Center(
       child: Card(
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

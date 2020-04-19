@@ -211,6 +211,41 @@ class StudyMock implements StudyManager {
                     MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
                     name: "Current location",
                   )))
+            ..addTriggerTask(
+                // TODO make this a recurrent scheduled trigger, once pr. day
+                PeriodicTrigger(period: 20 * 1000),
+                AppTask(
+                  name: "Coughing",
+                  description: 'In this small exercise we would like to collect sound samples of coughing.',
+                  instructions: 'Please press the record button below, and then cough 5 times.',
+                  minutesToComplete: 3,
+                  onResume: bloc.addTaskWithAudio,
+                )
+                  ..measures
+                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording"))
+                  ..measures.add(Measure(
+                    MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    name: "Current location",
+                  )))
+            ..addTriggerTask(
+                // TODO make this a recurrent scheduled trigger, once pr. day
+                PeriodicTrigger(period: 20 * 1000),
+                AppTask(
+                  name: "Reading",
+                  description: 'In this small exercise we would like to collect sound data while you are reading.',
+                  instructions: 'Please press the record button below, and then read the following text.\n\n'
+                      'Many, many years ago lived an emperor, who thought so much of new clothes that he spent all his money in order to obtain them; his only ambition was to be always well dressed. '
+                      'He did not care for his soldiers, and the theatre did not amuse him; the only thing, in fact, he thought anything of was to drive out and show a new suit of clothes. '
+                      'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
+                  minutesToComplete: 3,
+                  onResume: bloc.addTaskWithAudio,
+                )
+                  ..measures
+                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording"))
+                  ..measures.add(Measure(
+                    MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    name: "Current location",
+                  )))
 //            ..addTriggerTask(
 //                // TODO make this a recurrent scheduled trigger, once pr. day
 //                PeriodicTrigger(period: 60 * 1000),
@@ -232,11 +267,11 @@ class StudyMock implements StudyManager {
 //                      AudioSamplingPackage.NOISE,
 //                    ],
 //                  ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 5 * 60 * 1000, duration: 60 * 1000),
-                Task(name: 'Audio')
-                  ..measures
-                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
+//            ..addTriggerTask(
+//                PeriodicTrigger(period: 5 * 60 * 1000, duration: 60 * 1000),
+//                Task(name: 'Audio')
+//                  ..measures
+//                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
 //            ..addTriggerTask(
 //                PeriodicTrigger(period: 60 * 60 * 100),
 //                Task('Health')

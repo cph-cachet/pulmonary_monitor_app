@@ -151,7 +151,7 @@ class _DemographicSurvey implements Survey {
         ),
         RPQuestionStep.withAnswerFormat(
           "demo_3",
-          "Do you have any of these medical conditions? (can choose more than one)",
+          "Do you have any of these medical conditions?",
           _medicalChoices,
         ),
         RPQuestionStep.withAnswerFormat(
@@ -186,7 +186,7 @@ class _SymptomsSurvey implements Survey {
   RPTask get survey => RPOrderedTask("symptoms_survey", [
         RPQuestionStep.withAnswerFormat(
           "sym_1",
-          "Do you have any of the following symptoms today? (can select multiples)",
+          "Do you have any of the following symptoms today?",
           _symptomsChoices,
         ),
       ]);

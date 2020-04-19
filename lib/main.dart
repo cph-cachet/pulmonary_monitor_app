@@ -41,6 +41,7 @@ part 'ui/study_viz.dart';
 part 'ui/informed_consent_page.dart';
 part 'ui/linear_survey_page.dart';
 part 'ui/cachet.dart';
+part 'ui/audio_measure.dart';
 
 void main() {
   runApp(App());

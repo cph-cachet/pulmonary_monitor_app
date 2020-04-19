@@ -33,6 +33,12 @@ class SensingBLoC {
 
   void dispose() async => sensing.stop();
 
+  /// Add a [Datum] object to the stream of events.
+  void addDatum(Datum datum) => sensing.controller.executor.addDatum(datum);
+
+  /// Add a error to the stream of events.
+  void addError(Object error, [StackTrace stacktrace]) => sensing.controller.executor.addError(error, stacktrace);
+
   void addSensingTask(TaskExecutor executor) {
     AppTask _task = (executor.task as AppTask);
     print('>>> addSensingTask : $executor');
@@ -55,7 +61,25 @@ class SensingBLoC {
       type: UserTaskType.daily_survey,
       heading: _task.name,
       description: _task.description,
+      instructions: _task.instructions,
       minutesToComplete: _task.minutesToComplete,
+      executor: executor,
+    );
+
+    _tasks.add(_userTask);
+  }
+
+  void addTaskWithAudio(TaskExecutor executor) {
+    AppTask _task = (executor.task as AppTask);
+    print('>>> addTaskWithAudio - executor : $executor, task : $_task');
+
+    final AudioUserTask _userTask = AudioUserTask(
+      type: UserTaskType.audio_recording,
+      heading: _task.name,
+      description: _task.description,
+      instructions: _task.instructions,
+      minutesToComplete: _task.minutesToComplete,
+      recordingDuration: 5,
       executor: executor,
     );
 
