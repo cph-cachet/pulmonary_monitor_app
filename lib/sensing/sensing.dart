@@ -34,7 +34,7 @@ class Sensing {
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
 
-    controller.start();
+    controller.resume();
 
     // listening on all data events from the study and print it (for debugging purpose).
     controller.events.forEach(print);
@@ -61,14 +61,6 @@ class StudyMock implements StudyManager {
 
   Future<Study> getStudy(String studyId) async {
     return _getPulmonaryStudy(studyId);
-
-    //return _getCoverageStudy('#5-coverage');
-    //return _getHighFrequencyStudy('DF#4dD-high-frequency');
-    //return _getAllProbesAsAwareStudy('#4-aware-carp');
-    //return _getAllMeasuresStudy(studyId);
-    //return _getAllProbesAsAwareCarpUploadStudy();
-    //return _getAudioStudy(studyId);
-    //return _getESenseStudy(studyId);
   }
 
   Future<Study> _getPulmonaryStudy(String studyId) async {
@@ -80,18 +72,18 @@ class StudyMock implements StudyManager {
                 "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
                 "Before you start, please also fill in the demographich survey. "
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.common().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      //SensorSamplingPackage.ACCELEROMETER,
-//                      //SensorSamplingPackage.GYROSCOPE,
-//                      SensorSamplingPackage.LIGHT,
-//                      SensorSamplingPackage.PEDOMETER,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      //SensorSamplingPackage.ACCELEROMETER,
+                      //SensorSamplingPackage.GYROSCOPE,
+                      SensorSamplingPackage.LIGHT,
+                      SensorSamplingPackage.PEDOMETER,
+                    ],
+                  ))
             //TODO - add when the RxDart issue w. survey package is fixed
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
@@ -126,51 +118,52 @@ class StudyMock implements StudyManager {
                       DeviceSamplingPackage.SCREEN,
                     ],
                   ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 20 * 1000), // collect local weather and air quality once pr. hour
-                Task()
-                  ..measures = SamplingSchema.common().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                PeriodicTrigger(period: 1 * 20 * 1000),
+//                Task()
+//                  ..measures = SamplingSchema.common().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      ContextSamplingPackage.LOCATION,
+//                      //ContextSamplingPackage.WEATHER,
+//                      //ContextSamplingPackage.AIR_QUALITY,
+//                    ],
+//                  ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.common().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      //ContextSamplingPackage.LOCATION,
+//                      ContextSamplingPackage.GEOLOCATION,
+//                      //ContextSamplingPackage.ACTIVITY,
+//                      //ContextSamplingPackage.GEOFENCE,
+//                    ],
+//                  ))
             ..addTriggerTask(
                 ImmediateTrigger(), // collect local weather and air quality as an app task
                 AppTask(
                   name: "Weather & Air Quality",
                   description: "Collect local weather and air quality",
-                  onStart: bloc.addSensingTask,
+                  onResume: bloc.addSensingTask,
                 )..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
+                      //ContextSamplingPackage.AIR_QUALITY,
                     ],
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
                 AppTask(
-                  name: "Device",
-                  description: "Collect device info",
-                  onStart: bloc.addSensingTask,
+                  name: "Location",
+                  description: "Collect current location",
+                  onResume: bloc.addSensingTask,
                 )..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
-                      DeviceSamplingPackage.DEVICE,
-                    ],
-                  ))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.common().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      //ContextSamplingPackage.LOCATION,
-                      ContextSamplingPackage.GEOLOCATION,
-                      //ContextSamplingPackage.ACTIVITY,  //TODO - update when Thomas' new package is loaded
-                      //ContextSamplingPackage.GEOFENCE,
+                      ContextSamplingPackage.LOCATION,
                     ],
                   ))
             ..addTriggerTask(
@@ -179,7 +172,7 @@ class StudyMock implements StudyManager {
                   name: surveys.demographics.title,
                   description: surveys.demographics.description,
                   minutesToComplete: surveys.demographics.minutesToComplete,
-                  onStart: bloc.addTaskWithSurvey,
+                  onResume: bloc.addTaskWithSurvey,
                 )
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
@@ -189,16 +182,14 @@ class StudyMock implements StudyManager {
                   ))
                   ..measures.add(Measure(
                     MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-                    name: "Current location",
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
-                PeriodicTrigger(period: 20 * 1000),
+                PeriodicTrigger(period: 40 * 1000),
                 AppTask(
                   name: surveys.symptoms.title,
                   description: surveys.symptoms.description,
                   minutesToComplete: surveys.symptoms.minutesToComplete,
-                  //onStart: bloc.addTaskWithSurvey,
                   onResume: bloc.addTaskWithSurvey,
                 )
                   ..measures.add(RPTaskMeasure(
@@ -209,11 +200,10 @@ class StudyMock implements StudyManager {
                   ))
                   ..measures.add(Measure(
                     MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-                    name: "Current location",
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
-                PeriodicTrigger(period: 20 * 1000),
+                PeriodicTrigger(period: 30 * 1000),
                 AppTask(
                   name: "Coughing",
                   description: 'In this small exercise we would like to collect sound samples of coughing.',
@@ -221,8 +211,11 @@ class StudyMock implements StudyManager {
                   minutesToComplete: 3,
                   onResume: bloc.addTaskWithAudio,
                 )
-                  ..measures
-                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording"))
+                  ..measures.add(AudioMeasure(
+                    MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                    name: "Coughing",
+                    studyId: studyId,
+                  ))
                   ..measures.add(Measure(
                     MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
                     name: "Current location",
@@ -240,24 +233,15 @@ class StudyMock implements StudyManager {
                   minutesToComplete: 3,
                   onResume: bloc.addTaskWithAudio,
                 )
-                  ..measures
-                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording"))
+                  ..measures.add(AudioMeasure(
+                    MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                    name: "Reading",
+                    studyId: studyId,
+                  ))
                   ..measures.add(Measure(
                     MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
                     name: "Current location",
                   )))
-//            ..addTriggerTask(
-//                // TODO make this a recurrent scheduled trigger, once pr. day
-//                PeriodicTrigger(period: 60 * 1000),
-//                Task(name: 'WHO-5 Survey')
-//                  ..measures.add(RPTaskMeasure(
-//                    MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
-//                    name: 'WHO5',
-//                    enabled: true,
-//                    surveyTask: surveys.who5.survey,
-//                    onSurveyTriggered: bloc.onWHO5SurveyTriggered,
-//                    onSurveySubmit: bloc.onSurveySubmit,
-//                  )))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()

@@ -12,8 +12,8 @@ class UserTask {
   final String description;
   final String instructions;
 
-  StreamController<UserTaskState> _stateController = StreamController<UserTaskState>();
-  Stream<UserTaskState> get stateEvents => _stateController.stream.asBroadcastStream();
+  StreamController<UserTaskState> _stateController = StreamController<UserTaskState>.broadcast();
+  Stream<UserTaskState> get stateEvents => _stateController.stream;
 
   /// How many minutes will it take to complete this task?
   final int minutesToComplete;
@@ -76,7 +76,7 @@ class SensingUserTask extends UserTask {
         );
 
   void onPressed(BuildContext context) {
-    print(">>> onPressed in SensingUserTask, executor: $executor, state: ${executor?.state}");
+    print(">>> onPressed in SensingUserTask, executor: ${executor.name}, state: ${executor?.state}");
     executor?.resume();
     onDone();
   }
@@ -137,14 +137,15 @@ class SurveyUserTask extends SensingUserTask {
   }
 
   void onSurveySubmit(RPTaskResult result) {
+    print(' >>> onSurveySubmit() - result : $result');
     executor?.pause();
     onDone();
   }
 }
 
 class AudioUserTask extends SensingUserTask {
-  StreamController<int> _countDownController = StreamController<int>();
-  Stream<int> get countDownEvents => _countDownController.stream.asBroadcastStream();
+  StreamController<int> _countDownController = StreamController<int>.broadcast();
+  Stream<int> get countDownEvents => _countDownController.stream;
 
   /// Duration of audio recording in seconds.
   int recordingDuration;
@@ -201,6 +202,5 @@ class AudioUserTask extends SensingUserTask {
   /// Callback when recording is to stop.
   void onStop() {
     state = UserTaskState.done;
-    executor?.pause();
   }
 }
