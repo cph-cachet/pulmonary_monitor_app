@@ -7,5 +7,5 @@ Framework from the [Copenhagen Center for Health Technology](https://www.cachet.
 It follows the Flutter Business Logic Component (BLoC) architecture, as described in the 
 [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app).
 
-[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/T-D1KVIuvjA)
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/IgZNhkDRYx0)
 
