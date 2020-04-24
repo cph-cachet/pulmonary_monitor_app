@@ -74,7 +74,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -108,7 +108,7 @@ class StudyMock implements StudyManager {
 //              ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.common().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -151,7 +151,7 @@ class StudyMock implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.WEATHER,
-                      //ContextSamplingPackage.AIR_QUALITY,
+                      ContextSamplingPackage.AIR_QUALITY,
                     ],
                   ))
             ..addTriggerTask(
