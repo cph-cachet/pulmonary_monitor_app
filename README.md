@@ -8,5 +8,5 @@ It follows the Flutter Business Logic Component (BLoC) architecture, as describe
 [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app).
 
 ## How the AppTaks model works
-[![Watch the video](https://bseenlive.com/wp-content/uploads/2018/03/Youtube-Logo-Small.png)](https://youtu.be/IgZNhkDRYx0)
+[![Watch the video](https://bseenlive.com/wp-content/uploads/2018/03/Youtube-Logo-Small.png)](https://youtu.be/fO0lumFTzoY)
 
