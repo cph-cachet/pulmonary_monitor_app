@@ -29,7 +29,7 @@ class Sensing {
     study = await mock.getStudy(settings.studyId);
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study);
+    controller = StudyController(study, debugLevel: DebugLevel.DEBUG);
     //controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();

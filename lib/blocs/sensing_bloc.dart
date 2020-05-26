@@ -2,7 +2,6 @@ part of pulmonary_monitor_app;
 
 class SensingBLoC {
   final Sensing sensing = Sensing();
-  //SurveyPage surveyPage;
 
   List<UserTask> _tasks = List<UserTask>();
 
@@ -41,7 +40,7 @@ class SensingBLoC {
 
   void addSensingTask(TaskExecutor executor) {
     AppTask _task = (executor.task as AppTask);
-    print('>>> addSensingTask : $executor');
+    debug('Adding SensingTask : $executor');
 
     final SensingUserTask _userTask = SensingUserTask(
       type: UserTaskType.sensing,
@@ -55,7 +54,7 @@ class SensingBLoC {
 
   void addTaskWithSurvey(TaskExecutor executor) {
     AppTask _task = (executor.task as AppTask);
-    print('>>> addTaskWithSurvey - executor : $executor, task : $_task');
+    debug('Adding TaskWithSurvey - executor : $executor, task : $_task');
 
     final SurveyUserTask _userTask = SurveyUserTask(
       type: UserTaskType.daily_survey,
@@ -71,7 +70,7 @@ class SensingBLoC {
 
   void addTaskWithAudio(TaskExecutor executor) {
     AppTask _task = (executor.task as AppTask);
-    print('>>> addTaskWithAudio - executor : $executor, task : $_task');
+    debug('Adding TaskWithAudio - executor : $executor, task : $_task');
 
     final AudioUserTask _userTask = AudioUserTask(
       type: UserTaskType.audio_recording,
