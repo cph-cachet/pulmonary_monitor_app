@@ -185,7 +185,7 @@ class StudyMock implements StudyManager {
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
-                PeriodicTrigger(period: 40 * 1000),
+                PeriodicTrigger(period: Duration(seconds: 40)),
                 AppTask(
                   name: surveys.symptoms.title,
                   description: surveys.symptoms.description,
@@ -203,7 +203,7 @@ class StudyMock implements StudyManager {
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
-                PeriodicTrigger(period: 30 * 1000),
+                PeriodicTrigger(period: Duration(seconds: 30)),
                 AppTask(
                   name: "Coughing",
                   description: 'In this small exercise we would like to collect sound samples of coughing.',
@@ -222,7 +222,7 @@ class StudyMock implements StudyManager {
                   )))
             ..addTriggerTask(
                 // TODO make this a recurrent scheduled trigger, once pr. day
-                PeriodicTrigger(period: 20 * 1000),
+                PeriodicTrigger(period: Duration(seconds: 20)),
                 AppTask(
                   name: "Reading",
                   description: 'In this small exercise we would like to collect sound data while you are reading.',
@@ -342,36 +342,34 @@ SamplingSchema get aware => SamplingSchema()
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
           enabled: true,
-          frequency: 200, // How often to start a measure
-          duration: 2, // Window size
+          frequency: Duration(milliseconds: 200), // How often to start a measure
+          duration: Duration(milliseconds: 2), // Window size
         )),
     MapEntry(
         SensorSamplingPackage.GYROSCOPE,
-        PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            name: "Gyroscope",
-            enabled: true,
-            frequency: 200, // How often to start a measure
-            duration: 2 // Window size
-            )),
+        PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+          name: "Gyroscope",
+          enabled: true,
+          frequency: Duration(milliseconds: 200), // How often to start a measure
+          duration: Duration(milliseconds: 2), // Window size
+        )),
     MapEntry(
         SensorSamplingPackage.LIGHT,
-        PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-            name: "Ambient Light",
-            frequency: 60 * 1000, // How often to start a measure
-            duration: 1000 // Window size
-            )),
+        PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          name: "Ambient Light",
+          frequency: Duration(seconds: 60), // How often to start a measure
+          duration: Duration(seconds: 1), // Window size
+        )),
     MapEntry(
         AppsSamplingPackage.APPS,
         Measure(
           MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
           name: 'Installed Apps',
         )),
-    MapEntry(
-        AppsSamplingPackage.APP_USAGE,
-        AppUsageMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
-            // collect app usage every 10 min for the last 10 min
-            name: 'Apps Usage',
-            duration: 10 * 60 * 1000)),
+    MapEntry(AppsSamplingPackage.APP_USAGE,
+        MarkedMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE), name: 'App Usage')),
     MapEntry(DeviceSamplingPackage.BATTERY,
         Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'Battery')),
     MapEntry(DeviceSamplingPackage.SCREEN,
