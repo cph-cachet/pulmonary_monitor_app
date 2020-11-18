@@ -1,6 +1,6 @@
 part of pulmonary_monitor_app;
 
-class App extends StatelessWidget {
+class PulmonaryMonitorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),

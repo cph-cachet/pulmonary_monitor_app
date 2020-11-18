@@ -8,7 +8,8 @@ class StudyVisualization extends StatefulWidget {
 }
 
 class _StudyVizState extends State<StudyVisualization> {
-  static final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
   final StudyModel study;
@@ -52,7 +53,9 @@ class _StudyVizState extends State<StudyVisualization> {
             actions: <Widget>[
               IconButton(
                 icon: Icon(
-                  Theme.of(context).platform == TargetPlatform.iOS ? Icons.more_horiz : Icons.more_vert,
+                  Theme.of(context).platform == TargetPlatform.iOS
+                      ? Icons.more_horiz
+                      : Icons.more_vert,
                 ),
                 tooltip: 'Settings',
                 onPressed: _showInformedConsent,
@@ -98,9 +101,10 @@ class _StudyVizState extends State<StudyVisualization> {
     final ThemeData themeData = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: themeData.dividerColor))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subhead,
+        style: Theme.of(context).textTheme.subtitle1,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -110,19 +114,25 @@ class _StudyVizState extends State<StudyVisualization> {
               Container(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   width: 72.0,
-                  child: Icon(Icons.lightbulb_outline, size: 50, color: CACHET.CACHET_BLUE)),
+                  child: Icon(Icons.lightbulb_outline,
+                      size: 50, color: CACHET.CACHET_BLUE)),
               Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                _StudyControllerLine(study.description),
-                _StudyControllerLine(study.userID, heading: 'User ID'),
-                _StudyControllerLine(study.samplingStrategy, heading: 'Sampling Strategy'),
-                _StudyControllerLine(study.dataEndpoint, heading: 'Data Endpoint'),
-                StreamBuilder<Datum>(
-                    stream: study.samplingEvents,
-                    builder: (context, AsyncSnapshot<Datum> snapshot) {
-                      return _StudyControllerLine('${study.samplingSize}', heading: 'Sample Size');
-                    }),
-              ]))
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    _StudyControllerLine(study.description),
+                    _StudyControllerLine(study.userID, heading: 'User ID'),
+                    _StudyControllerLine(study.samplingStrategy,
+                        heading: 'Sampling Strategy'),
+                    _StudyControllerLine(study.dataEndpoint,
+                        heading: 'Data Endpoint'),
+                    StreamBuilder<Datum>(
+                        stream: study.samplingEvents,
+                        builder: (context, AsyncSnapshot<Datum> snapshot) {
+                          return _StudyControllerLine('${study.samplingSize}',
+                              heading: 'Sample Size');
+                        }),
+                  ]))
             ],
           ),
         ),
@@ -131,11 +141,13 @@ class _StudyVizState extends State<StudyVisualization> {
   }
 
   void _showInformedConsent() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
   }
 
   void _showSettings() {
-    Scaffold.of(context).showSnackBar(const SnackBar(content: Text('Settings not implemented yet...', softWrap: true)));
+    Scaffold.of(context).showSnackBar(const SnackBar(
+        content: Text('Settings not implemented yet...', softWrap: true)));
   }
 }
 
@@ -154,7 +166,9 @@ class _StudyControllerLine extends StatelessWidget {
                 : Text.rich(
                     TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: '$heading: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                            text: '$heading: ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(text: line),
                       ],
                     ),
@@ -170,13 +184,15 @@ class _TaskPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final List<Widget> children = task.measures.map((measure) => _MeasureLine(measure: measure)).toList();
+    final List<Widget> children =
+        task.measures.map((measure) => _MeasureLine(measure: measure)).toList();
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: themeData.dividerColor))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.subhead,
+          style: Theme.of(context).textTheme.subtitle1,
           child: SafeArea(
               top: false,
               bottom: false,
@@ -202,13 +218,17 @@ class _MeasureLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final Icon icon = (ProbeDescription.probeTypeIcon[measure.type.name] != null)
+    final Icon icon = (ProbeDescription.probeTypeIcon[measure.type.name] !=
+            null)
         ? Icon(ProbeDescription.probeTypeIcon[measure.type.name].icon, size: 25)
         : Icon(ProbeDescription.probeTypeIcon[DataType.NONE].icon, size: 25);
 
     final List<Widget> columnChildren = List<Widget>();
-    columnChildren.add((measure.name != null) ? Text(measure.name) : Text(measure.runtimeType.toString()));
-    columnChildren.add(Text(measure.toString(), style: themeData.textTheme.caption));
+    columnChildren.add((measure.name != null)
+        ? Text(measure.name)
+        : Text(measure.runtimeType.toString()));
+    columnChildren
+        .add(Text(measure.toString(), style: themeData.textTheme.caption));
 
     final List<Widget> rowChildren = List<Widget>();
     if (icon != null) {
@@ -219,12 +239,18 @@ class _MeasureLine extends StatelessWidget {
             onPressed: null,
           )));
     }
-    rowChildren
-        .addAll([Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: columnChildren))]);
+    rowChildren.addAll([
+      Expanded(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: columnChildren))
+    ]);
     return MergeSemantics(
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: rowChildren)),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: rowChildren)),
     );
   }
 }

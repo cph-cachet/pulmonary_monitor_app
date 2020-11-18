@@ -21,11 +21,7 @@ import 'package:carp_audio_package/audio.dart';
 //import 'package:carp_health_package/health_package.dart';
 import 'package:carp_backend/carp_backend.dart';
 
-part 'audio_recording.dart';
-part 'read_aloud.dart';
-part 'breathing.dart';
 part 'app.dart';
-part 'myapp.dart';
 part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
 part 'sensing/user_task.dart';
@@ -35,14 +31,14 @@ part 'models/data_models.dart';
 part 'models/task_models.dart';
 part 'blocs/sensing_bloc.dart';
 part 'blocs/settings_bloc.dart';
-part 'ui/task_list.dart';
-part 'ui/data_viz.dart';
-part 'ui/study_viz.dart';
+part 'ui/task_list_page.dart';
+part 'ui/data_viz_page.dart';
+part 'ui/study_viz_page.dart';
 part 'ui/informed_consent_page.dart';
 part 'ui/linear_survey_page.dart';
 part 'ui/cachet.dart';
-part 'ui/audio_measure.dart';
+part 'ui/audio_measure_page.dart';
 
 void main() {
-  runApp(App());
+  runApp(PulmonaryMonitorApp());
 }

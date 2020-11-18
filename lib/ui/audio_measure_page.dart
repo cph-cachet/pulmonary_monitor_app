@@ -3,8 +3,9 @@ part of pulmonary_monitor_app;
 class AudioMeasurePage extends StatefulWidget {
   static const String routeName = '/study/audio';
 
+  final AudioUserTask audioUserTask;
+
   AudioMeasurePage({Key key, this.audioUserTask}) : super(key: key);
-  AudioUserTask audioUserTask;
 
   _AudioMeasurePageState createState() => _AudioMeasurePageState(audioUserTask);
 }
@@ -49,7 +50,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         padding: const EdgeInsets.only(top: 30, left: 8, bottom: 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            audioUserTask.heading,
+            audioUserTask.title,
             style: TextStyle(
               fontSize: 21,
               fontWeight: FontWeight.bold,
@@ -83,11 +84,12 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         child: StreamBuilder<int>(
             stream: audioUserTask.countDownEvents,
             initialData: audioUserTask.recordingDuration,
-            builder: (context, AsyncSnapshot<int> snapshot) => Text('00:${snapshot.data.toString().padLeft(2, '0')}',
-                style: TextStyle(
-                  fontSize: 45,
-                  fontWeight: FontWeight.bold,
-                ))));
+            builder: (context, AsyncSnapshot<int> snapshot) =>
+                Text('00:${snapshot.data.toString().padLeft(2, '0')}',
+                    style: TextStyle(
+                      fontSize: 45,
+                      fontWeight: FontWeight.bold,
+                    ))));
   }
 
   Widget get bottomSection {
@@ -97,9 +99,9 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
             stream: audioUserTask.stateEvents,
             builder: (context, AsyncSnapshot<UserTaskState> snapshot) {
               switch (snapshot.data) {
-                case UserTaskState.created:
-                case UserTaskState.resumed:
-                case UserTaskState.paused:
+                case UserTaskState.enqueued:
+                case UserTaskState.started:
+                case UserTaskState.onhold:
                   return buttonSection;
                 case UserTaskState.done:
                   return finishedSection;
@@ -115,9 +117,9 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            (audioUserTask.state == UserTaskState.created)
-                ? Text('Press here to start recording...')
-                : Text('RECORDING...'),
+            (audioUserTask.state == UserTaskState.started)
+                ? Text('RECORDING...')
+                : Text('Press here to start recording...'),
             IconButton(
               iconSize: 80,
               color: CACHET.RED,
@@ -148,7 +150,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
               child: const Text('PRESS HERE TO GO BACK'),
               onPressed: () {
                 //setState(() {
-                audioUserTask.onStop();
+                //audioUserTask.onStop(context);
                 Navigator.pop(context);
                 //});
               },
