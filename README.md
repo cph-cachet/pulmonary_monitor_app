@@ -26,7 +26,6 @@ The user-interface of the app is shown below.
 
 ![pm_0](https://user-images.githubusercontent.com/1196642/99997746-e5a81980-2dbd-11eb-833f-7b28cb37fd05.png)
 ![pm_1](https://user-images.githubusercontent.com/1196642/99997786-f22c7200-2dbd-11eb-86ac-d6a9b44c549d.png)
-![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 
 **Figure 1** - User interface of the Pulmonary Monitor app. Left: Study overview. Right: Task list for the user to do.
 
@@ -63,20 +62,69 @@ study = Study('1234', 'user@dtu.dk')
 ````
 
 The above code add an `ImmediateTrigger` with an `AppTask` of type `ONE_TIME_SENSING_TYPE`. This app task contains the two measures of `weather` and `air_quality`. 
-The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once.
+The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once. When the measures has been collected, the app task is markede as "done" in the task list, illustrated by a green check mark as shown in Figure 2 left.
+
+![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
+
+**Figure 2** - User interface of the Pulmonary Monitor app. Left: Task list with a "done" sensing task.
+
 
 ### Survey App Task
 
+A survey (as defined in the [`carp_survey_package`](https://pub.dev/packages/carp_survey_package)) can be wrapped in an app task, which will add the survey to the task list. In Figure 1, there are two type of suevey added; a demographics survey and a survey of daily symptoms.
+These are configured in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file like this:
+
+````dart
+study = Study('1234', 'user@dtu.dk')
+   ...
+   ..addTriggerTask(
+        ImmediateTrigger(),
+        AppTask(
+          type: SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
+          title: surveys.demographics.title,
+          description: surveys.demographics.description,
+          minutesToComplete: surveys.demographics.minutesToComplete,
+        )
+          ..measures.add(RPTaskMeasure(
+            MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+            name: surveys.demographics.title,
+            enabled: true,
+            surveyTask: surveys.demographics.survey,
+          ))
+          ..measures.add(Measure(
+            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+          )))
+````
+
+This configuration add the demographics survey (as defined in `surveys.demographics.survey`) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know where the user filled in the survey.
+
+The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day and hence added to the task list daily. Again, location is collected when the survey is filled in.
+
+````dart
+    ..addTriggerTask(
+        PeriodicTrigger(period: Duration(days: 1)),
+        AppTask(
+          type: SurveyUserTask.SURVEY_TYPE,
+          title: surveys.symptoms.title,
+          description: surveys.symptoms.description,
+          minutesToComplete: surveys.symptoms.minutesToComplete,
+        )
+          ..measures.add(RPTaskMeasure(
+            MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+            name: surveys.symptoms.title,
+            enabled: true,
+            surveyTask: surveys.symptoms.survey,
+          ))
+          ..measures.add(Measure(
+            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+          )))
+````
+
+
+
+
+
 ### Audio App Task
-
-
-
-
-
-
-
-
-
 
 
 
