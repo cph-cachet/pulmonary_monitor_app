@@ -103,7 +103,7 @@ class Sensing implements StudyManager {
         ..addTriggerTask(
             ImmediateTrigger(),
             AppTask(
-              type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+              type: UserTask.ONE_TIME_SENSING_TYPE,
               title: "Weather & Air Quality",
               description: "Collect local weather and air quality",
             )..measures = SamplingSchema.common().getMeasureList(
@@ -208,7 +208,7 @@ class Sensing implements StudyManager {
               pauseCondition: (Datum datum) => true,
             ),
             AppTask(
-              type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+              type: UserTask.ONE_TIME_SENSING_TYPE,
               title: "Location, Weather & Air Quality",
               description: "Collect location, weather and air quality",
             )..measures = SamplingSchema.common().getMeasureList(
@@ -238,7 +238,7 @@ class Sensing implements StudyManager {
                   pauseCondition: (Datum datum) => true,
                 ),
                 AppTask(
-                  type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+                  type: UserTask.ONE_TIME_SENSING_TYPE,
                   title: "Weather & Air Quality",
                   description: "Collect local weather and air quality",
                 )..measures = SamplingSchema.common().getMeasureList(
@@ -251,7 +251,7 @@ class Sensing implements StudyManager {
             ..addTriggerTask(
                 ImmediateTrigger(),
                 AppTask(
-                  type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+                  type: UserTask.ONE_TIME_SENSING_TYPE,
                   title: "Location",
                   description: "Collect current location",
                 )..measures = SamplingSchema.common().getMeasureList(

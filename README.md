@@ -26,6 +26,7 @@ The user-interface of the app is shown below.
 
 ![pm_0](https://user-images.githubusercontent.com/1196642/99997746-e5a81980-2dbd-11eb-833f-7b28cb37fd05.png)
 ![pm_1](https://user-images.githubusercontent.com/1196642/99997786-f22c7200-2dbd-11eb-86ac-d6a9b44c549d.png)
+![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 
 **Figure 1** - User interface of the Pulmonary Monitor app. Left: Study overview. Right: Task list for the user to do.
 
@@ -42,14 +43,14 @@ The task list (Figure 1 right) is created from the different `AppTask`s defined 
 The sesing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list. This app task is defined like this:
 
 ````dart
-study = Study(studyId, await settings.userId)
+study = Study('1234', 'user@dtu.dk')
     ..name = 'Pulmonary Monitor'
     ..description =
         "With the Pulmonary Monitor you can monitor your respiratory health. ..."
-..addTriggerTask(
+    ..addTriggerTask(
             ImmediateTrigger(),
             AppTask(
-              type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+              type: UserTask.ONE_TIME_SENSING_TYPE,
               title: "Weather & Air Quality",
               description: "Collect local weather and air quality",
             )..measures = SamplingSchema.common().getMeasureList(
@@ -60,6 +61,9 @@ study = Study(studyId, await settings.userId)
                 ],
               ))
 ````
+
+The above code add an `ImmediateTrigger` with an `AppTask` of type `ONE_TIME_SENSING_TYPE`. This app task contains the two measures of `weather` and `air_quality`. 
+The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once.
 
 ### Survey App Task
 
