@@ -209,8 +209,8 @@ class Sensing implements StudyManager {
             ),
             AppTask(
               type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
-              title: "Weather & Air Quality",
-              description: "Collect local weather and air quality",
+              title: "Location, Weather & Air Quality",
+              description: "Collect location, weather and air quality",
             )..measures = SamplingSchema.common().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
