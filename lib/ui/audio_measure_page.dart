@@ -17,8 +17,6 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('audioUserTask.state = ${audioUserTask.state}');
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Audio Measure'),
@@ -34,16 +32,11 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         )));
   }
 
-  Widget get image {
-//    return Icon(Icons.mic, size: 100, color: CACHET.ORANGE);
-
-    return Image.asset(
-      'assets/images/audio.png',
-      width: 600,
-//      height: 240,
-      fit: BoxFit.cover,
-    );
-  }
+  Widget get image => Image.asset(
+        'assets/images/audio.png',
+        width: 600,
+        fit: BoxFit.cover,
+      );
 
   Widget get titleSection {
     return Container(
@@ -56,7 +49,6 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           Text(audioUserTask.description),
           Container(
             padding: const EdgeInsets.all(10),
@@ -68,12 +60,6 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
               ),
             ),
           ),
-//      Text(
-//        audioUserTask.description,
-//        style: TextStyle(
-//          color: Colors.grey[500],
-//        ),
-//      )
         ]));
   }
 
@@ -125,12 +111,9 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
               color: CACHET.RED,
               icon: Icon(Icons.radio_button_checked),
               onPressed: () {
-                //setState(() {
                 audioUserTask.onRecord();
-                //});
               },
             ),
-            //Text('Volume : $_volume')
           ],
         ));
   }
@@ -149,10 +132,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
             OutlineButton(
               child: const Text('PRESS HERE TO GO BACK'),
               onPressed: () {
-                //setState(() {
-                //audioUserTask.onStop(context);
                 Navigator.pop(context);
-                //});
               },
             ),
           ],

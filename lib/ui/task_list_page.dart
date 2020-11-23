@@ -13,10 +13,6 @@ class _TaskListState extends State<TaskList> {
       GlobalKey<ScaffoldState>();
 
   Widget build(BuildContext context) {
-    //Iterable<Widget> taskTiles = ListTile.divideTiles(
-    //    context: context, tiles: bloc.userTasks.map<Widget>((task) => _buildTaskTile(context, task)));
-
-    //List<UserTaskModel> tasks = bloc.userTasks.toList().reversed.toList();
     List<UserTask> tasks = bloc.tasks.reversed.toList();
 
     return Scaffold(
@@ -95,47 +91,6 @@ class _TaskListState extends State<TaskList> {
     );
   }
 
-//   Widget _buildTaskCard(BuildContext context, UserTask userTask) {
-//     return Center(
-//       child: Card(
-//         elevation: 10,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(15.0),
-//         ),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: <Widget>[
-//             ListTile(
-//               leading: taskTypeIcon[userTask.type],
-//               title: Text(userTask.title),
-//               subtitle: Text(userTask.description),
-//               trailing: taskStateIcon[userTask.state],
-//             ),
-//             // TODO - only add button if there is a task to do. Might be an info card.
-//             (userTask.state != UserTaskState.done)
-//                 ? ButtonBar(
-//                     children: <Widget>[
-//                       FlatButton(
-//                         child: const Text('PRESS HERE TO FINISH TASK'),
-//                         onPressed: () {
-//                           setState(() {
-//                             userTask.onStart(context);
-//                           });
-//                         },
-//                       ),
-// //                FlatButton(
-// //                  child: const Text('LISTEN'),
-// //                  onPressed: () {/* ... */},
-// //                ),
-//                     ],
-//                   )
-//                 : Text(""),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
   Map<String, Icon> get taskTypeIcon => {
         SurveyUserTask.WHO5_SURVEY_TYPE: Icon(
           Icons.design_services,
@@ -168,25 +123,6 @@ class _TaskListState extends State<TaskList> {
           size: 40,
         ),
       };
-
-  // String taskStateLabel(UserTaskState state) {
-  //   switch (state) {
-  //     case UserTaskState.initialized:
-  //       return "Initialized";
-  //     case UserTaskState.enqueued:
-  //       return "Enqueued";
-  //     case UserTaskState.dequeued:
-  //       return "Dequeued";
-  //     case UserTaskState.started:
-  //       return "Started";
-  //     case UserTaskState.onhold:
-  //       return "On Hold";
-  //     case UserTaskState.done:
-  //       return "Done";
-  //     default:
-  //       return "";
-  //   }
-  // }
 
   Map<UserTaskState, Icon> get taskStateIcon => {
         UserTaskState.initialized: Icon(Icons.stream, color: CACHET.YELLOW),
