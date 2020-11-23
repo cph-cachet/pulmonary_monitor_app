@@ -120,8 +120,10 @@ The configuration of the daily symptoms survey is similar. This survey is, howev
           )))
 ````
 
+![pm_5](https://user-images.githubusercontent.com/1196642/100005547-691b3800-2dc9-11eb-989d-b5b948487717.png)
+![pm_6](https://user-images.githubusercontent.com/1196642/100005570-71737300-2dc9-11eb-9208-b8d665a8d650.png)
 
-
+**Figure 3** - Left: The daily symptoms survey, shown when the user starts the task. Right: The task list showing that the two surveys have been filled in ("done").
 
 
 ### Audio App Task
