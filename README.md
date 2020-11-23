@@ -31,7 +31,7 @@ The user-interface of the app is shown below.
 
 ## App Tasks
 
-The most interesting part is the task list of app for the user (on the right). This list is build from the different `AppTask` defined in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file. There are three kind of app tasks defined:
+The task list (Figure 1 right) is created from the different `AppTask`s defined in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file. There are three kind of app tasks defined:
 
 1. A **sensing** task wrapped in an app task
 2. Two types of **survey** task wrapped in an app task
@@ -39,7 +39,27 @@ The most interesting part is the task list of app for the user (on the right). T
 
 ### Sensing App Task
 
-The sesing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list.
+The sesing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list. This app task is defined like this:
+
+````dart
+study = Study(studyId, await settings.userId)
+    ..name = 'Pulmonary Monitor'
+    ..description =
+        "With the Pulmonary Monitor you can monitor your respiratory health. ..."
+..addTriggerTask(
+            ImmediateTrigger(),
+            AppTask(
+              type: OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+              title: "Weather & Air Quality",
+              description: "Collect local weather and air quality",
+            )..measures = SamplingSchema.common().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.WEATHER,
+                  ContextSamplingPackage.AIR_QUALITY,
+                ],
+              ))
+````
 
 ### Survey App Task
 
