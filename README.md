@@ -226,7 +226,7 @@ class AudioUserTask extends UserTask {
 }
 ```` 
 
-The `onStart()` method is called when the user 'starts' the task. i.e. pushes the "CLICK HERE ..." button. 
+The `onStart()` method is called when the user 'starts' the task. i.e. pushes the "PRESS HERE ..." button. 
 This method then pushes an `AudioMeasurePage` (Figure 4 left) to the UI. 
 When the user click the red button to start recording, the `onRecord()` method is called.
 This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count down, which - when finished - pauses the sampling and reports this task as "done".
