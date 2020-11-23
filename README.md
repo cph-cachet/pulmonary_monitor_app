@@ -34,8 +34,8 @@ The user-interface of the app is shown below.
 The task list (Figure 1 right) is created from the different `AppTask`s defined in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file. There are three kind of app tasks defined:
 
 1. A **sensing** task wrapped in an app task
-2. Two types of **survey** task wrapped in an app task
-3. Two types of **audio** tasks wrapped in an app task
+2. Two types of **survey** tasks, each wrapped in an app task
+3. Two types of **audio** tasks, each wrapped in an app task
 
 ### Sensing App Task
 
@@ -120,6 +120,8 @@ The configuration of the daily symptoms survey is similar. This survey is, howev
           )))
 ````
 
+Figure 3 shows how this looks on the user interface.
+
 ![pm_5](https://user-images.githubusercontent.com/1196642/100005547-691b3800-2dc9-11eb-989d-b5b948487717.png)
 ![pm_6](https://user-images.githubusercontent.com/1196642/100005570-71737300-2dc9-11eb-9208-b8d665a8d650.png)
 
@@ -128,6 +130,44 @@ The configuration of the daily symptoms survey is similar. This survey is, howev
 
 ### Audio App Task
 
+The last type of app task using in the Pulmonary Monitor app is two type of audio tasks, which samples audio samples from the user when coughing and reading a text alound. Both use the `audio` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
 
+The configuration of the coughing audio app task is defined like this:
 
+````dart
+    ..addTriggerTask(
+        PeriodicTrigger(period: Duration(days: 1)),
+        AppTask(
+          type: AudioUserTask.AUDIO_TYPE,
+          title: "Coughing",
+          description: 'In this small exercise we would like to collect sound samples of coughing.',
+          instructions: 'Please press the record button below, and then cough 5 times.',
+          minutesToComplete: 3,
+        )
+          ..measures.add(AudioMeasure(
+            MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+            name: "Coughing",
+            studyId: studyId,
+          ))
+          ..measures.add(Measure(
+            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+            name: "Current location",
+          ))
+          ..measures.add(Measure(
+            MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
+            name: "Local weather",
+          ))
+          ..measures.add(Measure(
+            MeasureType(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY),
+            name: "Local air quality location",
+          )))
+````
+
+This configuration add an app task to the task list once per day of type `AUDIO_TYPE`. 
+This app task will collect four types of measures when started; an `audio` recording, current `location`, local `weather`, and local `air_quality`. 
+
+![pm_7](https://user-images.githubusercontent.com/1196642/100006854-70dbdc00-2dcb-11eb-9e42-0cba30c4af07.png)
+![pm_9](https://user-images.githubusercontent.com/1196642/100006878-776a5380-2dcb-11eb-91ca-2ee1a3aef618.png)
+
+**Figure 4** - Left: The daily coughing audio sampling, shown when the user starts the task. Right: The task list showing that the coughing task has been "done".
 
