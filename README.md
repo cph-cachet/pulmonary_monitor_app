@@ -27,6 +27,24 @@ The user-interface of the app is shown below.
 ![pm_0](https://user-images.githubusercontent.com/1196642/99997746-e5a81980-2dbd-11eb-833f-7b28cb37fd05.png)
 ![pm_1](https://user-images.githubusercontent.com/1196642/99997786-f22c7200-2dbd-11eb-86ac-d6a9b44c549d.png)
 
+## App Tasks
+
+The most interesting part is the list of app for the user (on the right). This list is build from the different `AppTask` defined in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file. There are three kind of app tasks defined:
+
+1. A **sensing** task wrapped in an app task
+2. Two types of **survey** task wrapped in an app task
+3. Two types of **audio** tasks wrapped in an app task
+
+### Sensing App Task
+
+### Survey App Task
+
+### Audio App Task
+
+
+
+
+
 
 
 
