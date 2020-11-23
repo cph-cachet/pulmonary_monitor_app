@@ -176,11 +176,12 @@ This app task will collect four types of measures when started; an `audio` recor
 As explained in the tutorial on the [`AppTask` model on the CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model), the runtime of app tasks are handled by the so-called [`UserTask`](). 
 A `UserTask` defines what happens when the user click the "PRESS HERE TO FINISH TASK" button.
 We shall not go into these details here (please see the tutorial), but just mention that the handling of the audio app tasks above, is done using an user task model specific to the PulmonaryMonitor app. 
+
 This user task model is specified in [`user_task.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/user_task.dart).
 This file defines:
 
 * `AudioUserTask` which defines the `UserTask` for what should happen when the audio app task is started.
-* A `PulmonaryUserTaskFactory` which is able to create an `UserTask` based on the type of app task.
+* A `PulmonaryUserTaskFactory` which is able to create a `UserTask` based on the type of app task. In this case an `AudioUserTask`.
 
 
 
