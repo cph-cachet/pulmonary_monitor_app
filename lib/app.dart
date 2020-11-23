@@ -41,9 +41,9 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Study')),
-          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Tasks')),
-          BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('Data')),
+          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Study'),
+          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), label: 'Tasks'),
+          BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'Data'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

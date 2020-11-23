@@ -157,12 +157,12 @@ class _TaskListState extends State<TaskList> {
           color: CACHET.GREEN,
           size: 40,
         ),
-        UserTask.SENSING_TYPE: Icon(
+        SensingUserTask.SENSING_TYPE: Icon(
           Icons.settings_input_antenna,
           color: CACHET.CACHET_BLUE,
           size: 40,
         ),
-        UserTask.ONE_TIME_SENSING_TYPE: Icon(
+        SensingUserTask.ONE_TIME_SENSING_TYPE: Icon(
           Icons.settings_input_component,
           color: CACHET.CACHET_BLUE,
           size: 40,

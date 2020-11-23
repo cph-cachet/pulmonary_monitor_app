@@ -41,16 +41,11 @@ class AudioUserTask extends UserTask {
 
 class PulmonaryUserTaskFactory implements UserTaskFactory {
   List<String> types = [
-    SurveyUserTask.SURVEY_TYPE,
-    SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
     AudioUserTask.AUDIO_TYPE,
   ];
 
   UserTask create(AppTaskExecutor executor) {
     switch (executor.appTask.type) {
-      case SurveyUserTask.SURVEY_TYPE:
-      case SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE:
-        return SurveyUserTask(executor);
       case AudioUserTask.AUDIO_TYPE:
         return AudioUserTask(executor);
       default:

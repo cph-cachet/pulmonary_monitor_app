@@ -199,7 +199,7 @@ class _TaskPanel extends StatelessWidget {
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
                   Icon(Icons.description, size: 40, color: CACHET.ORANGE),
-                  Text('  ${task.name}', style: themeData.textTheme.title),
+                  Text('  ${task.name}', style: themeData.textTheme.headline6),
                 ]),
                 Column(children: children)
                 //Expanded(child: Column(children: children))

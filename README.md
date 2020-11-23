@@ -44,12 +44,11 @@ The sesing app task collects `weather` and `air_quality` measures (both defined 
 ````dart
 study = Study('1234', 'user@dtu.dk')
     ..name = 'Pulmonary Monitor'
-    ..description =
-        "With the Pulmonary Monitor you can monitor your respiratory health. ..."
+    ..description = "With the Pulmonary Monitor you can monitor your respiratory health. ..."
     ..addTriggerTask(
             ImmediateTrigger(),
             AppTask(
-              type: UserTask.ONE_TIME_SENSING_TYPE,
+              type: SensingUserTask.ONE_TIME_SENSING_TYPE,
               title: "Weather & Air Quality",
               description: "Collect local weather and air quality",
             )..measures = SamplingSchema.common().getMeasureList(
@@ -61,12 +60,13 @@ study = Study('1234', 'user@dtu.dk')
               ))
 ````
 
-The above code add an `ImmediateTrigger` with an `AppTask` of type `ONE_TIME_SENSING_TYPE`. This app task contains the two measures of `weather` and `air_quality`. 
-The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once. When the measures has been collected, the app task is markede as "done" in the task list, illustrated by a green check mark as shown in Figure 2 left.
+The above code adds an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `ONE_TIME_SENSING_TYPE`. 
+This app task contains the two measures of `weather` and `air_quality`. 
+The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once. When the measures has been collected, the app task is markede as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
 
 ![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 
-**Figure 2** - User interface of the Pulmonary Monitor app. Left: Task list with a "done" sensing task.
+**Figure 2** - Task list with a "done" sensing task.
 
 
 ### Survey App Task
@@ -96,7 +96,7 @@ study = Study('1234', 'user@dtu.dk')
           )))
 ````
 
-This configuration add the demographics survey (as defined in `surveys.demographics.survey`) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know where the user filled in the survey.
+This configuration add the demographics survey (as defined in [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart)) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know *where* the user filled in this survey.
 
 The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day and hence added to the task list daily. Again, location is collected when the survey is filled in.
 
@@ -130,7 +130,7 @@ Figure 3 shows how this looks on the user interface.
 
 ### Audio App Task
 
-The last type of app task using in the Pulmonary Monitor app is two type of audio tasks, which samples audio samples from the user when coughing and reading a text alound. Both use the `audio` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
+The last type of app tasks used in the Pulmonary Monitor app, are two types of audio tasks, which samples audio from the user when coughing and reading a text alound. Both use the `audio` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
 
 The configuration of the coughing audio app task is defined like this:
 
@@ -163,11 +163,26 @@ The configuration of the coughing audio app task is defined like this:
           )))
 ````
 
-This configuration add an app task to the task list once per day of type `AUDIO_TYPE`. 
+This configuration adds an app task to the task list once per day of type `AUDIO_TYPE`. 
 This app task will collect four types of measures when started; an `audio` recording, current `location`, local `weather`, and local `air_quality`. 
 
 ![pm_7](https://user-images.githubusercontent.com/1196642/100006854-70dbdc00-2dcb-11eb-9e42-0cba30c4af07.png)
 ![pm_9](https://user-images.githubusercontent.com/1196642/100006878-776a5380-2dcb-11eb-91ca-2ee1a3aef618.png)
 
 **Figure 4** - Left: The daily coughing audio sampling, shown when the user starts the task. Right: The task list showing that the coughing task has been "done".
+
+## User Task Model
+
+As explained in the tutorial on the [`AppTask` model on the CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model), the runtime of app tasks are handled by the so-called [`UserTask`](). 
+A `UserTask` defines what happens when the user click the "PRESS HERE TO FINISH TASK" button.
+We shall not go into these details here (please see the tutorial), but just mention that the handling of the audio app tasks above, is done using an user task model specific to the PulmonaryMonitor app. 
+This user task model is specified in [`user_task.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/user_task.dart).
+This file defines:
+
+* `AudioUserTask` which defines the `UserTask` for what should happen when the audio app task is started.
+* A `PulmonaryUserTaskFactory` which is able to create an `UserTask` based on the type of app task.
+
+
+
+
 
