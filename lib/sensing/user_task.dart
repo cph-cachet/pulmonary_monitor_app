@@ -1,5 +1,7 @@
 part of pulmonary_monitor_app;
 
+/// A user task handling audio recordings.
+/// When started, creates a [AudioMeasurePage] and shows it to the user.
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
