@@ -128,9 +128,8 @@ class Sensing implements StudyManager {
                 enabled: true,
                 surveyTask: surveys.demographics.survey,
               ))
-              ..measures.add(Measure(
-                MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-              )))
+              ..measures.add(SamplingSchema.common()
+                  .measures[ContextSamplingPackage.LOCATION]))
         // collect symptoms on a daily basis
         ..addTriggerTask(
             PeriodicTrigger(period: Duration(days: 1)),
@@ -146,9 +145,8 @@ class Sensing implements StudyManager {
                 enabled: true,
                 surveyTask: surveys.symptoms.survey,
               ))
-              ..measures.add(Measure(
-                MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-              )))
+              ..measures.add(SamplingSchema.common()
+                  .measures[ContextSamplingPackage.LOCATION]))
         // collect a coughing sample on a daily basis
         // also collect location, and local weather and air quality of this sample
         ..addTriggerTask(
@@ -167,18 +165,12 @@ class Sensing implements StudyManager {
                 name: "Coughing",
                 studyId: studyId,
               ))
-              ..measures.add(Measure(
-                MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-                name: "Current location",
-              ))
-              ..measures.add(Measure(
-                MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
-                name: "Local weather",
-              ))
-              ..measures.add(Measure(
-                MeasureType(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY),
-                name: "Local air quality location",
-              )))
+              ..measures.add(SamplingSchema.common()
+                  .measures[ContextSamplingPackage.LOCATION])
+              ..measures.add(SamplingSchema.common()
+                  .measures[ContextSamplingPackage.WEATHER])
+              ..measures.add(SamplingSchema.common()
+                  .measures[ContextSamplingPackage.AIR_QUALITY]))
         // collect a reading / audio sample on a daily basis
         ..addTriggerTask(
             PeriodicTrigger(period: Duration(days: 1)),

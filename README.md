@@ -91,9 +91,8 @@ study = Study('1234', 'user@dtu.dk')
             enabled: true,
             surveyTask: surveys.demographics.survey,
           ))
-          ..measures.add(Measure(
-            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-          )))
+          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.LOCATION])
+        )
 ````
 
 This configuration add the demographics survey (as defined in [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart)) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know *where* the user filled in this survey.
@@ -115,9 +114,8 @@ The configuration of the daily symptoms survey is similar. This survey is, howev
             enabled: true,
             surveyTask: surveys.symptoms.survey,
           ))
-          ..measures.add(Measure(
-            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-          )))
+          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.LOCATION])
+        )
 ````
 
 Figure 3 shows how this looks on the user interface.
@@ -149,18 +147,10 @@ The configuration of the coughing audio app task is defined like this:
             name: "Coughing",
             studyId: studyId,
           ))
-          ..measures.add(Measure(
-            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-            name: "Current location",
-          ))
-          ..measures.add(Measure(
-            MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
-            name: "Local weather",
-          ))
-          ..measures.add(Measure(
-            MeasureType(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY),
-            name: "Local air quality location",
-          )))
+          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.LOCATION])
+          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.WEATHER])
+          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.AIR_QUALITY])
+        )
 ````
 
 This configuration adds an app task to the task list once per day of type `AUDIO_TYPE`. 
@@ -228,8 +218,8 @@ class AudioUserTask extends UserTask {
 
 The `onStart()` method is called when the user 'starts' the task. i.e. pushes the "PRESS HERE ..." button. 
 This method then pushes an `AudioMeasurePage` (Figure 4 left) to the UI. 
-When the user click the red button to start recording, the `onRecord()` method is called.
-This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count down, which - when finished - pauses the sampling and reports this task as "done".
+When the user clicks the red button to start recording, the `onRecord()` method is called.
+This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and reports this task as "done".
 
 
 
