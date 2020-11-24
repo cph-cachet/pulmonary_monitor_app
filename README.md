@@ -22,7 +22,7 @@ Pulmonary Monitor is designed to sample the following data:
 
 All of this is configured in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file. Compared to the standard CAMS example app, this app makes extensive use of `AppTask`s for collecting surveys and sound samples. However, it also illustrates how "normal" sensing measures can be wrapped in an `AppTask`. For example, there is an app task collecting weather and air quality measures. 
 
-The user-interface of the app is shown below.
+The user-interface of the app is shown in Figure 1.
 
 ![pm_0](https://user-images.githubusercontent.com/1196642/99997746-e5a81980-2dbd-11eb-833f-7b28cb37fd05.png)
 ![pm_1](https://user-images.githubusercontent.com/1196642/99997786-f22c7200-2dbd-11eb-86ac-d6a9b44c549d.png)
@@ -62,7 +62,7 @@ study = Study('1234', 'user@dtu.dk')
 
 The above code adds an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `ONE_TIME_SENSING_TYPE`. 
 This app task contains the two measures of `weather` and `air_quality`. 
-The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once. When the measures has been collected, the app task is markede as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
+The result of this sensing configuration is that an app task is imediately added to the task list and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once. When the measures have been collected, the app task is markede as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
 
 ![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 
@@ -71,7 +71,8 @@ The result of this sensing configuration is that an app task is imediately added
 
 ### Survey App Task
 
-A survey (as defined in the [`carp_survey_package`](https://pub.dev/packages/carp_survey_package)) can be wrapped in an app task, which will add the survey to the task list. In Figure 1, there are two type of suevey added; a demographics survey and a survey of daily symptoms.
+A survey (as defined in the [`carp_survey_package`](https://pub.dev/packages/carp_survey_package)) can be wrapped in an app task, which will add the survey to the task list. 
+In Figure 1, there are two types of surveys; a demographics survey and a survey of daily symptoms.
 These are configured in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file like this:
 
 ````dart
