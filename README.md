@@ -96,7 +96,7 @@ study = Study('1234', 'user@dtu.dk')
         )
 ````
 
-This configuration add the demographics survey (as defined in [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart)) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know *where* the user filled in this survey.
+This configuration adds the demographics survey (as defined in the [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart) file) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know *where* the user filled in this survey.
 
 The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day and hence added to the task list daily. Again, location is collected when the survey is filled in.
 
@@ -129,7 +129,7 @@ Figure 3 shows how this looks on the user interface.
 
 ### Audio App Task
 
-The last type of app tasks used in the Pulmonary Monitor app, are two types of audio tasks, which samples audio from the user when coughing and reading a text alound. Both use the `audio` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
+The last type of app tasks used in the Pulmonary Monitor app are two types of audio tasks, which sample audio from the user when coughing and reading a text alound. Both use the `audio` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
 
 The configuration of the coughing audio app task is defined like this:
 
@@ -171,7 +171,7 @@ We shall not go into these details here (please see the tutorial), but just ment
 This user task model is specified in the [`user_task.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/user_task.dart) file.
 This file defines:
 
-* A `AudioUserTask` which defines a `UserTask` for what should happen when the audio app task is started.
+* An `AudioUserTask` which defines a `UserTask` for what should happen when the audio app task is started.
 * A `PulmonaryUserTaskFactory` which is able to create a `UserTask` based on the type of app task. In this case an `AudioUserTask`.
 
 The definition of `AudioUserTask` is:
