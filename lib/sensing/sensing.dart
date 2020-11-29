@@ -29,7 +29,10 @@ class Sensing implements StudyManager {
     study = await this.getStudy(settings.studyId);
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study);
+    controller = StudyController(
+      study,
+      debugLevel: DebugLevel.DEBUG,
+    );
     await controller.initialize();
 
     // start sensing
@@ -190,7 +193,7 @@ class Sensing implements StudyManager {
                 name: "Reading",
                 studyId: studyId,
               )))
-        // when the reading (audio) measure is collect, the add a user task to
+        // when the reading (audio) measure is collected, the add a user task to
         // collect location, and local weather and air quality
         ..addTriggerTask(
             ConditionalSamplingEventTrigger(
