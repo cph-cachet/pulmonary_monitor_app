@@ -21,6 +21,9 @@ class Sensing implements StudyManager {
 
     // create and register external data managers
     DataManagerRegistry().register(CarpDataManager());
+
+    // register the special-purpose audio user task factory
+    AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());
   }
 
   /// Start sensing.

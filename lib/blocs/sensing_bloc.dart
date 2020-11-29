@@ -21,8 +21,6 @@ class SensingBLoC {
   SensingBLoC();
 
   Future<void> init() async {
-    AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());
-
     // This show how an app can listen to user task events.
     // Is not used in this app.
     AppTaskController().userTaskEvents.listen((event) {
