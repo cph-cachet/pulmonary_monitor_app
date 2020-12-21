@@ -6,13 +6,15 @@ class InformedConsentPage extends StatefulWidget {
 }
 
 class _InformedConsentPage extends State<InformedConsentPage> {
-  String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+  String _encode(Object object) =>
+      const JsonEncoder.withIndent(' ').convert(object);
 
   void resultCallback(RPTaskResult result, BuildContext context) {
     // Do anything with the result
     print(_encode(result));
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LinearSurveyPage()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LinearSurveyPage()));
   }
 
   @override

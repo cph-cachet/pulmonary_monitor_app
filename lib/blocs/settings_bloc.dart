@@ -7,12 +7,13 @@ class SettingsBLoC {
 
   SharedPreferences _preferences;
 
-  Future<void> init() async {
+  Future init() async {
     _preferences = await SharedPreferences.getInstance();
   }
 
   Future<SharedPreferences> get preferences async {
-    if (_preferences == null) _preferences = await SharedPreferences.getInstance();
+    if (_preferences == null)
+      _preferences = await SharedPreferences.getInstance();
     return _preferences;
   }
 
@@ -38,7 +39,8 @@ class SettingsBLoC {
   String get username => "researcher@example.com";
 
   /// The CARP password.
-  String get password => "..."; //decrypt("lkjhf98sdvhcksdmnfewoiywefhowieyurpo2hjr");
+  String get password =>
+      "..."; //decrypt("lkjhf98sdvhcksdmnfewoiywefhowieyurpo2hjr");
 
   /// The URI of the CARP server.
   String get uri => "http://staging.carp.cachet.dk:8080";

@@ -5,8 +5,7 @@ part of pulmonary_monitor_app;
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
-  StreamController<int> _countDownController =
-      StreamController<int>.broadcast();
+  StreamController<int> _countDownController = StreamController.broadcast();
   Stream<int> get countDownEvents => _countDownController.stream;
 
   /// Duration of audio recording in seconds.

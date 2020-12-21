@@ -20,7 +20,7 @@ class SensingBLoC {
 
   SensingBLoC();
 
-  Future<void> init() async {
+  Future init() async {
     // This show how an app can listen to user task events.
     // Is not used in this app.
     AppTaskController().userTaskEvents.listen((event) {
@@ -50,7 +50,7 @@ class SensingBLoC {
     });
   }
 
-  Future<void> start() async => sensing.start();
+  Future start() async => sensing.start();
 
   void pause() => sensing.controller.pause();
 

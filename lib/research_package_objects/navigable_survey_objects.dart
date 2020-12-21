@@ -61,9 +61,8 @@ RPIntegerAnswerFormat nrOfCigarettesAnswerFormat =
     RPIntegerAnswerFormat.withParams(0, 200, "cigarettes");
 RPChoiceAnswerFormat who5AnswerFormat = RPChoiceAnswerFormat.withParams(
     ChoiceAnswerStyle.SingleChoice, who5Choices);
-RPChoiceAnswerFormat joyfulActivitiesAnswerFormat =
-    RPChoiceAnswerFormat.withParams(
-        ChoiceAnswerStyle.MultipleChoice, joyfulActivities);
+RPChoiceAnswerFormat joyfulActivitiesAnswerFormat = RPChoiceAnswerFormat
+    .withParams(ChoiceAnswerStyle.MultipleChoice, joyfulActivities);
 RPChoiceAnswerFormat instrumentsAnswerFormat = RPChoiceAnswerFormat.withParams(
     ChoiceAnswerStyle.SingleChoice, instruments);
 RPIntegerAnswerFormat minutesIntegerAnswerFormat =

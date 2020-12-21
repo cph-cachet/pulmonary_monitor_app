@@ -141,7 +141,8 @@ class _StudyVizState extends State<StudyVisualization> {
   }
 
   void _showInformedConsent() {
-    Navigator.of(context)
+    Navigator
+        .of(context)
         .push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
   }
 
@@ -209,9 +210,9 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({Key key, this.measure})
-      : assert(measure != null),
-        super(key: key);
+  _MeasureLine({Key key, this.measure}) : super(key: key) {
+    assert(measure != null);
+  }
 
   final Measure measure;
 

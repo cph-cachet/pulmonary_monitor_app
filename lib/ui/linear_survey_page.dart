@@ -1,7 +1,8 @@
 part of pulmonary_monitor_app;
 
 class LinearSurveyPage extends StatelessWidget {
-  String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+  String _encode(Object object) =>
+      const JsonEncoder.withIndent(' ').convert(object);
 
   void resultCallback(RPTaskResult result) {
     // Do anything with the result

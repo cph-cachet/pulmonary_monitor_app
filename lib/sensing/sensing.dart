@@ -27,7 +27,7 @@ class Sensing implements StudyManager {
   }
 
   /// Start sensing.
-  Future<void> start() async {
+  Future start() async {
     // Get the study.
     study = await this.getStudy(settings.studyId);
 
@@ -51,7 +51,7 @@ class Sensing implements StudyManager {
     study = null;
   }
 
-  Future<void> initialize() => null;
+  Future initialize() => null;
 
   Future<Study> getStudy(String studyId) async {
     return _getPulmonaryStudy(studyId);
@@ -59,13 +59,13 @@ class Sensing implements StudyManager {
 
   Future<Study> _getPulmonaryStudy(String studyId) async {
     if (study == null) {
-      study = Study(studyId, await settings.userId)
+      study = Study(id: studyId, userId: await settings.userId)
         ..name = 'Pulmonary Monitor'
         ..description =
             "With the Pulmonary Monitor you can monitor your respiratory health. "
-                "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
-                "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-                "Before you start, please also fill in the demographich survey. "
+            "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
+            "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
+            "Before you start, please also fill in the demographich survey. "
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         // collect basic device measures continously
         ..addTriggerTask(
@@ -129,12 +129,13 @@ class Sensing implements StudyManager {
               minutesToComplete: surveys.demographics.minutesToComplete,
             )
               ..measures.add(RPTaskMeasure(
-                MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+                type: MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                 name: surveys.demographics.title,
                 enabled: true,
                 surveyTask: surveys.demographics.survey,
               ))
-              ..measures.add(SamplingSchema.common()
+              ..measures.add(SamplingSchema
+                  .common()
                   .measures[ContextSamplingPackage.LOCATION]))
         // collect symptoms on a daily basis
         ..addTriggerTask(
@@ -146,12 +147,13 @@ class Sensing implements StudyManager {
               minutesToComplete: surveys.symptoms.minutesToComplete,
             )
               ..measures.add(RPTaskMeasure(
-                MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+                type: MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                 name: surveys.symptoms.title,
                 enabled: true,
                 surveyTask: surveys.symptoms.survey,
               ))
-              ..measures.add(SamplingSchema.common()
+              ..measures.add(SamplingSchema
+                  .common()
                   .measures[ContextSamplingPackage.LOCATION]))
         // collect a coughing sample on a daily basis
         // also collect location, and local weather and air quality of this sample
@@ -167,15 +169,18 @@ class Sensing implements StudyManager {
               minutesToComplete: 3,
             )
               ..measures.add(AudioMeasure(
-                MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                type: MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                 name: "Coughing",
                 studyId: studyId,
               ))
-              ..measures.add(SamplingSchema.common()
+              ..measures.add(SamplingSchema
+                  .common()
                   .measures[ContextSamplingPackage.LOCATION])
-              ..measures.add(SamplingSchema.common()
+              ..measures.add(SamplingSchema
+                  .common()
                   .measures[ContextSamplingPackage.WEATHER])
-              ..measures.add(SamplingSchema.common()
+              ..measures.add(SamplingSchema
+                  .common()
                   .measures[ContextSamplingPackage.AIR_QUALITY]))
         // collect a reading / audio sample on a daily basis
         ..addTriggerTask(
@@ -192,7 +197,7 @@ class Sensing implements StudyManager {
                   'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
               minutesToComplete: 3,
             )..measures.add(AudioMeasure(
-                MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                type: MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                 name: "Reading",
                 studyId: studyId,
               )))
@@ -224,7 +229,7 @@ class Sensing implements StudyManager {
 
   Future<Study> _getConditionalStudy(String studyId) async {
     if (study == null) {
-      study = Study(studyId, await settings.userId)
+      study = Study(id: studyId, userId: await settings.userId)
             ..name = 'Conditional Monitor'
             ..description = 'This is a test study.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -267,13 +272,14 @@ class Sensing implements StudyManager {
                   minutesToComplete: surveys.demographics.minutesToComplete,
                 )
                   ..measures.add(RPTaskMeasure(
-                    MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+                    type: MeasureType(
+                        NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: surveys.demographics.title,
                     enabled: true,
                     surveyTask: surveys.demographics.survey,
                   ))
                   ..measures.add(Measure(
-                    MeasureType(
+                    type: MeasureType(
                         NameSpace.CARP, ContextSamplingPackage.LOCATION),
                   )))
 //
@@ -286,13 +292,14 @@ class Sensing implements StudyManager {
                   minutesToComplete: surveys.symptoms.minutesToComplete,
                 )
                   ..measures.add(RPTaskMeasure(
-                    MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+                    type: MeasureType(
+                        NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: surveys.symptoms.title,
                     enabled: true,
                     surveyTask: surveys.symptoms.survey,
                   ))
                   ..measures.add(Measure(
-                    MeasureType(
+                    type: MeasureType(
                         NameSpace.CARP, ContextSamplingPackage.LOCATION),
                   )))
           // ..addTriggerTask(
@@ -352,7 +359,7 @@ class Sensing implements StudyManager {
     assert(type != null);
     switch (type) {
       case DataEndPointTypes.PRINT:
-        return new DataEndPoint(DataEndPointTypes.PRINT);
+        return new DataEndPoint(type: DataEndPointTypes.PRINT);
       case DataEndPointTypes.FILE:
         return FileDataEndPoint(
             bufferSize: 50 * 1000, zip: true, encrypt: false);
@@ -389,7 +396,13 @@ class Sensing implements StudyManager {
 //          deleteWhenUploaded: false,
 //        );
       default:
-        return new DataEndPoint(DataEndPointTypes.PRINT);
+        return new DataEndPoint(type: DataEndPointTypes.PRINT);
     }
+  }
+
+  @override
+  Future<bool> saveStudy(Study study) {
+    // TODO: implement saveStudy
+    throw UnimplementedError();
   }
 }
