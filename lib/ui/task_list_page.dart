@@ -65,27 +65,27 @@ class _TaskListState extends State<TaskList> {
           stream: userTask.stateEvents,
           initialData: UserTaskState.initialized,
           builder: (context, AsyncSnapshot<UserTaskState> snapshot) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    leading: taskTypeIcon[userTask.type],
-                    title: Text(userTask.title),
-                    subtitle: Text(userTask.description),
-                    trailing: taskStateIcon[userTask.state],
-                  ),
-                  // TODO - only add button if there is a task to do. Might be an info card.
-                  (userTask.state == UserTaskState.enqueued ||
-                          userTask.state == UserTaskState.onhold)
-                      ? ButtonBar(
-                          children: <Widget>[
-                            FlatButton(
-                                child: const Text('PRESS HERE TO FINISH TASK'),
-                                onPressed: () => userTask.onStart(context)),
-                          ],
-                        )
-                      : Text(""),
-                ],
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: taskTypeIcon[userTask.type],
+                title: Text(userTask.title),
+                subtitle: Text(userTask.description),
+                trailing: taskStateIcon[userTask.state],
               ),
+              // TODO - only add button if there is a task to do. Might be an info card.
+              (userTask.state == UserTaskState.enqueued ||
+                      userTask.state == UserTaskState.onhold)
+                  ? ButtonBar(
+                      children: <Widget>[
+                        FlatButton(
+                            child: const Text('PRESS HERE TO FINISH TASK'),
+                            onPressed: () => userTask.onStart(context)),
+                      ],
+                    )
+                  : Text(""),
+            ],
+          ),
         ),
       ),
     );
