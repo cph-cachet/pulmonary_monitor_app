@@ -14,6 +14,7 @@ class AudioUserTask extends UserTask {
   AudioUserTask(AppTaskExecutor executor) : super(executor);
 
   void onStart(BuildContext context) {
+    super.onStart(context);
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -23,7 +24,6 @@ class AudioUserTask extends UserTask {
 
   /// Callback when recording is to start.
   void onRecord() {
-    state = UserTaskState.started;
     executor?.resume();
 
     Timer.periodic(new Duration(seconds: 1), (timer) {

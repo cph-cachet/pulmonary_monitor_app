@@ -44,14 +44,18 @@ dependencies:
 # Overriding carp libraries to use the local or github copy
 # Remove this before release of package
 dependency_overrides:
+#  carp_core:
+#    path: ../../carp_core/
 #  carp_mobile_sensing:
-#    path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
+#    path: ../../carp_mobile_sensing/
 #  carp_context_package:
-#    path: ../carp/carp.sensing-flutter/packages/carp_context_package/
+#    path: ../../packages/carp_context_package/
+#  carp_connectivity_package:
+#    path: ../../packages/carp_connectivity_package/
+#  carp_audio_package:
+#    path: ../../packages/carp_audio_package/
 #  carp_survey_package:
 #    path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
-#  carp_audio_package:
-#    path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
 #  carp_backend:
 #    path: ../carp/carp.sensing-flutter/backends/carp_backend/
 

@@ -63,9 +63,9 @@ class Sensing implements StudyManager {
         ..name = 'Pulmonary Monitor'
         ..description =
             "With the Pulmonary Monitor you can monitor your respiratory health. "
-            "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
-            "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-            "Before you start, please also fill in the demographich survey. "
+                "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
+                "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
+                "Before you start, please also fill in the demographich survey. "
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         // collect basic device measures continously
         ..addTriggerTask(
@@ -134,8 +134,7 @@ class Sensing implements StudyManager {
                 enabled: true,
                 surveyTask: surveys.demographics.survey,
               ))
-              ..measures.add(SamplingSchema
-                  .common()
+              ..measures.add(SamplingSchema.common()
                   .measures[ContextSamplingPackage.LOCATION]))
         // collect symptoms on a daily basis
         ..addTriggerTask(
@@ -152,8 +151,7 @@ class Sensing implements StudyManager {
                 enabled: true,
                 surveyTask: surveys.symptoms.survey,
               ))
-              ..measures.add(SamplingSchema
-                  .common()
+              ..measures.add(SamplingSchema.common()
                   .measures[ContextSamplingPackage.LOCATION]))
         // collect a coughing sample on a daily basis
         // also collect location, and local weather and air quality of this sample
@@ -173,14 +171,11 @@ class Sensing implements StudyManager {
                 name: "Coughing",
                 studyId: studyId,
               ))
-              ..measures.add(SamplingSchema
-                  .common()
+              ..measures.add(SamplingSchema.common()
                   .measures[ContextSamplingPackage.LOCATION])
-              ..measures.add(SamplingSchema
-                  .common()
+              ..measures.add(SamplingSchema.common()
                   .measures[ContextSamplingPackage.WEATHER])
-              ..measures.add(SamplingSchema
-                  .common()
+              ..measures.add(SamplingSchema.common()
                   .measures[ContextSamplingPackage.AIR_QUALITY]))
         // collect a reading / audio sample on a daily basis
         ..addTriggerTask(
@@ -364,7 +359,8 @@ class Sensing implements StudyManager {
         return FileDataEndPoint(
             bufferSize: 50 * 1000, zip: true, encrypt: false);
       case DataEndPointTypes.CARP:
-        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
+        return CarpDataEndPoint(
+            uploadMethod: CarpUploadMethod.DATA_POINT,
             name: 'CARP Staging Server',
             uri: settings.uri,
             clientId: settings.clientID,
