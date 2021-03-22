@@ -75,7 +75,7 @@ class _TaskListState extends State<TaskList> {
               ),
               // TODO - only add button if there is a task to do. Might be an info card.
               (userTask.state == UserTaskState.enqueued ||
-                      userTask.state == UserTaskState.onhold)
+                      userTask.state == UserTaskState.canceled)
                   ? ButtonBar(
                       children: <Widget>[
                         FlatButton(
@@ -129,7 +129,7 @@ class _TaskListState extends State<TaskList> {
         UserTaskState.enqueued: Icon(Icons.notifications, color: CACHET.YELLOW),
         UserTaskState.dequeued: Icon(Icons.stop, color: CACHET.YELLOW),
         UserTaskState.started: Icon(Icons.play_arrow, color: CACHET.GREY_4),
-        UserTaskState.onhold: Icon(Icons.pause, color: CACHET.GREY_4),
+        UserTaskState.canceled: Icon(Icons.pause, color: CACHET.GREY_4),
         UserTaskState.done: Icon(Icons.check, color: CACHET.GREEN),
       };
 }

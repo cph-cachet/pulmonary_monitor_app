@@ -1,21 +1,45 @@
 part of pulmonary_monitor_app;
 
-class PulmonaryMonitorApp extends StatelessWidget {
+class App extends StatelessWidget {
+  /// This methods is used to set up the entire app, including:
+  ///  * initialize the bloc
+  ///  * authenticate the user
+  ///  * get the invitation
+  ///  * get the study
+  ///  * initialize sensing
+  ///  * start sensing
+  Future<bool> init(BuildContext context) async {
+    await bloc.init();
+    bloc.resume();
+    return true;
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: CarpMobileSensingApp(key: key),
+      home: FutureBuilder(
+        future: init(context),
+        builder: (context, snapshot) => (!snapshot.hasData)
+            ? Scaffold(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                body: Center(
+                    child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [CircularProgressIndicator()],
+                )))
+            : PulmonaryMonitorApp(key: key),
+      ),
     );
   }
 }
 
-class CarpMobileSensingApp extends StatefulWidget {
-  CarpMobileSensingApp({Key key}) : super(key: key);
+class PulmonaryMonitorApp extends StatefulWidget {
+  PulmonaryMonitorApp({Key key}) : super(key: key);
 
-  CarpMobileSensingAppState createState() => CarpMobileSensingAppState();
+  PulmonaryMonitorAppState createState() => PulmonaryMonitorAppState();
 }
 
-class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
+class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
   int _selectedIndex = 0;
 
   final _pages = [
@@ -26,9 +50,6 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
 
   void initState() {
     super.initState();
-    settings.init();
-    bloc.init();
-    bloc.start();
   }
 
   void dispose() {
@@ -49,7 +70,7 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
         onTap: _onItemTapped,
       ),
 //      floatingActionButton: new FloatingActionButton(
-//        onPressed: _restart,
+//        onPressed: restart,
 //        tooltip: 'Restart study & probes',
 //        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
 //      ),
@@ -62,13 +83,7 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
     });
   }
 
-  void _stop() {
-    setState(() {
-      if (bloc.isRunning) bloc.stop();
-    });
-  }
-
-  void _restart() {
+  void restart() {
     setState(() {
       if (bloc.isRunning)
         bloc.pause();
