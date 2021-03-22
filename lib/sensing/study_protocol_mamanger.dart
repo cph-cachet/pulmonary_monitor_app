@@ -40,7 +40,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ),
       };
 
-    // Define which devices are used for data collection.
+    // define which devices are used for data collection.
     Smartphone phone = Smartphone(
       name: 'SM-A320FL',
       roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
@@ -85,6 +85,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             types: [
               ContextSamplingPackage.GEOLOCATION,
               ContextSamplingPackage.ACTIVITY,
+            ],
+          ),
+        phone);
+
+    // add a simple app task that collects weather and air quality when resumed
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AppTask(
+          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Weather & Air Quality",
+          description: "Collect local weather and air quality",
+        )..measures = SamplingPackageRegistry().common().getMeasureList(
+            types: [
+              ContextSamplingPackage.WEATHER,
+              ContextSamplingPackage.AIR_QUALITY,
             ],
           ),
         phone);
