@@ -41,12 +41,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       };
 
     // define which devices are used for data collection.
-    Smartphone phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
-
-    protocol..addMasterDevice(phone);
+    Smartphone phone = Smartphone();
+    protocol.addMasterDevice(phone);
 
     // collect basic device measures continously
     protocol.addTriggeredTask(
@@ -115,7 +111,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )
           ..measures.add(RPTaskMeasure(
             type: SurveySamplingPackage.SURVEY,
-            name: surveys.demographics.title,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: surveys.demographics.title,
+                description: surveys.demographics.description,
+              )
+            },
             surveyTask: surveys.demographics.survey,
           ))
           ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
@@ -132,7 +133,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )
           ..measures.add(RPTaskMeasure(
             type: SurveySamplingPackage.SURVEY,
-            name: surveys.symptoms.title,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: surveys.symptoms.title,
+                description: surveys.symptoms.description,
+              )
+            },
             surveyTask: surveys.symptoms.survey,
           ))
           ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
@@ -151,10 +157,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               'Please press the record button below, and then cough 5 times.',
           minutesToComplete: 3,
         )
-          ..measures.add(AudioMeasure(
+          ..measures.add(CAMSMeasure(
             type: AudioSamplingPackage.AUDIO,
-            name: "Coughing",
-            studyId: studyId,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: "Coughing",
+                description: "Collects an audio recording of coughing",
+              )
+            },
           ))
           ..measures.addAll(SamplingPackageRegistry().common().getMeasureList(
             types: [
@@ -179,10 +189,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               'He did not care for his soldiers, and the theatre did not amuse him; the only thing, in fact, he thought anything of was to drive out and show a new suit of clothes. '
               'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
           minutesToComplete: 3,
-        )..measures.add(AudioMeasure(
+        )..measures.add(CAMSMeasure(
             type: AudioSamplingPackage.AUDIO,
-            name: "Reading",
-            studyId: studyId,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: "Reading",
+                description:
+                    "Collects an audio recording while reading a text aloud",
+              )
+            },
           )),
         phone);
 
@@ -192,7 +207,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ConditionalSamplingEventTrigger(
           measureType: AudioSamplingPackage.AUDIO,
           resumeCondition: (DataPoint dataPoint) => true,
-          pauseCondition: (DataPoint datum) => true,
+          pauseCondition: (DataPoint dataPoint) => true,
         ),
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,

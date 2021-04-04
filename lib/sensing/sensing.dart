@@ -26,9 +26,9 @@ class Sensing {
   List<Probe> get runningProbes =>
       (_controller != null) ? _controller.executor.probes : List();
 
-  /// the list of running - i.e. used - probes in this study.
-  List<DeviceManager> get runningDevices =>
-      DeviceRegistry().devices.values.toList();
+  /// the list of connected devices.
+  // List<DeviceManager> get runningDevices =>
+  //     DeviceController().devices.values.toList();
 
   /// Get the singleton sensing instance
   factory Sensing() => _instance;
@@ -58,14 +58,9 @@ class Sensing {
     // deploy this protocol using the on-phone deployment service
     _status = await CAMSDeploymentService().createStudyDeployment(_protocol);
 
-    // at this time we can register this phone as a master device like this
-    await CAMSDeploymentService().registerDevice(
-      status.studyDeploymentId,
-      CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-      DeviceRegistration(),
-    );
-    // but this is actually not needed, since a phone is always registrered
-    // automatically in the CAMSDeploymentService.
+    // initialize the local device controller with the deployment status,
+    // which contains the list of needed devices
+    // await DeviceController().initialize(_status, CAMSDeploymentService());
 
     // now we're ready to get the device deployment configuration for this phone
     _deployment = await CAMSDeploymentService()
