@@ -20,7 +20,8 @@ import 'package:carp_context_package/context.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:carp_audio_package/audio.dart';
 //import 'package:carp_health_package/health_package.dart';
-//import 'package:carp_backend/carp_backend.dart';
+import 'package:carp_backend/carp_backend.dart';
+import 'sensing/credentials.dart';
 
 part 'app.dart';
 part 'sensing/sensing.dart';

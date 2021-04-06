@@ -44,7 +44,7 @@ class Sensing {
     // SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // create and register external data managers
-    //DataManagerRegistry().register(CarpDataManager());
+    DataManagerRegistry().register(CarpDataManager());
 
     // register the special-purpose audio user task factory
     AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());

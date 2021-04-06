@@ -35,7 +35,6 @@ class App extends StatelessWidget {
 
 class PulmonaryMonitorApp extends StatefulWidget {
   PulmonaryMonitorApp({Key key}) : super(key: key);
-
   PulmonaryMonitorAppState createState() => PulmonaryMonitorAppState();
 }
 

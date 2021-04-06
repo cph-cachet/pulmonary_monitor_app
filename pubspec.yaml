@@ -57,8 +57,11 @@ dependency_overrides:
     path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
   carp_survey_package:
     path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
-#  carp_backend:
-#    path: ../carp/carp.sensing-flutter/backends/carp_backend/
+  carp_backend:
+    path: ../carp/carp.sensing-flutter/backends/carp_backend/
+  carp_webservices:
+    path: ../carp/carp.sensing-flutter/backends/carp_webservices/
+
 
 
 dev_dependencies:

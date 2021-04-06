@@ -14,16 +14,35 @@ part of pulmonary_monitor_app;
 class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
+  /// Get a data endpoint for this study.
+  DataEndPoint getDataEndpoint(String type) {
+    switch (type) {
+      case DataEndPointTypes.FILE:
+        return FileDataEndPoint(
+          bufferSize: 50 * 1000,
+          zip: true,
+          encrypt: false,
+        );
+      case DataEndPointTypes.CARP:
+        return CarpDataEndPoint(
+            uploadMethod: CarpUploadMethod.DATA_POINT,
+            name: 'CARP Production Server',
+            uri: uri,
+            clientId: clientID,
+            clientSecret: clientSecret,
+            email: username,
+            password: password);
+      default:
+        return DataEndPoint(type: type);
+    }
+  }
+
   /// Create a new CAMS study protocol.
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..studyId = studyId
       ..name = '#23-Pulmonary'
-      ..dataEndPoint = FileDataEndPoint(
-        bufferSize: 50 * 1000,
-        zip: true,
-        encrypt: false,
-      )
+      ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP)
       ..owner = ProtocolOwner(
         id: 'AB',
         name: 'Alex Boyon',
