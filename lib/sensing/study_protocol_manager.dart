@@ -48,16 +48,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         name: 'Alex Boyon',
         email: 'alex@uni.dk',
       )
-      ..protocolDescription = {
-        'en': StudyProtocolDescription(
-          title: 'Pulmonary Monitor',
-          description:
-              "With the Pulmonary Monitor you can monitor your respiratory health. "
-              "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
-              "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-              "Before you start, please also fill in the demographich survey. ",
-        ),
-      };
+      ..protocolDescription = StudyProtocolDescription(
+        title: 'Pulmonary Monitor',
+        description:
+            "With the Pulmonary Monitor you can monitor your respiratory health. "
+            "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
+            "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
+            "Before you start, please also fill in the demographich survey. ",
+      );
 
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -130,12 +128,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )
           ..measures.add(RPTaskMeasure(
             type: SurveySamplingPackage.SURVEY,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: surveys.demographics.title,
-                description: surveys.demographics.description,
-              )
-            },
+            name: surveys.demographics.title,
+            description: surveys.demographics.description,
             surveyTask: surveys.demographics.survey,
           ))
           ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
@@ -152,12 +146,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )
           ..measures.add(RPTaskMeasure(
             type: SurveySamplingPackage.SURVEY,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: surveys.symptoms.title,
-                description: surveys.symptoms.description,
-              )
-            },
+            name: surveys.symptoms.title,
+            description: surveys.symptoms.description,
             surveyTask: surveys.symptoms.survey,
           ))
           ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
@@ -178,12 +168,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )
           ..measures.add(CAMSMeasure(
             type: AudioSamplingPackage.AUDIO,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: "Coughing",
-                description: "Collects an audio recording of coughing",
-              )
-            },
+            name: "Coughing",
+            description: "Collects an audio recording of coughing",
           ))
           ..measures.addAll(SamplingPackageRegistry().common().getMeasureList(
             types: [
@@ -210,13 +196,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           minutesToComplete: 3,
         )..measures.add(CAMSMeasure(
             type: AudioSamplingPackage.AUDIO,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: "Reading",
-                description:
-                    "Collects an audio recording while reading a text aloud",
-              )
-            },
+            name: "Reading",
+            description:
+                "Collects an audio recording while reading a text aloud",
           )),
         phone);
 

@@ -10,12 +10,13 @@ part of pulmonary_monitor_app;
 /// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   static final Sensing _instance = Sensing._();
-  CAMSMasterDeviceDeployment _deployment;
   StudyDeploymentStatus _status;
   StudyProtocol _protocol;
   StudyDeploymentController _controller;
+  StudyProtocolManager manager;
+  SmartPhoneClientManager client;
 
-  CAMSMasterDeviceDeployment get deployment => _deployment;
+  CAMSMasterDeviceDeployment get deployment => _controller?.deployment;
 
   /// Get the status of the study deployment.
   StudyDeploymentStatus get status => _status;
@@ -48,33 +49,36 @@ class Sensing {
 
     // register the special-purpose audio user task factory
     AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());
+
+    manager = LocalStudyProtocolManager();
   }
 
   /// Initialize and setup sensing.
   Future<void> initialize() async {
-    // get the protocol from the local protocol manager (defined below)
-    _protocol = await LocalStudyProtocolManager().getStudyProtocol('1234');
+    // get the protocol from the study protocol manager based on the
+    // study deployment id
+    _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
 
     // deploy this protocol using the on-phone deployment service
-    _status = await CAMSDeploymentService().createStudyDeployment(_protocol);
-
-    // initialize the local device controller with the deployment status,
-    // which contains the list of needed devices
-    // await DeviceController().initialize(_status, CAMSDeploymentService());
-
-    // now we're ready to get the device deployment configuration for this phone
-    _deployment = await CAMSDeploymentService()
-        .getDeviceDeployment(status.studyDeploymentId);
-
-    // create a study deployment controller that can manage this deployment
-    _controller = StudyDeploymentController(
-      deployment,
-      debugLevel: DebugLevel.DEBUG,
-      privacySchemaName: PrivacySchema.DEFAULT,
+    // reuse the study deployment id, so we have the same id on the phone deployment
+    _status = await SmartphoneDeploymentService().createStudyDeployment(
+      _protocol,
+      testStudyDeploymentId,
     );
 
-    // initialize the controller
-    await _controller.initialize();
+    String deviceRolename = _status.masterDeviceStatus.device.roleName;
+
+    // create and configure a client manager for this phone
+    client = SmartPhoneClientManager();
+    await client.configure();
+
+    _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
+
+    // configure the controller and resume sampling
+    await _controller.configure(
+      privacySchemaName: PrivacySchema.DEFAULT,
+    );
+    // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
     _controller.data.listen((data) => print(toJsonString(data)));

@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
 import 'package:uuid/uuid.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 //import 'package:carp_connectivity_package/connectivity.dart';
 //import 'package:carp_communication_package/communication.dart';
@@ -27,7 +26,7 @@ part 'app.dart';
 part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
 part 'sensing/user_task.dart';
-part 'sensing/study_protocol_mamanger.dart';
+part 'sensing/study_protocol_manager.dart';
 part 'models/probe_description.dart';
 part 'models/deployment_model.dart';
 part 'models/data_models.dart';

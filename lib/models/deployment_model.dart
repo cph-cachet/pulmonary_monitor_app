@@ -4,9 +4,10 @@ class StudyDeploymentModel {
   CAMSMasterDeviceDeployment deployment;
 
   String get name => deployment?.name ?? '';
-  String get title => deployment?.title ?? '';
+  String get title => deployment?.protocolDescription?.title ?? '';
   String get description =>
-      deployment?.description ?? 'No description available.';
+      deployment?.protocolDescription?.description ??
+      'No description available.';
   Image get image => Image.asset('assets/images/running.png');
   String get userID => deployment?.userId ?? '';
   // String get samplingStrategy => 'NORMAL';
@@ -27,6 +28,6 @@ class StudyDeploymentModel {
 
   StudyDeploymentModel(this.deployment)
       : assert(deployment != null,
-            'A StudyModel must be initialized with a real Study.'),
+            'A StudyDeploymentModel must be initialized with a non-null CAMSMasterDeviceDeployment.'),
         super();
 }

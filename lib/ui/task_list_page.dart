@@ -127,9 +127,11 @@ class _TaskListState extends State<TaskList> {
   Map<UserTaskState, Icon> get taskStateIcon => {
         UserTaskState.initialized: Icon(Icons.stream, color: CACHET.YELLOW),
         UserTaskState.enqueued: Icon(Icons.notifications, color: CACHET.YELLOW),
-        UserTaskState.dequeued: Icon(Icons.stop, color: CACHET.YELLOW),
-        UserTaskState.started: Icon(Icons.play_arrow, color: CACHET.GREY_4),
-        UserTaskState.canceled: Icon(Icons.pause, color: CACHET.GREY_4),
+        UserTaskState.dequeued:
+            Icon(Icons.not_interested_outlined, color: CACHET.RED),
+        UserTaskState.started:
+            Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+        UserTaskState.canceled: Icon(Icons.radio_button_off, color: CACHET.RED),
         UserTaskState.done: Icon(Icons.check, color: CACHET.GREEN),
       };
 }

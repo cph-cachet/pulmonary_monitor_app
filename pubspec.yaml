@@ -14,7 +14,7 @@ description: App for monitoring of pulmonary (i.e. respiratory) health build usi
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.20.0
+version: 0.21.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 
@@ -38,7 +38,7 @@ dependencies:
   #carp_backend: ^0.11.0
   #carp_communication_package: ^0.6.1
   
-  research_package: ^0.4.0
+  research_package: ^0.5.0
   #carp_health_package: ^0.6.1
 
 

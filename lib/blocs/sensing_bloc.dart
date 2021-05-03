@@ -19,7 +19,7 @@ class SensingBLoC {
   SensingBLoC();
 
   Future init() async {
-    globalDebugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.DEBUG;
     await settings.init();
     await Sensing().initialize();
     info('$runtimeType initialized');
