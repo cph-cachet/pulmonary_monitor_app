@@ -87,7 +87,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
               switch (snapshot.data) {
                 case UserTaskState.enqueued:
                 case UserTaskState.started:
-                case UserTaskState.onhold:
+                case UserTaskState.canceled:
                   return buttonSection;
                 case UserTaskState.done:
                   return finishedSection;

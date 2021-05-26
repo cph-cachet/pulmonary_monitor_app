@@ -5,48 +5,68 @@ import 'package:research_package/model.dart';
 /// CHOICES
 ///
 
-List<RPImageChoice> images = [
-  RPImageChoice.withParams(
-      Image.asset('assets/images/very-sad.png'), 0, 'Feeling very sad'),
-  RPImageChoice.withParams(
-      Image.asset('assets/images/sad.png'), 0, 'Feeling sad'),
-  RPImageChoice.withParams(
-      Image.asset('assets/images/ok.png'), 0, 'Feeling ok'),
-  RPImageChoice.withParams(
-      Image.asset('assets/images/happy.png'), 0, 'Feeling happy'),
-  RPImageChoice.withParams(
-      Image.asset('assets/images/very-happy.png'), 0, 'Feeling very happy'),
+List<RPChoice> timeChoices = [
+  RPChoice(text: "All of the time", value: 5),
+  RPChoice(text: "Most of the time", value: 4),
+  RPChoice(text: "More than half of the time", value: 3),
+  RPChoice(text: "Less than half of the time", value: 2),
+  RPChoice(text: "Some of the time", value: 1),
+  RPChoice(text: "At no time", value: 0),
 ];
 
 List<RPChoice> joyfulActivities = [
-  RPChoice.withParams("Playing games", 6),
-  RPChoice.withParams("Jogging", 5),
-  RPChoice.withParams("Playing an instrument", 4),
-  RPChoice.withParams("Family and friends", 3),
-  RPChoice.withParams("Doing sports", 2),
-  RPChoice.withParams("Reading", 1),
-  RPChoice.withParams("Being productive", 0),
-];
-
-List<RPChoice> who5Choices = [
-  RPChoice.withParams("All of the time", 5),
-  RPChoice.withParams("Most of the time", 4),
-  RPChoice.withParams("More than half of the time", 3),
-  RPChoice.withParams("Less than half of the time", 2),
-  RPChoice.withParams("Some of the time", 1),
-  RPChoice.withParams("At no time", 0),
+  RPChoice(text: "Playing games", value: 6),
+  RPChoice(text: "Jogging", value: 5),
+  RPChoice(text: "Playing an instrument", value: 4),
+  RPChoice(text: "Family and friends", value: 3),
+  RPChoice(text: "Doing sports", value: 2),
+  RPChoice(text: "Reading", value: 1),
+  RPChoice(text: "Being productive", value: 0),
 ];
 
 List<RPChoice> instruments = [
-  RPChoice.withParams("Piano", 1),
-  RPChoice.withParams("Guitar", 0),
+  RPChoice(text: "Guitar", value: 3),
+  RPChoice(text: "Piano", value: 2),
+  RPChoice(text: "Saxophone", value: 1),
+];
+
+List<RPChoice> who5Choices = [
+  RPChoice(text: "All of the time", value: 5),
+  RPChoice(text: "Most of the time", value: 4),
+  RPChoice(text: "More than half of the time", value: 3),
+  RPChoice(text: "Less than half of the time", value: 2),
+  RPChoice(text: "Some of the time", value: 1),
+  RPChoice(text: "At no time", value: 0),
+];
+
+List<RPImageChoice> images = [
+  RPImageChoice(
+      image: Image.asset('assets/images/very-sad.png'),
+      value: 0,
+      description: 'Feeling very sad'),
+  RPImageChoice(
+      image: Image.asset('assets/images/sad.png'),
+      value: 1,
+      description: 'Feeling sad'),
+  RPImageChoice(
+      image: Image.asset('assets/images/ok.png'),
+      value: 2,
+      description: 'Feeling ok'),
+  RPImageChoice(
+      image: Image.asset('assets/images/happy.png'),
+      value: 3,
+      description: 'Feeling happy'),
+  RPImageChoice(
+      image: Image.asset('assets/images/very-happy.png'),
+      value: 4,
+      description: 'Feeling very happy'),
 ];
 
 List<RPChoice> guitarReasons = [
-  RPChoice.withParams("Fun", 3),
-  RPChoice.withParams("Easy to play", 2),
-  RPChoice.withParams("Charming", 1),
-  RPChoice.withParams("Popular", 0),
+  RPChoice(text: "Fun", value: 3),
+  RPChoice(text: "Easy to play", value: 2),
+  RPChoice(text: "Charming", value: 1),
+  RPChoice(text: "Popular", value: 0),
 ];
 
 ///
@@ -54,78 +74,77 @@ List<RPChoice> guitarReasons = [
 ///
 
 RPBooleanAnswerFormat yesNoAnswerFormat =
-    RPBooleanAnswerFormat.withParams("Yes", "No");
+    RPBooleanAnswerFormat(trueText: "Yes", falseText: "No");
 RPImageChoiceAnswerFormat imageChoiceAnswerFormat =
-    RPImageChoiceAnswerFormat.withParams(images);
+    RPImageChoiceAnswerFormat(choices: images);
 RPIntegerAnswerFormat nrOfCigarettesAnswerFormat =
-    RPIntegerAnswerFormat.withParams(0, 200, "cigarettes");
-RPChoiceAnswerFormat who5AnswerFormat = RPChoiceAnswerFormat.withParams(
-    ChoiceAnswerStyle.SingleChoice, who5Choices);
-RPChoiceAnswerFormat joyfulActivitiesAnswerFormat = RPChoiceAnswerFormat
-    .withParams(ChoiceAnswerStyle.MultipleChoice, joyfulActivities);
-RPChoiceAnswerFormat instrumentsAnswerFormat = RPChoiceAnswerFormat.withParams(
-    ChoiceAnswerStyle.SingleChoice, instruments);
+    RPIntegerAnswerFormat(minValue: 0, maxValue: 200, suffix: "cigarettes");
+RPChoiceAnswerFormat who5AnswerFormat = RPChoiceAnswerFormat(
+    answerStyle: RPChoiceAnswerStyle.SingleChoice, choices: who5Choices);
+RPChoiceAnswerFormat joyfulActivitiesAnswerFormat = RPChoiceAnswerFormat(
+    answerStyle: RPChoiceAnswerStyle.MultipleChoice, choices: joyfulActivities);
+RPChoiceAnswerFormat instrumentsAnswerFormat = RPChoiceAnswerFormat(
+    answerStyle: RPChoiceAnswerStyle.SingleChoice, choices: instruments);
 RPIntegerAnswerFormat minutesIntegerAnswerFormat =
-    RPIntegerAnswerFormat.withParams(0, 10000, "minutes");
-RPChoiceAnswerFormat guitarAnswerFormat = RPChoiceAnswerFormat.withParams(
-    ChoiceAnswerStyle.MultipleChoice, guitarReasons);
+    RPIntegerAnswerFormat(minValue: 0, maxValue: 10000, suffix: "minutes");
+RPChoiceAnswerFormat guitarAnswerFormat = RPChoiceAnswerFormat(
+    answerStyle: RPChoiceAnswerStyle.MultipleChoice, choices: guitarReasons);
 
 ///
 /// STEPS
 ///
 
-RPQuestionStep smokingQuestionStep = RPQuestionStep.withAnswerFormat(
-    "smokingQuestionId", "Do you smoke?", yesNoAnswerFormat);
+RPQuestionStep smokingQuestionStep = RPQuestionStep("smokingQuestionId",
+    title: "Do you smoke?", answerFormat: yesNoAnswerFormat);
 
-RPQuestionStep imageChoiceQuestionStep = RPQuestionStep.withAnswerFormat(
+RPQuestionStep imageChoiceQuestionStep = RPQuestionStep(
   "imageStepID",
-  "Indicate you mood by selecting a picture!",
-  imageChoiceAnswerFormat,
+  title: "Indicate you mood by selecting a picture!",
+  answerFormat: imageChoiceAnswerFormat,
 );
 
-RPQuestionStep nrOfCigarettesQuestionStep = RPQuestionStep.withAnswerFormat(
+RPQuestionStep nrOfCigarettesQuestionStep = RPQuestionStep(
     "nrOfCigarettesQuestionStepID",
-    "How many cigarettes do you smoke a day?",
-    nrOfCigarettesAnswerFormat);
+    title: "How many cigarettes do you smoke a day?",
+    answerFormat: nrOfCigarettesAnswerFormat);
 
 RPInstructionStep instructionStep = RPInstructionStep(
-  identifier: "instructionID",
+  "instructionID",
   title: "Welcome!",
   detailText: "For the sake of science of course...",
 )..text =
     "Please fill out this questionnaire!\n\nIn this questionnaire answers to some questions will determine what other questions you will get. You can not skip these question, although you are free to skip the other questions.";
 
-RPQuestionStep singleChoiceQuestionStep = RPQuestionStep.withAnswerFormat(
+RPQuestionStep singleChoiceQuestionStep = RPQuestionStep(
   "singleChoiceQuestionStepID",
-  "I have felt cheerful and in good spirits",
-  who5AnswerFormat,
+  title: "I have felt cheerful and in good spirits",
+  answerFormat: who5AnswerFormat,
 );
 
-RPQuestionStep multiChoiceQuestionStep = RPQuestionStep.withAnswerFormat(
+RPQuestionStep multiChoiceQuestionStep = RPQuestionStep(
   "multiChoiceQuestionStepID",
-  "What makes you happy?",
-  joyfulActivitiesAnswerFormat,
+  title: "What makes you happy?",
+  answerFormat: joyfulActivitiesAnswerFormat,
 );
 
-RPQuestionStep instrumentChoiceQuestionStep = RPQuestionStep.withAnswerFormat(
+RPQuestionStep instrumentChoiceQuestionStep = RPQuestionStep(
     "instrumentChoiceQuestionStepID",
-    "Which instrument are you playing?",
-    instrumentsAnswerFormat);
-RPQuestionStep minutesQuestionStep = RPQuestionStep.withAnswerFormat(
-    "minutesQuestionStepID",
-    "How many minutes do you spend practicing a week?",
-    minutesIntegerAnswerFormat);
-RPFormStep formStep = RPFormStep.withTitle(
+    title: "Which instrument are you playing?",
+    answerFormat: instrumentsAnswerFormat);
+RPQuestionStep minutesQuestionStep = RPQuestionStep("minutesQuestionStepID",
+    title: "How many minutes do you spend practicing a week?",
+    answerFormat: minutesIntegerAnswerFormat);
+RPFormStep formStep = RPFormStep(
   "formstepID",
-  [instrumentChoiceQuestionStep, minutesQuestionStep],
-  "Questions about music",
+  steps: [instrumentChoiceQuestionStep, minutesQuestionStep],
+  title: "Questions about music",
   optional: true,
 );
 
-RPQuestionStep guitarChoiceQuestionStep = RPQuestionStep.withAnswerFormat(
+RPQuestionStep guitarChoiceQuestionStep = RPQuestionStep(
     "guitarChoiceQuestionStepID",
-    "Why did you start playing the guitar?",
-    guitarAnswerFormat);
+    title: "Why did you start playing the guitar?",
+    answerFormat: guitarAnswerFormat);
 
 RPCompletionStep completionStep = RPCompletionStep("completionID")
   ..title = "Finished"

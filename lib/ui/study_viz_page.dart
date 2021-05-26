@@ -4,7 +4,7 @@ class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.study);
+  _StudyVizState createState() => _StudyVizState(bloc.studyDeploymentModel);
 }
 
 class _StudyVizState extends State<StudyVisualization> {
@@ -12,35 +12,17 @@ class _StudyVizState extends State<StudyVisualization> {
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
-  final StudyModel study;
+  final StudyDeploymentModel studyDeploymentModel;
 
-  _StudyVizState(this.study) : super();
+  _StudyVizState(this.studyDeploymentModel) : super();
 
-  @override
-  Widget build(BuildContext context) {
-    if (bloc.study != null) {
-      return _buildStudyVisualization(context, study);
-    } else {
-      return _buildEmptyStudyPanel(context);
-    }
-  }
+  Widget build(BuildContext context) =>
+      _buildStudyVisualization(context, bloc.studyDeploymentModel);
 
-  Widget _buildEmptyStudyPanel(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Study'),
-      ),
-      body: Center(
-        child: Icon(
-          Icons.school,
-          size: 100,
-          color: CACHET.ORANGE,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStudyVisualization(BuildContext context, StudyModel study) {
+  Widget _buildStudyVisualization(
+    BuildContext context,
+    StudyDeploymentModel studyDeploymentModel,
+  ) {
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -62,11 +44,11 @@ class _StudyVizState extends State<StudyVisualization> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(study.name),
+              title: Text(studyDeploymentModel.name),
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  study.image,
+                  studyDeploymentModel.image,
 //                  Image.asset(
 //                    bloc.study.image,
 //                    fit: BoxFit.cover,
@@ -77,14 +59,16 @@ class _StudyVizState extends State<StudyVisualization> {
             ),
           ),
           SliverList(
-            delegate: SliverChildListDelegate(_buildStudyPanel(context, study)),
+            delegate: SliverChildListDelegate(
+                _buildStudyPanel(context, studyDeploymentModel)),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildStudyPanel(BuildContext context, StudyModel study) {
+  List<Widget> _buildStudyPanel(
+      BuildContext context, StudyDeploymentModel study) {
     List<Widget> children = List<Widget>();
 
     children.add(AnnotatedRegion<SystemUiOverlayStyle>(
@@ -92,12 +76,14 @@ class _StudyVizState extends State<StudyVisualization> {
       child: _buildStudyControllerPanel(context, study),
     ));
 
-    study.study.tasks.forEach((task) => children.add(_TaskPanel(task: task)));
+    studyDeploymentModel.deployment.tasks
+        .forEach((task) => children.add(_TaskPanel(task: task)));
 
     return children;
   }
 
-  Widget _buildStudyControllerPanel(BuildContext context, StudyModel study) {
+  Widget _buildStudyControllerPanel(
+      BuildContext context, StudyDeploymentModel study) {
     final ThemeData themeData = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -120,16 +106,17 @@ class _StudyVizState extends State<StudyVisualization> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                    _StudyControllerLine(studyDeploymentModel.title,
+                        heading: 'Title'),
                     _StudyControllerLine(study.description),
                     _StudyControllerLine(study.userID, heading: 'User ID'),
-                    _StudyControllerLine(study.samplingStrategy,
-                        heading: 'Sampling Strategy'),
                     _StudyControllerLine(study.dataEndpoint,
                         heading: 'Data Endpoint'),
-                    StreamBuilder<Datum>(
-                        stream: study.samplingEvents,
-                        builder: (context, AsyncSnapshot<Datum> snapshot) {
-                          return _StudyControllerLine('${study.samplingSize}',
+                    StreamBuilder<DataPoint>(
+                        stream: studyDeploymentModel.data,
+                        builder: (context, AsyncSnapshot<DataPoint> snapshot) {
+                          return _StudyControllerLine(
+                              '${studyDeploymentModel.samplingSize}',
                               heading: 'Sample Size');
                         }),
                   ]))
@@ -141,14 +128,8 @@ class _StudyVizState extends State<StudyVisualization> {
   }
 
   void _showInformedConsent() {
-    Navigator
-        .of(context)
+    Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
-  }
-
-  void _showSettings() {
-    Scaffold.of(context).showSnackBar(const SnackBar(
-        content: Text('Settings not implemented yet...', softWrap: true)));
   }
 }
 
@@ -180,7 +161,7 @@ class _StudyControllerLine extends StatelessWidget {
 class _TaskPanel extends StatelessWidget {
   _TaskPanel({Key key, this.task}) : super(key: key);
 
-  final Task task;
+  final TaskDescriptor task;
 
   @override
   Widget build(BuildContext context) {
@@ -219,14 +200,13 @@ class _MeasureLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final Icon icon = (ProbeDescription.probeTypeIcon[measure.type.name] !=
-            null)
-        ? Icon(ProbeDescription.probeTypeIcon[measure.type.name].icon, size: 25)
-        : Icon(ProbeDescription.probeTypeIcon[DataType.NONE].icon, size: 25);
+    final Icon icon = (ProbeDescription.probeTypeIcon[measure.type] != null)
+        ? Icon(ProbeDescription.probeTypeIcon[measure.type].icon, size: 25)
+        : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN].icon, size: 25);
 
     final List<Widget> columnChildren = List<Widget>();
-    columnChildren.add((measure.name != null)
-        ? Text(measure.name)
+    columnChildren.add((measure is CAMSMeasure)
+        ? Text((measure as CAMSMeasure).name)
         : Text(measure.runtimeType.toString()));
     columnChildren
         .add(Text(measure.toString(), style: themeData.textTheme.caption));

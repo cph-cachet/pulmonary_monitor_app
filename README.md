@@ -42,22 +42,34 @@ The task list (Figure 1 right) is created from the different `AppTask`s defined 
 The sesing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list. This app task is defined like this:
 
 ````dart
-study = Study('1234', 'user@dtu.dk')
-    ..name = 'Pulmonary Monitor'
-    ..description = "With the Pulmonary Monitor you can monitor your respiratory health. ..."
-    ..addTriggerTask(
-            ImmediateTrigger(),
-            AppTask(
-              type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-              title: "Weather & Air Quality",
-              description: "Collect local weather and air quality",
-            )..measures = SamplingSchema.common().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  ContextSamplingPackage.WEATHER,
-                  ContextSamplingPackage.AIR_QUALITY,
-                ],
-              ))
+
+
+    // create a CAMS study protocol
+    CAMSStudyProtocol protocol = CAMSStudyProtocol()
+      ..studyId = studyId
+      ..name = '#23-Pulmonary'
+      .. ;
+
+    // define the phone device which are used for data collection
+    Smartphone phone = Smartphone(
+      name: 'SM-A320FL',
+      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
+    );
+
+    // add a simple app task that collects weather and air quality when resumed
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AppTask(
+          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Weather & Air Quality",
+          description: "Collect local weather and air quality",
+        )..measures = SamplingPackageRegistry().common().getMeasureList(
+            types: [
+              ContextSamplingPackage.WEATHER,
+              ContextSamplingPackage.AIR_QUALITY,
+            ],
+          ),
+        phone);
 ````
 
 The above code adds an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `ONE_TIME_SENSING_TYPE`. 
@@ -76,9 +88,8 @@ In Figure 1, there are two types of surveys; a demographics survey and a survey 
 These are configured in the [`sensing.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/sensing.dart) file like this:
 
 ````dart
-study = Study('1234', 'user@dtu.dk')
-   ...
-   ..addTriggerTask(
+    // collect demographics & location once when the study starts
+    protocol.addTriggeredTask(
         ImmediateTrigger(),
         AppTask(
           type: SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
@@ -87,13 +98,12 @@ study = Study('1234', 'user@dtu.dk')
           minutesToComplete: surveys.demographics.minutesToComplete,
         )
           ..measures.add(RPTaskMeasure(
-            MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+            type: SurveySamplingPackage.SURVEY,
             name: surveys.demographics.title,
-            enabled: true,
             surveyTask: surveys.demographics.survey,
           ))
-          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.LOCATION])
-        )
+          ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
+        phone);
 ````
 
 This configuration adds the demographics survey (as defined in the [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart) file) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know *where* the user filled in this survey.
@@ -101,8 +111,9 @@ This configuration adds the demographics survey (as defined in the [`surveys.dar
 The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day and hence added to the task list daily. Again, location is collected when the survey is filled in.
 
 ````dart
-    ..addTriggerTask(
-        PeriodicTrigger(period: Duration(days: 1)),
+    // collect symptoms on a daily basis
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
         AppTask(
           type: SurveyUserTask.SURVEY_TYPE,
           title: surveys.symptoms.title,
@@ -110,13 +121,12 @@ The configuration of the daily symptoms survey is similar. This survey is, howev
           minutesToComplete: surveys.symptoms.minutesToComplete,
         )
           ..measures.add(RPTaskMeasure(
-            MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+            type: SurveySamplingPackage.SURVEY,
             name: surveys.symptoms.title,
-            enabled: true,
             surveyTask: surveys.symptoms.survey,
           ))
-          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.LOCATION])
-        )
+          ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
+        phone);
 ````
 
 Figure 3 shows how this looks on the user interface.
@@ -134,24 +144,32 @@ The last type of app tasks used in the Pulmonary Monitor app are two types of au
 The configuration of the coughing audio app task is defined like this:
 
 ````dart
-    ..addTriggerTask(
+    // collect a coughing sample on a daily basis
+    // also collect location, and local weather and air quality of this sample
+    protocol.addTriggeredTask(
         PeriodicTrigger(period: Duration(days: 1)),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Coughing",
-          description: 'In this small exercise we would like to collect sound samples of coughing.',
-          instructions: 'Please press the record button below, and then cough 5 times.',
+          description:
+              'In this small exercise we would like to collect sound samples of coughing.',
+          instructions:
+              'Please press the record button below, and then cough 5 times.',
           minutesToComplete: 3,
         )
           ..measures.add(AudioMeasure(
-            MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+            type: AudioSamplingPackage.AUDIO,
             name: "Coughing",
             studyId: studyId,
           ))
-          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.LOCATION])
-          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.WEATHER])
-          ..measures.add(SamplingSchema.common().measures[ContextSamplingPackage.AIR_QUALITY])
-        )
+          ..measures.addAll(SamplingPackageRegistry().common().getMeasureList(
+            types: [
+              ContextSamplingPackage.LOCATION,
+              ContextSamplingPackage.WEATHER,
+              ContextSamplingPackage.AIR_QUALITY,
+            ],
+          )),
+        phone);
 ````
 
 This configuration adds an app task to the task list once per day of type `AUDIO_TYPE`. 
@@ -221,7 +239,4 @@ The `onStart()` method is called when the user 'starts' the task. i.e. pushes th
 This method then pushes an `AudioMeasurePage` (Figure 4 left) to the UI. 
 When the user clicks the red button to start recording, the `onRecord()` method is called.
 This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and reports this task as "done".
-
-
-
 
