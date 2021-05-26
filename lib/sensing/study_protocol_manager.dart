@@ -42,7 +42,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..studyId = studyId
       ..name = '#23-Pulmonary'
-      ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP)
       ..owner = ProtocolOwner(
         id: 'AB',
         name: 'Alex Boyon',
@@ -102,9 +101,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ),
         phone);
 
-    // add a simple app task that collects weather and air quality when resumed
+    // add an app task that once pr. hour asks the user to
+    // collect weather and air quality
     protocol.addTriggeredTask(
-        ImmediateTrigger(),
+        PeriodicTrigger(period: Duration(hours: 1)),
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Weather & Air Quality",
@@ -137,7 +137,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // collect symptoms on a daily basis
     protocol.addTriggeredTask(
-        ImmediateTrigger(),
+        PeriodicTrigger(period: Duration(days: 1)),
         AppTask(
           type: SurveyUserTask.SURVEY_TYPE,
           title: surveys.symptoms.title,
