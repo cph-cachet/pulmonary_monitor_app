@@ -39,7 +39,9 @@ class PulmonaryMonitorApp extends StatefulWidget {
 }
 
 class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
-  int _selectedIndex = 0;
+  // when the app starts, show the task list (index =1) since the app may have
+  // been started due to the user selecting a notification
+  int _selectedIndex = 1;
 
   final _pages = [
     StudyVisualization(),

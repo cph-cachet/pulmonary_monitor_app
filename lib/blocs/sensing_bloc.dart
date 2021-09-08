@@ -20,7 +20,12 @@ class SensingBLoC {
 
   Future init() async {
     Settings().debugLevel = DebugLevel.DEBUG;
-    await settings.init();
+
+    // don't store the app task queue across app restart
+    Settings().saveAppTaskQueue = false;
+
+    await Settings().init();
+    await LocalResourceManager().initialize();
     await Sensing().initialize();
     info('$runtimeType initialized');
 

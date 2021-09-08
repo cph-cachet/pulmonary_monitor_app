@@ -75,6 +75,10 @@ class Sensing {
 
     _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
 
+    // set the study description, if available
+    deployment!.protocolDescription ??=
+        await LocalResourceManager().getStudyDescription();
+
     // configure the controller and resume sampling
     await _controller!.configure(
       privacySchemaName: PrivacySchema.DEFAULT,

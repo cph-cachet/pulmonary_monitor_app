@@ -4,7 +4,9 @@ class StudyDeploymentModel {
   SmartphoneDeployment deployment;
 
   // String get name => deployment?.name ?? '';
-  String get title => deployment.protocolDescription?.title ?? '';
+  String get studyDeploymentId => deployment.studyDeploymentId;
+  String get title =>
+      deployment.protocolDescription?.title ?? deployment.studyDeploymentId;
   String get description =>
       deployment.protocolDescription?.description ??
       'No description available.';

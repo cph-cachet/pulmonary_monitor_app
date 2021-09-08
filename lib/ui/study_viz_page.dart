@@ -106,9 +106,10 @@ class _StudyVizState extends State<StudyVisualization> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    _StudyControllerLine(studyDeploymentModel.title,
-                        heading: 'Title'),
+                    _StudyControllerLine(study.title, heading: 'Title'),
                     _StudyControllerLine(study.description),
+                    _StudyControllerLine(study.studyDeploymentId,
+                        heading: 'Deployment ID'),
                     _StudyControllerLine(study.userID, heading: 'User ID'),
                     _StudyControllerLine(study.dataEndpoint,
                         heading: 'Data Endpoint'),
