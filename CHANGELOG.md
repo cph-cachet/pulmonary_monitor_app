@@ -1,3 +1,8 @@
+## 0.30.0
+* upgrade to null-safety
+* upgrade to `carp_mobile_sensing` v 0.30.4
+* implementation of notifications for app tasks
+
 ## 0.21.0
 * upgrade to `carp_mobile_sensing` v. 0.21.x
 * support for json serialization in surveys

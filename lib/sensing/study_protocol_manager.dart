@@ -39,22 +39,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
   /// Create a new CAMS study protocol.
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
-    CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..studyId = studyId
-      ..name = '#23-Pulmonary'
-      ..owner = ProtocolOwner(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      )
-      ..protocolDescription = StudyProtocolDescription(
-        title: 'Pulmonary Monitor',
-        description:
-            "With the Pulmonary Monitor you can monitor your respiratory health. "
-            "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
-            "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-            "Before you start, please also fill in the demographich survey. ",
-      );
+    StudyProtocol protocol = StudyProtocol(
+      name: 'Pulmonary Monitor',
+      ownerId: 'alex@uni.dk',
+      description:
+          "With the Pulmonary Monitor you can monitor your respiratory health. "
+          "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
+          "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
+          "Before you start, please also fill in the demographich survey. ",
+    );
 
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -102,13 +95,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // add an app task that once pr. hour asks the user to
-    // collect weather and air quality
+    // collect weather and air quality - and notify the user
     protocol.addTriggeredTask(
         PeriodicTrigger(period: Duration(hours: 1)),
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Weather & Air Quality",
           description: "Collect local weather and air quality",
+          notification: true,
         )..measures = SamplingPackageRegistry().common().getMeasureList(
             types: [
               ContextSamplingPackage.WEATHER,
@@ -125,6 +119,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           title: surveys.demographics.title,
           description: surveys.demographics.description,
           minutesToComplete: surveys.demographics.minutesToComplete,
+          notification: true,
         )
           ..measures.add(RPTaskMeasure(
             type: SurveySamplingPackage.SURVEY,
@@ -165,6 +160,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           instructions:
               'Please press the record button below, and then cough 5 times.',
           minutesToComplete: 3,
+          notification: true,
         )
           ..measures.add(CAMSMeasure(
             type: AudioSamplingPackage.AUDIO,

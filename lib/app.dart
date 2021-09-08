@@ -34,12 +34,14 @@ class App extends StatelessWidget {
 }
 
 class PulmonaryMonitorApp extends StatefulWidget {
-  PulmonaryMonitorApp({Key key}) : super(key: key);
+  PulmonaryMonitorApp({Key? key}) : super(key: key);
   PulmonaryMonitorAppState createState() => PulmonaryMonitorAppState();
 }
 
 class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
-  int _selectedIndex = 0;
+  // when the app starts, show the task list (index =1) since the app may have
+  // been started due to the user selecting a notification
+  int _selectedIndex = 1;
 
   final _pages = [
     StudyVisualization(),

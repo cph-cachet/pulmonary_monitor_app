@@ -33,52 +33,59 @@ class _WHO5Survey implements Survey {
   int get minutesToComplete => 1;
 
   RPChoiceAnswerFormat _choiceAnswerFormat = RPChoiceAnswerFormat(
-      answerStyle: RPChoiceAnswerStyle.SingleChoice,
-      choices: [
-        RPChoice(text: "All of the time", value: 5),
-        RPChoice(text: "Most of the time", value: 4),
-        RPChoice(text: "More than half of the time", value: 3),
-        RPChoice(text: "Less than half of the time", value: 2),
-        RPChoice(text: "Some of the time", value: 1),
-        RPChoice(text: "At no time", value: 0),
-      ]);
+    answerStyle: RPChoiceAnswerStyle.SingleChoice,
+    choices: [
+      RPChoice(text: "All of the time", value: 5),
+      RPChoice(text: "Most of the time", value: 4),
+      RPChoice(text: "More than half of the time", value: 3),
+      RPChoice(text: "Less than half of the time", value: 2),
+      RPChoice(text: "Some of the time", value: 1),
+      RPChoice(text: "At no time", value: 0),
+    ],
+  );
 
-  RPTask get survey => RPOrderedTask("who5_survey", [
-        RPInstructionStep('who5', title: "WHO Well-Being Index")
-          ..text =
-              "Please indicate for each of the following five statements which is closest to how you have been feeling over the last two weeks. "
+  RPTask get survey => RPOrderedTask(
+        identifier: "who5_survey",
+        steps: [
+          RPInstructionStep(
+              identifier: 'who5',
+              title: "WHO Well-Being Index",
+              text:
+                  "Please indicate for each of the following five statements which is closest to how you have been feeling over the last two weeks. "
                   "Notice that higher numbers mean better well-being.\n\n"
                   "Example: If you have felt cheerful and in good spirits more than half of the time during the last two weeks, "
-                  "select the box with the label 'More than half of the time'.",
-        RPQuestionStep(
-          "who5_1",
-          title: "I have felt cheerful and in good spirits",
-          answerFormat: _choiceAnswerFormat,
-        ),
-        RPQuestionStep(
-          "who5_2",
-          title: "I have felt calm and relaxed",
-          answerFormat: _choiceAnswerFormat,
-        ),
-        RPQuestionStep(
-          "who5_3",
-          title: "I have felt active and vigorous",
-          answerFormat: _choiceAnswerFormat,
-        ),
-        RPQuestionStep(
-          "who5_4",
-          title: "I woke up feeling fresh and rested",
-          answerFormat: _choiceAnswerFormat,
-        ),
-        RPQuestionStep(
-          "who5_5",
-          title: "My daily life has been filled with things that interest me",
-          answerFormat: _choiceAnswerFormat,
-        ),
-        RPCompletionStep("who5_ompletion")
-          ..title = "Finished"
-          ..text = "Thank you for filling out the survey!",
-      ]);
+                  "select the box with the label 'More than half of the time'."),
+          RPQuestionStep(
+            identifier: "who5_1",
+            title: "I have felt cheerful and in good spirits",
+            answerFormat: _choiceAnswerFormat,
+          ),
+          RPQuestionStep(
+            identifier: "who5_2",
+            title: "I have felt calm and relaxed",
+            answerFormat: _choiceAnswerFormat,
+          ),
+          RPQuestionStep(
+            identifier: "who5_3",
+            title: "I have felt active and vigorous",
+            answerFormat: _choiceAnswerFormat,
+          ),
+          RPQuestionStep(
+            identifier: "who5_4",
+            title: "I woke up feeling fresh and rested",
+            answerFormat: _choiceAnswerFormat,
+          ),
+          RPQuestionStep(
+            identifier: "who5_5",
+            title: "My daily life has been filled with things that interest me",
+            answerFormat: _choiceAnswerFormat,
+          ),
+          RPCompletionStep(
+              identifier: "who5_ompletion",
+              title: "Finished",
+              text: "Thank you for filling out the survey!"),
+        ],
+      );
 }
 
 class _DemographicSurvey implements Survey {
@@ -146,28 +153,31 @@ class _DemographicSurvey implements Survey {
         RPChoice(text: "Prefer not to say", value: 7),
       ]);
 
-  RPTask get survey => RPOrderedTask("demo_survey", [
-        RPQuestionStep(
-          "demo_1",
-          title: "Which is your biological sex?",
-          answerFormat: _sexChoices,
-        ),
-        RPQuestionStep(
-          "demo_2",
-          title: "How old are you?",
-          answerFormat: _ageChoices,
-        ),
-        RPQuestionStep(
-          "demo_3",
-          title: "Do you have any of these medical conditions?",
-          answerFormat: _medicalChoices,
-        ),
-        RPQuestionStep(
-          "demo_4",
-          title: "Do you, or have you, ever smoked (including e-cigarettes)?",
-          answerFormat: _smokeChoices,
-        ),
-      ]);
+  RPTask get survey => RPOrderedTask(
+        identifier: "demo_survey",
+        steps: [
+          RPQuestionStep(
+            identifier: "demo_1",
+            title: "Which is your biological sex?",
+            answerFormat: _sexChoices,
+          ),
+          RPQuestionStep(
+            identifier: "demo_2",
+            title: "How old are you?",
+            answerFormat: _ageChoices,
+          ),
+          RPQuestionStep(
+            identifier: "demo_3",
+            title: "Do you have any of these medical conditions?",
+            answerFormat: _medicalChoices,
+          ),
+          RPQuestionStep(
+            identifier: "demo_4",
+            title: "Do you, or have you, ever smoked (including e-cigarettes)?",
+            answerFormat: _smokeChoices,
+          ),
+        ],
+      );
 }
 
 class _SymptomsSurvey implements Survey {
@@ -194,11 +204,14 @@ class _SymptomsSurvey implements Survey {
         RPChoice(text: "Prefer not to say", value: 13),
       ]);
 
-  RPTask get survey => RPOrderedTask("symptoms_survey", [
-        RPQuestionStep(
-          "sym_1",
-          title: "Do you have any of the following symptoms today?",
-          answerFormat: _symptomsChoices,
-        ),
-      ]);
+  RPTask get survey => RPOrderedTask(
+        identifier: "symptoms_survey",
+        steps: [
+          RPQuestionStep(
+            identifier: "sym_1",
+            title: "Do you have any of the following symptoms today?",
+            answerFormat: _symptomsChoices,
+          ),
+        ],
+      );
 }

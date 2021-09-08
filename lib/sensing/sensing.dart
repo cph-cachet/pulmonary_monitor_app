@@ -10,22 +10,23 @@ part of pulmonary_monitor_app;
 /// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   static final Sensing _instance = Sensing._();
-  StudyDeploymentStatus _status;
-  StudyProtocol _protocol;
-  StudyDeploymentController _controller;
-  StudyProtocolManager manager;
-  SmartPhoneClientManager client;
+  StudyDeploymentStatus? _status;
+  StudyProtocol? _protocol;
+  StudyDeploymentController? _controller;
+  late StudyProtocolManager manager;
+  late SmartPhoneClientManager client;
 
-  CAMSMasterDeviceDeployment get deployment => _controller?.deployment;
+  SmartphoneDeployment? get deployment =>
+      _controller?.deployment as SmartphoneDeployment?;
 
   /// Get the status of the study deployment.
-  StudyDeploymentStatus get status => _status;
-  StudyProtocol get protocol => _protocol;
-  StudyDeploymentController get controller => _controller;
+  StudyDeploymentStatus? get status => _status;
+  StudyProtocol? get protocol => _protocol;
+  StudyDeploymentController? get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
-      (_controller != null) ? _controller.executor.probes : List();
+      (_controller != null) ? _controller!.executor!.probes : [];
 
   /// the list of connected devices.
   // List<DeviceManager> get runningDevices =>
@@ -62,11 +63,11 @@ class Sensing {
     // deploy this protocol using the on-phone deployment service
     // reuse the study deployment id, so we have the same id on the phone deployment
     _status = await SmartphoneDeploymentService().createStudyDeployment(
-      _protocol,
+      _protocol!,
       testStudyDeploymentId,
     );
 
-    String deviceRolename = _status.masterDeviceStatus.device.roleName;
+    String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
 
     // create and configure a client manager for this phone
     client = SmartPhoneClientManager();
@@ -74,13 +75,17 @@ class Sensing {
 
     _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
 
+    // set the study description, if available
+    deployment!.protocolDescription ??=
+        await LocalResourceManager().getStudyDescription();
+
     // configure the controller and resume sampling
-    await _controller.configure(
+    await _controller!.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
     );
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
-    _controller.data.listen((data) => print(toJsonString(data)));
+    _controller!.data.listen((data) => print(toJsonString(data)));
   }
 }

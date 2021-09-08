@@ -1,8 +1,8 @@
 part of pulmonary_monitor_app;
 
 class SensingBLoC {
-  CAMSMasterDeviceDeployment get deployment => Sensing().deployment;
-  StudyDeploymentModel _model;
+  SmartphoneDeployment? get deployment => Sensing().deployment;
+  StudyDeploymentModel? _model;
 
   /// The list of available app tasks for the user to address.
   List<UserTask> get tasks => AppTaskController().userTaskQueue;
@@ -10,17 +10,22 @@ class SensingBLoC {
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (Sensing().controller != null) &&
-      Sensing().controller.executor.state == ProbeState.resumed;
+      Sensing().controller!.executor!.state == ProbeState.resumed;
 
   /// Get the study for this app.
   StudyDeploymentModel get studyDeploymentModel =>
-      _model ??= StudyDeploymentModel(deployment);
+      _model ??= StudyDeploymentModel(deployment!);
 
   SensingBLoC();
 
   Future init() async {
     Settings().debugLevel = DebugLevel.DEBUG;
-    await settings.init();
+
+    // don't store the app task queue across app restart
+    Settings().saveAppTaskQueue = false;
+
+    await Settings().init();
+    await LocalResourceManager().initialize();
     await Sensing().initialize();
     info('$runtimeType initialized');
 
@@ -47,16 +52,19 @@ class SensingBLoC {
           //
           break;
         case UserTaskState.canceled:
-          // TODO: Handle this case.
+          //
+          break;
+        case UserTaskState.expired:
+          //
           break;
       }
     });
   }
 
-  void resume() async => Sensing().controller.resume();
-  void pause() => Sensing().controller.pause();
-  void stop() async => Sensing().controller.stop();
-  void dispose() async => Sensing().controller.stop();
+  void resume() async => Sensing().controller!.resume();
+  void pause() => Sensing().controller!.pause();
+  void stop() async => Sensing().controller!.stop();
+  void dispose() async => Sensing().controller!.stop();
 
   // /// Add a [Datum] object to the stream of events.
   // void addDatum(Datum datum) => sensing.controller.executor.addDatum(datum);

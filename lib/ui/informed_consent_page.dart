@@ -20,7 +20,7 @@ class _InformedConsentPage extends State<InformedConsentPage> {
   @override
   Widget build(BuildContext context) {
     return RPUITask(
-      task: consentTask,
+      task: LocalResourceManager().informedConsent,
       onSubmit: (result) {
         resultCallback(result, context);
       },
