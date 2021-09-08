@@ -35,7 +35,6 @@ class _TaskListState extends State<TaskList> {
       body: StreamBuilder<UserTask>(
         stream: AppTaskController().userTaskEvents,
         builder: (context, AsyncSnapshot<UserTask> snapshot) {
-          print('>> $snapshot');
           return Scrollbar(
             child: ListView.builder(
               itemCount: tasks.length,
