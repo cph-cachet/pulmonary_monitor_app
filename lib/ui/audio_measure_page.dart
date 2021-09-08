@@ -3,15 +3,15 @@ part of pulmonary_monitor_app;
 class AudioMeasurePage extends StatefulWidget {
   static const String routeName = '/study/audio';
 
-  final AudioUserTask audioUserTask;
+  final AudioUserTask? audioUserTask;
 
-  AudioMeasurePage({Key key, this.audioUserTask}) : super(key: key);
+  AudioMeasurePage({Key? key, this.audioUserTask}) : super(key: key);
 
   _AudioMeasurePageState createState() => _AudioMeasurePageState(audioUserTask);
 }
 
 class _AudioMeasurePageState extends State<AudioMeasurePage> {
-  AudioUserTask audioUserTask;
+  AudioUserTask? audioUserTask;
 
   _AudioMeasurePageState(this.audioUserTask) : super();
 
@@ -43,17 +43,17 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         padding: const EdgeInsets.only(top: 30, left: 8, bottom: 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            audioUserTask.title,
+            audioUserTask!.title,
             style: TextStyle(
               fontSize: 21,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(audioUserTask.description),
+          Text(audioUserTask!.description),
           Container(
             padding: const EdgeInsets.all(10),
             child: Text(
-              audioUserTask.instructions,
+              audioUserTask!.instructions,
               softWrap: true,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
@@ -68,8 +68,8 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         padding: const EdgeInsets.only(top: 80),
         alignment: FractionalOffset.center,
         child: StreamBuilder<int>(
-            stream: audioUserTask.countDownEvents,
-            initialData: audioUserTask.recordingDuration,
+            stream: audioUserTask!.countDownEvents,
+            initialData: audioUserTask!.recordingDuration,
             builder: (context, AsyncSnapshot<int> snapshot) =>
                 Text('00:${snapshot.data.toString().padLeft(2, '0')}',
                     style: TextStyle(
@@ -82,7 +82,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
     return Container(
         alignment: FractionalOffset.center,
         child: StreamBuilder<UserTaskState>(
-            stream: audioUserTask.stateEvents,
+            stream: audioUserTask!.stateEvents,
             builder: (context, AsyncSnapshot<UserTaskState> snapshot) {
               switch (snapshot.data) {
                 case UserTaskState.enqueued:
@@ -103,7 +103,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            (audioUserTask.state == UserTaskState.started)
+            (audioUserTask!.state == UserTaskState.started)
                 ? Text('RECORDING...')
                 : Text('Press here to start recording...'),
             IconButton(
@@ -111,7 +111,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
               color: CACHET.RED,
               icon: Icon(Icons.radio_button_checked),
               onPressed: () {
-                audioUserTask.onRecord();
+                audioUserTask!.onRecord();
               },
             ),
           ],
@@ -129,7 +129,7 @@ class _AudioMeasurePageState extends State<AudioMeasurePage> {
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 )),
-            OutlineButton(
+            OutlinedButton(
               child: const Text('PRESS HERE TO GO BACK'),
               onPressed: () {
                 Navigator.pop(context);

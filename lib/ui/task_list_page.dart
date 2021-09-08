@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 class TaskList extends StatefulWidget {
-  const TaskList({Key key}) : super(key: key);
+  const TaskList({Key? key}) : super(key: key);
 
   static const String routeName = '/tasklist';
 
@@ -50,7 +50,7 @@ class _TaskListState extends State<TaskList> {
   }
 
   void _showSettings() {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Settings not implemented yet...')));
   }
 
@@ -78,7 +78,7 @@ class _TaskListState extends State<TaskList> {
                       userTask.state == UserTaskState.canceled)
                   ? ButtonBar(
                       children: <Widget>[
-                        FlatButton(
+                        TextButton(
                             child: const Text('PRESS HERE TO FINISH TASK'),
                             onPressed: () => userTask.onStart(context)),
                       ],
