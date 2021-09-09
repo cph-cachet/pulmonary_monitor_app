@@ -16,6 +16,7 @@ func registerPlugins(registry: FlutterPluginRegistry) -> () {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
 
+    //  from flutter_local_notifications
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }

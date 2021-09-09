@@ -13,6 +13,7 @@ class AudioUserTask extends UserTask {
 
   AudioUserTask(AppTaskExecutor executor) : super(executor);
 
+  @override
   void onStart(BuildContext context) {
     super.onStart(context);
     Navigator.push(

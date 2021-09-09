@@ -28,7 +28,7 @@ part 'blocs/sensing_bloc.dart';
 part 'blocs/settings_bloc.dart';
 part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
-part 'sensing/user_task.dart';
+part 'sensing/audio_user_task.dart';
 part 'sensing/study_protocol_manager.dart';
 part 'sensing/local_resource_manager.dart';
 part 'sensing/linear_survey_objects.dart';
