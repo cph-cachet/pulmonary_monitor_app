@@ -13,7 +13,6 @@ part of pulmonary_monitor_app;
 ///  * study descriptions
 class LocalResourceManager implements ResourceManager {
   RPOrderedTask? _informedConsent;
-  StudyDescription? _description;
 
   static final LocalResourceManager _instance = LocalResourceManager._();
   factory LocalResourceManager() => _instance;
@@ -27,7 +26,6 @@ class LocalResourceManager implements ResourceManager {
   Future initialize() async {
     // initialize local cached values
     await getInformedConsent();
-    await getStudyDescription();
   }
 
   @override
@@ -157,46 +155,5 @@ class LocalResourceManager implements ResourceManager {
   Future<bool> setLocalizations(
       Locale locale, Map<String, dynamic> localizations) {
     throw UnimplementedError();
-  }
-
-  @override
-  StudyDescription? get studyDescription => _description;
-
-  @override
-  Future<StudyDescription?> getStudyDescription() async {
-    if (_description == null) {
-      _description = StudyDescription(
-          title: 'Pulmonary Monitor',
-          description:
-              "With the Pulmonary Monitor you can monitor your respiratory health. "
-              "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
-              "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-              "Before you start, please also fill in the demographich survey. ",
-          purpose:
-              'To collect basic data from users in their everyday life in order '
-              'to investigate pulmonary-related symptoms.',
-          responsible: StudyReponsible(
-            id: 'jakba',
-            title: 'Professor',
-            address: 'Ørsteds Plads, 2100 Kgs. Lyngby',
-            affiliation: 'Technical University of Denmark',
-            email: 'jakba@dtu.dk',
-            name: 'Jakob E. Bardram',
-          ));
-    }
-
-    return _description;
-  }
-
-  @override
-  Future<bool> setStudyDescription(StudyDescription description) async {
-    _description = description;
-    return true;
-  }
-
-  @override
-  Future<bool> deleteStudyDescription() async {
-    _description = null;
-    return true;
   }
 }

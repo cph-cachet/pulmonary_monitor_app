@@ -38,16 +38,29 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   }
 
   /// Create a new CAMS study protocol.
-  Future<StudyProtocol> getStudyProtocol(String studyId) async {
-    StudyProtocol protocol = StudyProtocol(
+  Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       name: 'Pulmonary Monitor',
       ownerId: 'alex@uni.dk',
-      description:
-          "With the Pulmonary Monitor you can monitor your respiratory health. "
-          "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
-          "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-          "Before you start, please also fill in the demographich survey. ",
     );
+    protocol.protocolDescription = StudyDescription(
+        title: 'Pulmonary Monitor',
+        description:
+            "With the Pulmonary Monitor you can monitor your respiratory health. "
+            "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
+            "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
+            "Before you start, please also fill in the demographich survey. ",
+        purpose:
+            'To collect basic data from users in their everyday life in order '
+            'to investigate pulmonary-related symptoms.',
+        responsible: StudyResponsible(
+          id: 'jakba',
+          title: 'Professor',
+          address: 'Ørsteds Plads, 2100 Kgs. Lyngby',
+          affiliation: 'Technical University of Denmark',
+          email: 'jakba@dtu.dk',
+          name: 'Jakob E. Bardram',
+        ));
 
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -71,7 +84,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // collect location, weather and air quality every 5 minutes
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(minutes: 5)),
+        PeriodicTrigger(
+          period: Duration(minutes: 5),
+          duration: const Duration(seconds: 2),
+        ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().common().getMeasureList(
             types: [
@@ -97,7 +113,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // add an app task that once pr. hour asks the user to
     // collect weather and air quality - and notify the user
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(hours: 1)),
+        PeriodicTrigger(
+          period: Duration(hours: 1),
+          duration: const Duration(seconds: 2),
+        ),
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Weather & Air Quality",
@@ -132,7 +151,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // collect symptoms on a daily basis
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(days: 1)),
+        PeriodicTrigger(
+          period: Duration(days: 1),
+          duration: const Duration(seconds: 2),
+        ),
         AppTask(
           type: SurveyUserTask.SURVEY_TYPE,
           title: surveys.symptoms.title,
@@ -151,7 +173,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // collect a coughing sample on a daily basis
     // also collect location, and local weather and air quality of this sample
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(days: 1)),
+        PeriodicTrigger(
+          period: Duration(days: 1),
+          duration: const Duration(seconds: 2),
+        ),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Coughing",
@@ -178,7 +203,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // collect a reading / audio sample on a daily basis
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(days: 1)),
+        PeriodicTrigger(
+          period: Duration(days: 1),
+          duration: const Duration(seconds: 2),
+        ),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Reading",

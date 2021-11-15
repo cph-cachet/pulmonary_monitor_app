@@ -12,7 +12,7 @@ class Sensing {
   static final Sensing _instance = Sensing._();
   StudyDeploymentStatus? _status;
   StudyProtocol? _protocol;
-  StudyDeploymentController? _controller;
+  SmartphoneDeploymentController? _controller;
   late StudyProtocolManager manager;
   late SmartPhoneClientManager client;
 
@@ -22,7 +22,7 @@ class Sensing {
   /// Get the status of the study deployment.
   StudyDeploymentStatus? get status => _status;
   StudyProtocol? get protocol => _protocol;
-  StudyDeploymentController? get controller => _controller;
+  SmartphoneDeploymentController? get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
@@ -74,10 +74,6 @@ class Sensing {
     await client.configure();
 
     _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
-
-    // set the study description, if available
-    deployment!.protocolDescription ??=
-        await LocalResourceManager().getStudyDescription();
 
     // configure the controller and resume sampling
     await _controller!.configure(
