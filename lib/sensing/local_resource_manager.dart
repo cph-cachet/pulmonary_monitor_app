@@ -10,8 +10,8 @@ part of pulmonary_monitor_app;
 /// A local resource manager handling:
 ///  * informed consent
 ///  * localization
-///  * study descriptions
-class LocalResourceManager implements ResourceManager {
+class LocalResourceManager
+    implements InformedConsentManager, LocalizationManager {
   RPOrderedTask? _informedConsent;
 
   static final LocalResourceManager _instance = LocalResourceManager._();

@@ -39,7 +39,7 @@ class Sensing {
     // create and register external sampling packages
     // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
@@ -73,7 +73,9 @@ class Sensing {
     client = SmartPhoneClientManager();
     await client.configure();
 
+    // add and deploy this study deployment
     _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
+    await _controller?.tryDeployment();
 
     // configure the controller and resume sampling
     await _controller!.configure(

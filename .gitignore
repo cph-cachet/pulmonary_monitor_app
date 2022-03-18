@@ -1,3 +1,6 @@
+# Sensitive files
+lib/sensing/credentials.dart
+
 # Miscellaneous
 *.class
 *.lock
@@ -23,6 +26,7 @@
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -71,26 +75,4 @@ doc/
 !**/ios/**/default.mode2v3
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-lib/sensing/credentials.dart
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
+

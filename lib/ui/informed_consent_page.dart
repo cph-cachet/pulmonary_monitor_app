@@ -10,11 +10,8 @@ class _InformedConsentPage extends State<InformedConsentPage> {
       const JsonEncoder.withIndent(' ').convert(object);
 
   void resultCallback(RPTaskResult result, BuildContext context) {
-    // Do anything with the result
     print(_encode(result));
-
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LinearSurveyPage()));
+    Navigator.of(context).pop();
   }
 
   @override

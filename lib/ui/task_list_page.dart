@@ -106,6 +106,11 @@ class _TaskListState extends State<TaskList> {
           color: CACHET.ORANGE,
           size: 40,
         ),
+        SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE: Icon(
+          Icons.face,
+          color: CACHET.YELLOW,
+          size: 40,
+        ),
         AudioUserTask.AUDIO_TYPE: Icon(
           Icons.record_voice_over,
           color: CACHET.GREEN,

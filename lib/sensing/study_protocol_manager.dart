@@ -70,7 +70,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
+          ..measures = SamplingPackageRegistry().common.getMeasureList(
             types: [
               SensorSamplingPackage.LIGHT,
               SensorSamplingPackage.PEDOMETER,
@@ -89,7 +89,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           duration: const Duration(seconds: 2),
         ),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
+          ..measures = SamplingPackageRegistry().common.getMeasureList(
             types: [
               ContextSamplingPackage.LOCATION,
               ContextSamplingPackage.WEATHER,
@@ -102,7 +102,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
+          ..measures = SamplingPackageRegistry().common.getMeasureList(
             types: [
               ContextSamplingPackage.GEOLOCATION,
               ContextSamplingPackage.ACTIVITY,
@@ -122,7 +122,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           title: "Weather & Air Quality",
           description: "Collect local weather and air quality",
           notification: true,
-        )..measures = SamplingPackageRegistry().common().getMeasureList(
+        )..measures = SamplingPackageRegistry().common.getMeasureList(
             types: [
               ContextSamplingPackage.WEATHER,
               ContextSamplingPackage.AIR_QUALITY,
@@ -170,6 +170,65 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
         phone);
 
+    // perform a cognitive assessment
+    protocol.addTriggeredTask(
+        PeriodicTrigger(
+          period: Duration(minutes: 2),
+          duration: const Duration(seconds: 2),
+        ),
+        AppTask(
+          type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+          title: surveys.cognition.title,
+          description: surveys.cognition.description,
+          minutesToComplete: surveys.cognition.minutesToComplete,
+        )
+          ..measures.add(RPTaskMeasure(
+            type: SurveySamplingPackage.SURVEY,
+            name: surveys.cognition.title,
+            description: surveys.cognition.description,
+            surveyTask: surveys.cognition.survey,
+          ))
+          ..measures.add(Measure(type: ContextSamplingPackage.LOCATION)),
+        phone);
+
+    // perform a Parkisons' assessment
+    protocol.addTriggeredTask(
+        PeriodicTrigger(
+          period: Duration(minutes: 2),
+          duration: const Duration(seconds: 2),
+        ),
+        AppTask(
+          type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+          title: "Parkinsons' Assessment",
+          description: "A simple task assessing finger tapping speed.",
+          minutesToComplete: 3,
+        )
+          ..measures.add(RPTaskMeasure(
+            type: SurveySamplingPackage.SURVEY,
+            surveyTask:
+                RPOrderedTask(identifier: "parkinsons_assessment", steps: [
+              RPInstructionStep(
+                  identifier: 'parkinsons_instruction',
+                  title: "Parkinsons' Disease Assessment",
+                  text:
+                      "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
+                      "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
+                      "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
+              RPFlankerActivity(
+                'flanker_1',
+                lengthOfTest: 30,
+                numberOfCards: 10,
+              ),
+              RPTappingActivity(
+                'tapping_1',
+                lengthOfTest: 10,
+              )
+            ]),
+          ))
+          ..measures.add(Measure(type: SensorSamplingPackage.ACCELEROMETER))
+          ..measures.add(Measure(type: SensorSamplingPackage.GYROSCOPE)),
+        phone);
+
     // collect a coughing sample on a daily basis
     // also collect location, and local weather and air quality of this sample
     protocol.addTriggeredTask(
@@ -188,11 +247,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           notification: true,
         )
           ..measures.add(CAMSMeasure(
-            type: AudioSamplingPackage.AUDIO,
+            type: MediaSamplingPackage.AUDIO,
             name: "Coughing",
             description: "Collects an audio recording of coughing",
           ))
-          ..measures.addAll(SamplingPackageRegistry().common().getMeasureList(
+          ..measures.addAll(SamplingPackageRegistry().common.getMeasureList(
             types: [
               ContextSamplingPackage.LOCATION,
               ContextSamplingPackage.WEATHER,
@@ -219,7 +278,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
           minutesToComplete: 3,
         )..measures.add(CAMSMeasure(
-            type: AudioSamplingPackage.AUDIO,
+            type: MediaSamplingPackage.AUDIO,
             name: "Reading",
             description:
                 "Collects an audio recording while reading a text aloud",
@@ -230,7 +289,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // collect location, and local weather and air quality
     protocol.addTriggeredTask(
         ConditionalSamplingEventTrigger(
-          measureType: AudioSamplingPackage.AUDIO,
+          measureType: MediaSamplingPackage.AUDIO,
           resumeCondition: (DataPoint dataPoint) => true,
           pauseCondition: (DataPoint dataPoint) => true,
         ),
@@ -238,7 +297,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Location, Weather & Air Quality",
           description: "Collect location, weather and air quality",
-        )..measures.addAll(SamplingPackageRegistry().common().getMeasureList(
+        )..measures.addAll(SamplingPackageRegistry().common.getMeasureList(
             types: [
               ContextSamplingPackage.LOCATION,
               ContextSamplingPackage.WEATHER,

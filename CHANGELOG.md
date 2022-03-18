@@ -1,3 +1,8 @@
+## 0.33.0
+* upgrade to `carp_mobile_sensing` v 0.33.0
+* added example of a cognitive assessment task based on the `cognition_package`
+* general clean-up
+
 ## 0.30.0
 * upgrade to null-safety
 * upgrade to `carp_mobile_sensing` v 0.30.4
