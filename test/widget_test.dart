@@ -1,29 +1,74 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+import 'dart:convert';
+import 'dart:io';
+import 'package:test/test.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:pulmonary_monitor_app/main.dart';
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_connectivity_package/connectivity.dart';
+import 'package:carp_context_package/context.dart';
+import 'package:carp_audio_package/media.dart';
+import 'package:carp_survey_package/survey.dart';
+
+import '../lib/main.dart';
+
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-//  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-//    // Build our app and trigger a frame.
-//    await tester.pumpWidget(MyApp());
-//
-//    // Verify that our counter starts at 0.
-//    expect(find.text('0'), findsOneWidget);
-//    expect(find.text('1'), findsNothing);
-//
-//    // Tap the '+' icon and trigger a frame.
-//    await tester.tap(find.byIcon(Icons.add));
-//    await tester.pump();
-//
-//    // Verify that our counter has incremented.
-//    expect(find.text('0'), findsNothing);
-//    expect(find.text('1'), findsOneWidget);
-//  });
+  // creating an empty protocol to initialize json serialization
+  StudyProtocol? protocol;
+  late Smartphone phone;
+  late LocationService loc;
+
+  setUp(() async {
+    // register the different sampling package since we're using measures from them
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
+    SamplingPackageRegistry().register(SurveySamplingPackage());
+
+    DomainJsonFactory();
+
+    // Define which devices are used for data collection.
+    phone = Smartphone();
+    loc = LocationService();
+  });
+
+  group("Local Study Protocol Manager", () {
+    setUp(() async {
+      // generate the protocol
+      protocol = await LocalStudyProtocolManager()
+          .getStudyProtocol('CAMS App v 0.33.0');
+    });
+
+    test('CAMSStudyProtocol -> JSON', () async {
+      print(protocol);
+      print(toJsonString(protocol!));
+      expect(protocol?.ownerId, 'alex@uni.dk');
+    });
+
+    test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+      print('#1 : $protocol');
+      final studyJson = toJsonString(protocol!);
+
+      SmartphoneStudyProtocol protocolFromJson =
+          SmartphoneStudyProtocol.fromJson(
+              json.decode(studyJson) as Map<String, dynamic>);
+      expect(toJsonString(protocolFromJson), equals(studyJson));
+      print('#2 : $protocolFromJson');
+    });
+
+    test('JSON File -> StudyProtocol', () async {
+      // Read the study protocol from json file
+      String plainJson = File('test/json/protocol.json').readAsStringSync();
+
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      expect(protocol.ownerId, 'abc@dtu.dk');
+      expect(protocol.masterDevices.first.roleName, phone.roleName);
+      expect(protocol.connectedDevices.first.roleName, loc.roleName);
+      print(toJsonString(protocol));
+    });
+  });
 }

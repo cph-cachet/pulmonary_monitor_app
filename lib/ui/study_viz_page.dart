@@ -207,10 +207,11 @@ class _MeasureLine extends StatelessWidget {
         : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN as String]!.icon,
             size: 25);
 
+    final String name = ProbeDescription.descriptors[measure?.type]?.name ??
+        measure.runtimeType.toString();
+
     final List<Widget> columnChildren = [];
-    columnChildren.add((measure is CAMSMeasure)
-        ? Text((measure as CAMSMeasure).name!)
-        : Text(measure.runtimeType.toString()));
+    columnChildren.add(Text(name));
     columnChildren
         .add(Text(measure.toString(), style: themeData.textTheme.caption));
 

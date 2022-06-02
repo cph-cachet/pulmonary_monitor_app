@@ -54,7 +54,7 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
   }
 
   void dispose() {
-    bloc.dispose();
+    bloc.stop();
     super.dispose();
   }
 

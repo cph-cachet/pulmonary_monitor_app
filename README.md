@@ -1,8 +1,7 @@
 # Pulmonary Monitor Flutter App
 
 The Pulmonary Monitor Flutter App is designed to monitor pulmonary (i.e., respiratory) symptoms.
-It is build using the [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) 
-(CAMS) Framework, which is part of the [CACHET Research Platform](https://carp.cachet.dk) (CARP) from the [Copenhagen Center for Health Technology](https://www.cachet.dk).
+It is build using the [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) (CAMS) Framework, which is part of the [CACHET Research Platform](https://carp.cachet.dk) (CARP) from the [Copenhagen Center for Health Technology](https://www.cachet.dk).
 
 It follows the Flutter Business Logic Component (BLoC) architecture, as described in the 
 [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app).
@@ -19,6 +18,7 @@ Pulmonary Monitor is designed to sample the following data:
 * context data - location, activity, weather, and air quality
 * surveys - demographics and daily symptoms
 * sound - coughing and reading
+* cognitive performance - using a set of cognitive tests
 
 All of this is configured in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. Compared to the standard CAMS example app, this app makes extensive use of `AppTask`s for collecting surveys and sound samples. However, it also illustrates how "normal" sensing measures can be wrapped in an `AppTask`. For example, there is an app task collecting weather and air quality measures. 
 
@@ -31,11 +31,12 @@ The user-interface of the app is shown in Figure 1.
 
 ## App Tasks
 
-The task list (Figure 1 right) is created from the different `AppTask`s defined in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. There are three kind of app tasks defined:
+The task list (Figure 1 right) is created from the different `AppTask`s defined in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. There are four kind of app tasks defined:
 
-1. A **sensing** task wrapped in an app task
-2. Two types of **survey** tasks, each wrapped in an app task
-3. Two types of **audio** tasks, each wrapped in an app task
+1. A **sensing** task wrapped in an app task collecting weather and air quality.
+2. Two types of **survey** tasks collecting demographics and daily symptoms.
+3. Two types of **audio** tasks, collecting sound while the user is coughing and reading.
+4. Two type of **cognitive** tasks, assessing cognitive functioning and finger tapping speed. 
 
 ### Sensing App Task
 

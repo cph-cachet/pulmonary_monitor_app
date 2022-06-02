@@ -47,11 +47,11 @@ class PulmonaryUserTaskFactory implements UserTaskFactory {
   ];
 
   UserTask create(AppTaskExecutor executor) {
-    switch (executor.appTask.type) {
+    switch (executor.task.type) {
       case AudioUserTask.AUDIO_TYPE:
         return AudioUserTask(executor);
       default:
-        return SensingUserTask(executor);
+        return BackgroundSensingUserTask(executor);
     }
   }
 }
