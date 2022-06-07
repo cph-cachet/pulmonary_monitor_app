@@ -7,6 +7,7 @@ class AudioUserTask extends UserTask {
 
   StreamController<int> _countDownController = StreamController.broadcast();
   Stream<int> get countDownEvents => _countDownController.stream;
+  Timer? _timer;
 
   /// Duration of audio recording in seconds.
   int recordingDuration = 10;
@@ -27,11 +28,11 @@ class AudioUserTask extends UserTask {
   void onRecord() {
     executor.resume();
 
-    Timer.periodic(new Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(new Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
-      if (recordingDuration == 0) {
-        timer.cancel();
+      if (recordingDuration <= 0) {
+        _timer?.cancel();
         _countDownController.close();
 
         executor.pause();
