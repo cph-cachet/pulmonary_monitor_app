@@ -62,6 +62,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Jakob E. Bardram',
         ));
 
+    // define the data end point , i.e., where to store data
+    protocol.dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE);
+
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
     protocol.addMasterDevice(phone);
@@ -113,7 +116,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ]),
         phone);
 
-    // collect demographics & location once when the study starts
+    // collect demographics & location once the study starts
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         RPAppTask(
@@ -126,11 +129,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
         phone);
 
-    // collect symptoms on a daily basis
+    // collect symptoms daily at 13:30
     protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(days: 1),
-          duration: const Duration(seconds: 2),
+        RecurrentScheduledTrigger(
+          type: RecurrentType.daily,
+          time: TimeOfDay(hour: 13, minute: 30),
         ),
         RPAppTask(
             type: SurveyUserTask.SURVEY_TYPE,
@@ -143,10 +146,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // perform a cognitive assessment
     protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(minutes: 2),
-          duration: const Duration(seconds: 2),
-        ),
+        IntervalTrigger(period: Duration(hours: 2)),
         RPAppTask(
             type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
             title: surveys.cognition.title,
@@ -158,10 +158,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // perform a Parkisons' assessment
     protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(minutes: 2),
-          duration: const Duration(seconds: 2),
-        ),
+        IntervalTrigger(period: Duration(hours: 2)),
         RPAppTask(
             type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
             title: "Parkinsons' Assessment",
@@ -197,10 +194,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // collect a coughing sample on a daily basis
     // also collect location, and local weather and air quality of this sample
     protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(days: 1),
-          duration: const Duration(seconds: 2),
-        ),
+        IntervalTrigger(period: Duration(days: 1)),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Coughing",
@@ -222,10 +216,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // collect a reading / audio sample on a daily basis
     protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(days: 1),
-          duration: const Duration(seconds: 2),
-        ),
+        IntervalTrigger(period: Duration(days: 1)),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Reading",
