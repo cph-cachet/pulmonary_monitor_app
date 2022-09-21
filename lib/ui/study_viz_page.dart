@@ -4,18 +4,20 @@ class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key? key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.studyDeploymentModel);
+  @override
+  StudyVizState createState() => StudyVizState(bloc.studyDeploymentModel);
 }
 
-class _StudyVizState extends State<StudyVisualization> {
+class StudyVizState extends State<StudyVisualization> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
   final StudyDeploymentModel studyDeploymentModel;
 
-  _StudyVizState(this.studyDeploymentModel) : super();
+  StudyVizState(this.studyDeploymentModel) : super();
 
+  @override
   Widget build(BuildContext context) =>
       _buildStudyVisualization(context, bloc.studyDeploymentModel);
 
@@ -76,8 +78,9 @@ class _StudyVizState extends State<StudyVisualization> {
       child: _buildStudyControllerPanel(context, study),
     ));
 
-    studyDeploymentModel.deployment.tasks
-        .forEach((task) => children.add(_TaskPanel(task: task)));
+    for (var task in studyDeploymentModel.deployment.tasks) {
+      children.add(_TaskPanel(task: task));
+    }
 
     return children;
   }

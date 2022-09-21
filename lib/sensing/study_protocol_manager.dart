@@ -12,6 +12,7 @@ part of pulmonary_monitor_app;
 /// This class shows how to configure a [StudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
+  @override
   Future initialize() async {}
 
   /// Get a data endpoint for this study.
@@ -38,6 +39,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   }
 
   /// Create a new CAMS study protocol.
+  @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       name: 'Pulmonary Monitor',
@@ -68,6 +70,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
     protocol.addMasterDevice(phone);
+
+    // Define the online weather service and add it as a 'device'
+    WeatherService weatherService =
+        WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    protocol.addConnectedDevice(weatherService);
 
     // build-in measure from sensor and device sampling packages
     protocol.addTriggeredTask(
@@ -107,14 +114,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         IntervalTrigger(period: Duration(hours: 1)),
         AppTask(
           type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Weather & Air Quality",
-          description: "Collect local weather and air quality",
+          title: "Weather",
+          description: "Collect local weather data",
           notification: true,
-        )..addMeasures([
-            Measure(type: ContextSamplingPackage.WEATHER),
-            Measure(type: ContextSamplingPackage.AIR_QUALITY),
-          ]),
-        phone);
+        )..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        weatherService);
 
     // collect demographics & location once the study starts
     protocol.addTriggeredTask(
@@ -253,6 +257,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     return protocol;
   }
 
+  @override
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();
   }

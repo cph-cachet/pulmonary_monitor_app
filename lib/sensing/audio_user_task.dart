@@ -5,7 +5,8 @@ part of pulmonary_monitor_app;
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
-  StreamController<int> _countDownController = StreamController.broadcast();
+  final StreamController<int> _countDownController =
+      StreamController.broadcast();
   Stream<int> get countDownEvents => _countDownController.stream;
   Timer? _timer;
 
@@ -28,7 +29,7 @@ class AudioUserTask extends UserTask {
   void onRecord() {
     executor.resume();
 
-    _timer = Timer.periodic(new Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
       if (recordingDuration <= 0) {
@@ -43,10 +44,12 @@ class AudioUserTask extends UserTask {
 }
 
 class PulmonaryUserTaskFactory implements UserTaskFactory {
+  @override
   List<String> types = [
     AudioUserTask.AUDIO_TYPE,
   ];
 
+  @override
   UserTask create(AppTaskExecutor executor) {
     switch (executor.task.type) {
       case AudioUserTask.AUDIO_TYPE:

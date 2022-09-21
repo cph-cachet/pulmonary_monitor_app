@@ -5,13 +5,15 @@ class TaskList extends StatefulWidget {
 
   static const String routeName = '/tasklist';
 
-  _TaskListState createState() => _TaskListState();
+  @override
+  TaskListState createState() => TaskListState();
 }
 
-class _TaskListState extends State<TaskList> {
+class TaskListState extends State<TaskList> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
+  @override
   Widget build(BuildContext context) {
     List<UserTask> tasks = bloc.tasks.reversed.toList();
 

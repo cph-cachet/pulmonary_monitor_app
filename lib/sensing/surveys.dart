@@ -3,16 +3,16 @@ part of pulmonary_monitor_app;
 final surveys = _Surveys();
 
 class _Surveys {
-  Survey _who5 = _WHO5Survey();
+  final Survey _who5 = _WHO5Survey();
   Survey get who5 => _who5;
 
-  Survey _demographics = _DemographicSurvey();
+  final Survey _demographics = _DemographicSurvey();
   Survey get demographics => _demographics;
 
-  Survey _symptoms = _SymptomsSurvey();
+  final Survey _symptoms = _SymptomsSurvey();
   Survey get symptoms => _symptoms;
 
-  Survey _cognition = _CognitionSurvey();
+  final Survey _cognition = _CognitionSurvey();
   Survey get cognition => _cognition;
 }
 
@@ -32,11 +32,14 @@ abstract class Survey {
 }
 
 class _WHO5Survey implements Survey {
+  @override
   String get title => "WHO5 Well-Being";
+  @override
   String get description => "A short 5-item survey on your well-being.";
+  @override
   int get minutesToComplete => 1;
 
-  RPChoiceAnswerFormat _choiceAnswerFormat = RPChoiceAnswerFormat(
+  final RPChoiceAnswerFormat _choiceAnswerFormat = RPChoiceAnswerFormat(
     answerStyle: RPChoiceAnswerStyle.SingleChoice,
     choices: [
       RPChoice(text: "All of the time", value: 5),
@@ -48,6 +51,7 @@ class _WHO5Survey implements Survey {
     ],
   );
 
+  @override
   RPTask get survey => RPOrderedTask(
         identifier: "who5_survey",
         steps: [
@@ -93,8 +97,11 @@ class _WHO5Survey implements Survey {
 }
 
 class _DemographicSurvey implements Survey {
+  @override
   String get title => "Demographics";
+  @override
   String get description => "A short 4-item survey on your background.";
+  @override
   int get minutesToComplete => 2;
 
   final RPChoiceAnswerFormat _sexChoices = RPChoiceAnswerFormat(
@@ -157,6 +164,7 @@ class _DemographicSurvey implements Survey {
         RPChoice(text: "Prefer not to say", value: 7),
       ]);
 
+  @override
   RPTask get survey => RPOrderedTask(
         identifier: "demo_survey",
         steps: [
@@ -185,11 +193,14 @@ class _DemographicSurvey implements Survey {
 }
 
 class _SymptomsSurvey implements Survey {
+  @override
   String get title => "Symptoms";
+  @override
   String get description => "A short 1-item survey on your daily symptoms.";
+  @override
   int get minutesToComplete => 1;
 
-  RPChoiceAnswerFormat _symptomsChoices = RPChoiceAnswerFormat(
+  final RPChoiceAnswerFormat _symptomsChoices = RPChoiceAnswerFormat(
       answerStyle: RPChoiceAnswerStyle.MultipleChoice,
       choices: [
         RPChoice(text: "None", value: 1),
@@ -208,6 +219,7 @@ class _SymptomsSurvey implements Survey {
         RPChoice(text: "Prefer not to say", value: 13),
       ]);
 
+  @override
   RPTask get survey => RPOrderedTask(
         identifier: "symptoms_survey",
         steps: [
@@ -221,10 +233,14 @@ class _SymptomsSurvey implements Survey {
 }
 
 class _CognitionSurvey implements Survey {
+  @override
   String get title => "Cognitive Assessment";
+  @override
   String get description => "A short 2-item cognitive assessment.";
+  @override
   int get minutesToComplete => 2;
 
+  @override
   RPTask get survey => RPOrderedTask(
         identifier: "cognition_survey",
         steps: [

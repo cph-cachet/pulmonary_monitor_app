@@ -14,6 +14,7 @@ class App extends StatelessWidget {
     return true;
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
@@ -35,6 +36,7 @@ class App extends StatelessWidget {
 
 class PulmonaryMonitorApp extends StatefulWidget {
   PulmonaryMonitorApp({Key? key}) : super(key: key);
+  @override
   PulmonaryMonitorAppState createState() => PulmonaryMonitorAppState();
 }
 
@@ -49,15 +51,18 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
     DataVisualization(),
   ];
 
+  @override
   void initState() {
     super.initState();
   }
 
+  @override
   void dispose() {
     bloc.stop();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
@@ -86,10 +91,11 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
 
   void restart() {
     setState(() {
-      if (bloc.isRunning)
+      if (bloc.isRunning) {
         bloc.pause();
-      else
+      } else {
         bloc.resume();
+      }
     });
   }
 }

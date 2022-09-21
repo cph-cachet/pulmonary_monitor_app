@@ -144,7 +144,8 @@ class LocalResourceManager
     print("$runtimeType - loading '$path'");
     String jsonString = await rootBundle.loadString(path);
 
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
+    Map<String, dynamic> jsonMap =
+        json.decode(jsonString) as Map<String, dynamic>;
     Map<String, String> translations =
         jsonMap.map((key, value) => MapEntry(key, value.toString()));
 

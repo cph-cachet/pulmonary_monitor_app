@@ -5,12 +5,13 @@ homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.2
+  flutter_launcher_icons: ^0.10.0
   uuid: ^3.0.4
   shared_preferences: ^2.0.0
 
@@ -25,10 +26,58 @@ dependencies:
   # carp_health_package: ^2.4.0
   
   # research_package: ^0.7.0
-  cognition_package: ^1.0.0
+  cognition_package: ^1.2.0
+
+# Overriding carp libraries to use github branch
+# Remove this before release of app
+# dependency_overrides:  
+#   carp_core:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: carp_core
+#   carp_mobile_sensing:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: carp_mobile_sensing
+#   carp_context_package:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: packages/carp_context_package/
+#   carp_survey_package:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: packages/carp_survey_package/
+#   carp_connectivity_package:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: packages/carp_connectivity_package/
+#   carp_audio_package:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: packages/carp_audio_package/
+#   carp_backend:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: backends/carp_backend/
+#   carp_webservices:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: backends/carp_webservices/
+#   research_package:
+#     git:
+#       url: https://github.com/cph-cachet/research.package.git
+#       ref: dev-carp-core-0_40_0
 
 
-# Overriding carp libraries to use the local or github copy
+# Overriding carp libraries to use a local copy
 dependency_overrides:
   carp_core:
     path: ../carp/carp.sensing-flutter/carp_core/
@@ -51,6 +100,7 @@ dev_dependencies:
 #  flutter_test:
 #    sdk: flutter
   test: any 
+  flutter_lints: any
 
 
 # Is used to change the default app launch icons on iOS and Android.

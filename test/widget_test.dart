@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
-import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 import 'package:carp_survey_package/survey.dart';
 
@@ -27,7 +27,8 @@ void main() {
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
 
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -43,18 +44,18 @@ void main() {
 
     test('CAMSStudyProtocol -> JSON', () async {
       print(protocol);
-      print(toJsonString(protocol!));
+      print(_encode(protocol!));
       expect(protocol?.ownerId, 'alex@uni.dk');
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
       print('#1 : $protocol');
-      final studyJson = toJsonString(protocol!);
+      final studyJson = _encode(protocol!);
 
       SmartphoneStudyProtocol protocolFromJson =
           SmartphoneStudyProtocol.fromJson(
               json.decode(studyJson) as Map<String, dynamic>);
-      expect(toJsonString(protocolFromJson), equals(studyJson));
+      expect(_encode(protocolFromJson), equals(studyJson));
       print('#2 : $protocolFromJson');
     });
 
@@ -68,7 +69,7 @@ void main() {
       expect(protocol.ownerId, 'abc@dtu.dk');
       expect(protocol.masterDevices.first.roleName, phone.roleName);
       expect(protocol.connectedDevices.first.roleName, loc.roleName);
-      print(toJsonString(protocol));
+      print(_encode(protocol));
     });
   });
 }
