@@ -18,6 +18,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   /// Get a data endpoint for this study.
   DataEndPoint getDataEndpoint(String type) {
     switch (type) {
+      case DataEndPointTypes.SQLITE:
+        return SQLiteDataEndPoint();
       case DataEndPointTypes.FILE:
         return FileDataEndPoint(
           bufferSize: 50 * 1000,
@@ -65,7 +67,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ));
 
     // define the data end point , i.e., where to store data
-    protocol.dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE);
+    protocol.dataEndPoint = getDataEndpoint(DataEndPointTypes.SQLITE);
 
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -75,6 +77,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     WeatherService weatherService =
         WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
     protocol.addConnectedDevice(weatherService);
+
+    // Define the online air quality service and add it as a 'device'
+    AirQualityService airQualityService =
+        AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
+    protocol.addConnectedDevice(airQualityService);
 
     // build-in measure from sensor and device sampling packages
     protocol.addTriggeredTask(
@@ -107,18 +114,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
           ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
         locationService);
-
-    // add an app task that once pr. hour asks the user to
-    // collect weather and air quality - and notify the user
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(hours: 1)),
-        AppTask(
-          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Weather",
-          description: "Collect local weather data",
-          notification: true,
-        )..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
-        weatherService);
 
     // collect demographics & location once the study starts
     protocol.addTriggeredTask(
@@ -235,23 +230,23 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )..measures.add(Measure(type: MediaSamplingPackage.AUDIO)),
         phone);
 
-    // when the reading (audio) measure is collected, the add a user task to
-    // collect location, and local weather and air quality
+    // add a task that keeps reappearing when done
+    var environmentTask = AppTask(
+      type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+      title: "Location, Weather & Air Quality",
+      description: "Collect location, weather and air quality",
+    )..addMeasures([
+        Measure(type: ContextSamplingPackage.LOCATION),
+        Measure(type: ContextSamplingPackage.WEATHER),
+        Measure(type: ContextSamplingPackage.AIR_QUALITY),
+      ]);
+
+    protocol.addTriggeredTask(ImmediateTrigger(), environmentTask, phone);
     protocol.addTriggeredTask(
-        ConditionalSamplingEventTrigger(
-          measureType: MediaSamplingPackage.AUDIO,
-          resumeCondition: (DataPoint dataPoint) => true,
-          pauseCondition: (DataPoint dataPoint) => true,
-        ),
-        AppTask(
-          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Weather & Air Quality",
-          description: "Collect local weather and air quality",
-          notification: true,
-        )..addMeasures([
-            Measure(type: ContextSamplingPackage.WEATHER),
-            Measure(type: ContextSamplingPackage.AIR_QUALITY),
-          ]),
+        UserTaskTrigger(
+            taskName: environmentTask.name,
+            resumeCondition: UserTaskState.done),
+        environmentTask,
         phone);
 
     return protocol;

@@ -2,15 +2,8 @@ part of pulmonary_monitor_app;
 
 class App extends StatelessWidget {
   /// This methods is used to set up the entire app, including:
-  ///  * initialize the bloc
-  ///  * authenticate the user
-  ///  * get the invitation
-  ///  * get the study
-  ///  * initialize sensing
-  ///  * start sensing
   Future<bool> init(BuildContext context) async {
     await bloc.init();
-    bloc.resume();
     return true;
   }
 
