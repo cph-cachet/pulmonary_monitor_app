@@ -15,9 +15,10 @@ class Sensing {
   SmartphoneDeploymentController? _controller;
   late StudyProtocolManager manager;
   late SmartPhoneClientManager client;
+  DeploymentService deploymentService = SmartphoneDeploymentService();
+  // Study? study;
 
-  SmartphoneDeployment? get deployment =>
-      _controller?.deployment as SmartphoneDeployment?;
+  SmartphoneDeployment? get deployment => _controller?.deployment;
 
   /// Get the status of the study deployment.
   StudyDeploymentStatus? get status => _status;
@@ -62,26 +63,43 @@ class Sensing {
 
     // deploy this protocol using the on-phone deployment service
     // reuse the study deployment id, so we have the same id on the phone deployment
-    _status = await SmartphoneDeploymentService().createStudyDeployment(
+    _status = await deploymentService.createStudyDeployment(
       _protocol!,
       testStudyDeploymentId,
     );
 
+    String studyDeploymentId = _status!.studyDeploymentId;
     String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
 
     // create and configure a client manager for this phone
     client = SmartPhoneClientManager();
-    await client.configure();
-
-    // add and deploy this study deployment
-    _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
-    await _controller?.tryDeployment();
-
-    // configure the controller and resume sampling
-    await _controller!.configure(
-      privacySchemaName: PrivacySchema.DEFAULT,
+    await client.configure(
+      deploymentService: deploymentService,
+      deviceController: DeviceController(),
     );
-    // controller.resume();
+
+    // Define the study and add it to the client.
+    Study study = Study(
+      studyDeploymentId,
+      deviceRolename,
+    );
+    await client.addStudy(study);
+
+    // Get the study controller and try to deploy the study.
+    //
+    // Note that if the study has already been deployed on this phone
+    // it has been cached locally in a file and the local cache will
+    // be used pr. default.
+    // If not deployed before (i.e., cached) the study deployment will be
+    // fetched from the deployment service.
+    _controller = client.getStudyRuntime(study);
+    await controller?.tryDeployment(useCached: true);
+
+    // Configure the controller
+    await controller?.configure();
+
+    // Start samplling
+    controller?.start();
 
     // listening on the data stream and print them as json to the debug console
     _controller!.data.listen((data) => print(toJsonString(data)));

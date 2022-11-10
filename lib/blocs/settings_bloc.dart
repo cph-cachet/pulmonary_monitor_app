@@ -11,11 +11,8 @@ class SettingsBLoC {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  Future<SharedPreferences?> get preferences async {
-    if (_preferences == null)
-      _preferences = await SharedPreferences.getInstance();
-    return _preferences;
-  }
+  Future<SharedPreferences?> get preferences async =>
+      _preferences ??= await SharedPreferences.getInstance();
 
   String? _userId;
 

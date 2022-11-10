@@ -3,9 +3,8 @@ library pulmonary_monitor_app;
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
-//import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,7 +13,7 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 //import 'package:carp_connectivity_package/connectivity.dart';
 //import 'package:carp_communication_package/communication.dart';
-import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:carp_audio_package/media.dart';
 //import 'package:carp_health_package/health_package.dart';
@@ -46,3 +45,6 @@ part 'ui/audio_measure_page.dart';
 void main() {
   runApp(App());
 }
+
+String toJsonString(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);

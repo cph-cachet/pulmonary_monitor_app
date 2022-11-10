@@ -7,13 +7,14 @@ class AudioMeasurePage extends StatefulWidget {
 
   AudioMeasurePage({Key? key, this.audioUserTask}) : super(key: key);
 
-  _AudioMeasurePageState createState() => _AudioMeasurePageState(audioUserTask);
+  @override
+  AudioMeasurePageState createState() => AudioMeasurePageState(audioUserTask);
 }
 
-class _AudioMeasurePageState extends State<AudioMeasurePage> {
+class AudioMeasurePageState extends State<AudioMeasurePage> {
   AudioUserTask? audioUserTask;
 
-  _AudioMeasurePageState(this.audioUserTask) : super();
+  AudioMeasurePageState(this.audioUserTask) : super();
 
   @override
   Widget build(BuildContext context) {

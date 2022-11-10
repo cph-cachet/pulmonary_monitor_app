@@ -2,10 +2,10 @@ part of pulmonary_monitor_app;
 
 class InformedConsentPage extends StatefulWidget {
   @override
-  State createState() => new _InformedConsentPage();
+  State createState() => InformedConsentPageState();
 }
 
-class _InformedConsentPage extends State<InformedConsentPage> {
+class InformedConsentPageState extends State<InformedConsentPage> {
   String _encode(Object object) =>
       const JsonEncoder.withIndent(' ').convert(object);
 

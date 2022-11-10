@@ -1,3 +1,6 @@
+## 0.40.0
+* upgrade to `carp_mobile_sensing` v 0.40.0
+
 ## 0.33.0
 * upgrade to `carp_mobile_sensing` v 0.33.0
 * added example of a cognitive assessment task based on the `cognition_package`

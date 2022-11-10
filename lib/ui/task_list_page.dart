@@ -5,13 +5,15 @@ class TaskList extends StatefulWidget {
 
   static const String routeName = '/tasklist';
 
-  _TaskListState createState() => _TaskListState();
+  @override
+  TaskListState createState() => TaskListState();
 }
 
-class _TaskListState extends State<TaskList> {
+class TaskListState extends State<TaskList> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
+  @override
   Widget build(BuildContext context) {
     List<UserTask> tasks = bloc.tasks.reversed.toList();
 
@@ -91,12 +93,12 @@ class _TaskListState extends State<TaskList> {
   }
 
   Map<String, Icon> get taskTypeIcon => {
-        SurveyUserTask.WHO5_SURVEY_TYPE: Icon(
+        SurveyUserTask.SURVEY_TYPE: Icon(
           Icons.design_services,
           color: CACHET.ORANGE,
           size: 40,
         ),
-        SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE: Icon(
+        SurveyUserTask.SURVEY_TYPE: Icon(
           Icons.person,
           color: CACHET.ORANGE,
           size: 40,
@@ -116,12 +118,12 @@ class _TaskListState extends State<TaskList> {
           color: CACHET.GREEN,
           size: 40,
         ),
-        SensingUserTask.SENSING_TYPE: Icon(
+        BackgroundSensingUserTask.SENSING_TYPE: Icon(
           Icons.settings_input_antenna,
           color: CACHET.CACHET_BLUE,
           size: 40,
         ),
-        SensingUserTask.ONE_TIME_SENSING_TYPE: Icon(
+        BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE: Icon(
           Icons.settings_input_component,
           color: CACHET.CACHET_BLUE,
           size: 40,

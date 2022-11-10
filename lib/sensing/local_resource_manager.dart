@@ -79,10 +79,10 @@ class LocalResourceManager
       RPConsentReviewStep consentReviewStep = RPConsentReviewStep(
         identifier: "consentreviewstepID",
         consentDocument: consentDocument,
-      )
-        ..reasonForConsent = 'By tapping AGREE you can take part in the study'
-        ..text = 'Agreed?'
-        ..title = "Consent Review Step Title";
+        reasonForConsent: 'By tapping AGREE you can take part in the study',
+        text: 'Agreed?',
+        title: "Consent Review Step Title",
+      );
 
       RPVisualConsentStep consentVisualStep = RPVisualConsentStep(
         identifier: "visualStep",
@@ -144,7 +144,8 @@ class LocalResourceManager
     print("$runtimeType - loading '$path'");
     String jsonString = await rootBundle.loadString(path);
 
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
+    Map<String, dynamic> jsonMap =
+        json.decode(jsonString) as Map<String, dynamic>;
     Map<String, String> translations =
         jsonMap.map((key, value) => MapEntry(key, value.toString()));
 

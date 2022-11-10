@@ -7,11 +7,6 @@ class SensingBLoC {
   /// The list of available app tasks for the user to address.
   List<UserTask> get tasks => AppTaskController().userTaskQueue;
 
-  /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning =>
-      (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ProbeState.resumed;
-
   /// Get the study for this app.
   StudyDeploymentModel get studyDeploymentModel =>
       _model ??= StudyDeploymentModel(deployment!);
@@ -61,10 +56,14 @@ class SensingBLoC {
     });
   }
 
-  void resume() async => Sensing().controller!.resume();
-  void pause() => Sensing().controller!.pause();
-  void stop() async => Sensing().controller!.stop();
-  void dispose() async => Sensing().controller!.stop();
+  void resume() async => Sensing().controller?.executor?.resume();
+  void pause() => Sensing().controller?.executor?.pause();
+  void stop() async => Sensing().controller?.stop();
+
+  /// Is sensing running, i.e. has the study executor been resumed?
+  bool get isRunning =>
+      (Sensing().controller != null) &&
+      Sensing().controller!.executor!.state == ExecutorState.resumed;
 
   // /// Add a [Datum] object to the stream of events.
   // void addDatum(Datum datum) => sensing.controller.executor.addDatum(datum);
