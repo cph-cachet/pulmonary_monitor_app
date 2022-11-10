@@ -79,10 +79,10 @@ class LocalResourceManager
       RPConsentReviewStep consentReviewStep = RPConsentReviewStep(
         identifier: "consentreviewstepID",
         consentDocument: consentDocument,
-      )
-        ..reasonForConsent = 'By tapping AGREE you can take part in the study'
-        ..text = 'Agreed?'
-        ..title = "Consent Review Step Title";
+        reasonForConsent: 'By tapping AGREE you can take part in the study',
+        text: 'Agreed?',
+        title: "Consent Review Step Title",
+      );
 
       RPVisualConsentStep consentVisualStep = RPVisualConsentStep(
         identifier: "visualStep",

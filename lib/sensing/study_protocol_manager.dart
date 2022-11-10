@@ -119,7 +119,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         RPAppTask(
-            type: SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
+            type: SurveyUserTask.SURVEY_TYPE,
             title: surveys.demographics.title,
             description: surveys.demographics.description,
             minutesToComplete: surveys.demographics.minutesToComplete,
@@ -173,13 +173,20 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
                         "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
                         "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
                         "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
+                RPTimerStep(
+                  identifier: 'RPTimerStepID',
+                  timeout: Duration(seconds: 6),
+                  title:
+                      "Please stand up and hold the phone in one hand and lift it in a straight arm until you hear the sound.",
+                  playSound: true,
+                ),
                 RPFlankerActivity(
-                  'flanker_1',
+                  identifier: 'flanker_1',
                   lengthOfTest: 30,
                   numberOfCards: 10,
                 ),
                 RPTappingActivity(
-                  'tapping_1',
+                  identifier: 'tapping_1',
                   lengthOfTest: 10,
                 )
               ],

@@ -3,7 +3,6 @@ description: App for monitoring of pulmonary (i.e. respiratory) health build usi
 version: 0.40.0
 homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 
-
 environment:
   sdk: '>=2.17.0 <3.0.0'
   flutter: ">=3.0.0"
@@ -15,18 +14,18 @@ dependencies:
   uuid: ^3.0.4
   shared_preferences: ^2.0.0
 
-  # carp_core: ^0.40.0
-  # carp_mobile_sensing: ^0.40.0
-  # carp_context_package: ^0.40.0
-  # carp_connectivity_package: ^0.40.0
-  # carp_survey_package: ^0.40.0
-  # carp_audio_package: ^0.40.0
-  # carp_backend: ^0.40.0
+  carp_core: ^0.40.0
+  carp_mobile_sensing: ^0.40.0
+  carp_context_package: ^0.40.0
+  carp_connectivity_package: ^0.40.0
+  carp_survey_package: ^0.40.0
+  carp_audio_package: ^0.40.0
+  carp_backend: ^0.40.0
   # carp_communication_package: ^0.40.0
-  # carp_health_package: ^2.4.0
+  carp_health_package: ^2.4.0
   
-  # research_package: ^0.7.0
-  cognition_package: ^1.2.0
+  research_package: ^1.2.0
+  cognition_package: ^1.3.0
 
 # Overriding carp libraries to use github branch
 # Remove this before release of app
@@ -78,23 +77,23 @@ dependencies:
 
 
 # Overriding carp libraries to use a local copy
-dependency_overrides:
-  carp_core:
-    path: ../carp/carp.sensing-flutter/carp_core/
-  carp_mobile_sensing:
-    path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
-  carp_context_package:
-    path: ../carp/carp.sensing-flutter/packages/carp_context_package/
-  carp_connectivity_package:
-    path: ../carp/carp.sensing-flutter/packages/carp_connectivity_package/
-  carp_audio_package:
-    path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
-  carp_survey_package:
-    path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
-  carp_backend:
-    path: ../carp/carp.sensing-flutter/backends/carp_backend/
-  carp_webservices:
-    path: ../carp/carp.sensing-flutter/backends/carp_webservices/
+# dependency_overrides:
+#   carp_core:
+#     path: ../carp/carp.sensing-flutter/carp_core/
+#   carp_mobile_sensing:
+#     path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
+#   carp_context_package:
+#     path: ../carp/carp.sensing-flutter/packages/carp_context_package/
+#   carp_connectivity_package:
+#     path: ../carp/carp.sensing-flutter/packages/carp_connectivity_package/
+#   carp_audio_package:
+#     path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
+#   carp_survey_package:
+#     path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
+#   carp_backend:
+#     path: ../carp/carp.sensing-flutter/backends/carp_backend/
+#   carp_webservices:
+#     path: ../carp/carp.sensing-flutter/backends/carp_webservices/
 
 dev_dependencies:
 #  flutter_test:

@@ -93,12 +93,12 @@ class TaskListState extends State<TaskList> {
   }
 
   Map<String, Icon> get taskTypeIcon => {
-        SurveyUserTask.WHO5_SURVEY_TYPE: Icon(
+        SurveyUserTask.SURVEY_TYPE: Icon(
           Icons.design_services,
           color: CACHET.ORANGE,
           size: 40,
         ),
-        SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE: Icon(
+        SurveyUserTask.SURVEY_TYPE: Icon(
           Icons.person,
           color: CACHET.ORANGE,
           size: 40,

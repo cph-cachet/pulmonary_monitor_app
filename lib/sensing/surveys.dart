@@ -252,12 +252,13 @@ class _CognitionSurvey implements Survey {
                   "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
                   "Please sit down confortably and just relax. Remember that there are no right or wrong answers."),
           RPFlankerActivity(
-            'flanker_1',
+            identifier: 'flanker_1',
             lengthOfTest: 300,
             numberOfCards: 10,
             includeResults: true,
           ),
-          RPPictureSequenceMemoryActivity('picture_sequence_memory_1',
+          RPPictureSequenceMemoryActivity(
+              identifier: 'picture_sequence_memory_1',
               lengthOfTest: 180,
               numberOfTests: 1,
               numberOfPics: 6,
