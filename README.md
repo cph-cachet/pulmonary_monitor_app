@@ -1,12 +1,12 @@
 # Pulmonary Monitor Flutter App
 
 The Pulmonary Monitor Flutter App is designed to monitor pulmonary (i.e., respiratory) symptoms.
-It is build using the [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) (CAMS) Framework, which is part of the [CACHET Research Platform](https://carp.cachet.dk) (CARP) from the [Copenhagen Center for Health Technology](https://www.cachet.dk).
+It is build using the [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) (CAMS) Framework, which is part of the [Copenhagen Research Platform](https://carp.cachet.dk) (CARP) from the [Copenhagen Center for Health Technology](https://www.cachet.dk).
 
-It follows the Flutter Business Logic Component (BLoC) architecture, as described in the 
+It follows the Flutter Business Logic Component (BLoC) architecture, as described in the
 [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app).
 
-In particular, this app is designed to demonstrate how the CAMS [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) is used. An elaborate presentation of the app task model is available on the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.5-The-AppTask-Model).
+In particular, this app is designed to demonstrate how the CAMS [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) is used. An elaborate presentation of the app task model is available on the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model).
 
 ## Design Rationale
 
@@ -14,13 +14,13 @@ The work on this app started with a collaboration with the [COVID-19 Sounds App]
 
 Pulmonary Monitor is designed to sample the following data:
 
-* device data - device, memory, light, 
+* device data - device, memory, light,
 * context data - location, activity, weather, and air quality
 * surveys - demographics and daily symptoms
 * sound - coughing and reading
 * cognitive performance - using a set of cognitive tests
 
-All of this is configured in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. Compared to the standard CAMS example app, this app makes extensive use of `AppTask`s for collecting surveys and sound samples. However, it also illustrates how "normal" sensing measures can be wrapped in an `AppTask`. For example, there is an app task collecting weather and air quality measures. 
+All of this is configured in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. Compared to the standard CAMS example app, this app makes extensive use of `AppTask`s for collecting surveys and sound samples. However, it also illustrates how "normal" sensing measures can be wrapped in an `AppTask`. For example, there is an app task collecting weather and air quality measures. And it illustrates how background sensing can be added to an app task. For example, accelerometer and gyroscope data is collected while the user performs a cognitive assessment.
 
 The user-interface of the app is shown in Figure 1.
 
@@ -36,92 +36,93 @@ The task list (Figure 1 right) is created from the different `AppTask`s defined 
 1. A **sensing** task wrapped in an app task collecting weather and air quality.
 2. Two types of **survey** tasks collecting demographics and daily symptoms.
 3. Two types of **audio** tasks, collecting sound while the user is coughing and reading.
-4. Two type of **cognitive** tasks, assessing cognitive functioning and finger tapping speed. 
+4. Two type of **cognitive** tasks, assessing cognitive functioning and finger tapping speed.
 
 ### Sensing App Task
 
-The sensing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list. This app task is defined like this:
+The sensing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list in Figure 1. This app task is defined like this:
 
 ````dart
-    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      name: 'Pulmonary Monitor',
-      ownerId: 'alex@uni.dk',
-    );
+SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+  name: 'Pulmonary Monitor',
+  ownerId: 'alex@uni.dk',
+);
 
-    // define which devices are used for data collection
-    Smartphone phone = Smartphone();
-    protocol.addMasterDevice(phone);
- 
-    ...
+// define which devices are used for data collection
+Smartphone phone = Smartphone();
+protocol.addMasterDevice(phone);
 
-    // add an app task that once pr. hour asks the user to
-    // collect weather and air quality - and notify the user
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(hours: 1)),
-        AppTask(
-          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Weather & Air Quality",
-          description: "Collect local weather and air quality",
-          notification: true,
-        )..addMeasures([
-            Measure(type: ContextSamplingPackage.WEATHER),
-            Measure(type: ContextSamplingPackage.AIR_QUALITY),
-          ]),
-        phone);
+...
+
+// add an app task that once pr. hour asks the user to
+// collect weather and air quality - and notify the user
+protocol.addTriggeredTask(
+    PeriodicTrigger(period: Duration(hours: 1)),
+    AppTask(
+      type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+      title: "Location, Weather & Air Quality",
+      description: "Collect location, weather and air quality",
+      notification: true,
+      measures: [
+        Measure(type: ContextSamplingPackage.LOCATION),
+        Measure(type: ContextSamplingPackage.WEATHER),
+        Measure(type: ContextSamplingPackage.AIR_QUALITY),
+      ]),
+    phone);
 ````
 
-The above code adds an [`IntervalTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/IntervalTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `ONE_TIME_SENSING_TYPE`. 
-This app task contains the two measures of `weather` and `air_quality`. 
-The result of this sensing configuration is that an app task is added to the task list every hour, and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measures are resumed exactly once. When the measures have been collected, the app task is markede as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
+The above code adds an [`PeriodicTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/PeriodicTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `ONE_TIME_SENSING_TYPE`.
+This app task contains the three measures of location, weather, and air quality.
+The result of this sensing configuration is that an app task is added to the task list every hour, and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measurements are collected exactly once. When the measurements have been collected, the app task is marked as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
 
 ![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 
 **Figure 2** - Task list with a "done" sensing task.
 
-This app task has also enabled `notification` and a notification about this task will be added to the phone's notification system. 
-If the user presses this notification, s/he is taken to the app (but **NOT** the task itself (this is a more complicated issue, which is supported by CAMS, but not implemented in the PulmonaryMonitor app (yet))). 
+This app task has also enabled `notification` and a notification about this task will be added to the phone's notification system.
+If the user presses this notification, s/he is taken to the app (but **NOT** the task itself (this is a more complicated issue, which is supported by CAMS, but not implemented in the PulmonaryMonitor app (yet))).
 If the user does the task from the app (by pushing the `PRESS HERE TO FINISH TASK` button), the notification will be removed again.
 
 ### Survey App Task
 
-A survey (as defined in the [`carp_survey_package`](https://pub.dev/packages/carp_survey_package)) can be wrapped in an app task, which will add the survey to the task list. 
+A survey (as defined in the [`carp_survey_package`](https://pub.dev/packages/carp_survey_package)) can be wrapped in an app task, which will add the survey to the task list.
 In Figure 1, there are two types of surveys; a demographics survey and a survey of daily symptoms.
 These are configured in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file like this:
 
 ````dart
-    // collect demographics & location when the study starts
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        RPAppTask(
-            type: SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
-            title: surveys.demographics.title,
-            description: surveys.demographics.description,
-            minutesToComplete: surveys.demographics.minutesToComplete,
-            notification: true,
-            rpTask: surveys.demographics.survey)
-          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
-        phone);
+// collect demographics & location once the study starts
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      RPAppTask(
+          type: SurveyUserTask.SURVEY_TYPE,
+          title: 'Demographics',
+          description: 'A short 4-item survey on your background.',
+          minutesToComplete: 1,
+          notification: true,
+          rpTask: surveys.demographics.survey,
+          measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
+      phone);
 ````
 
-This configuration adds the demographics survey (as defined in the [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart) file) immediately to the task list.  Note that a `location` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know **where** the user filled in this survey.
+This configuration adds the demographics survey (as defined in the [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart) file) immediately to the task list.  Note that a `LOCATION` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know **where** the user filled in this survey.
 
-The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day and hence added to the task list daily. Again, location is collected when the survey is filled in.
+The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day at 13:30 and hence added to the task list daily. Again, location is collected when the survey is filled in.
 
 ````dart
-    // collect symptoms daily at 13:30
-    protocol.addTriggeredTask(
-        RecurrentScheduledTrigger(
-          type: RecurrentType.daily,
-          time: TimeOfDay(hour: 13, minute: 30),
-        ),
-        RPAppTask(
-            type: SurveyUserTask.SURVEY_TYPE,
-            title: surveys.symptoms.title,
-            description: surveys.symptoms.description,
-            minutesToComplete: surveys.symptoms.minutesToComplete,
-            rpTask: surveys.symptoms.survey)
-          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
-        phone);
+// collect symptoms daily at 13:30
+protocol.addTaskControl(
+    RecurrentScheduledTrigger(
+      type: RecurrentType.daily,
+      time: TimeOfDay(hour: 13, minute: 30),
+    ),
+    RPAppTask(
+        type: SurveyUserTask.SURVEY_TYPE,
+        title: surveys.symptoms.title,
+        description: surveys.symptoms.description,
+        minutesToComplete: surveys.symptoms.minutesToComplete,
+        rpTask: surveys.symptoms.survey,
+        measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
+    phone);
 ````
 
 Note that this app task does not issue a notification.
@@ -133,41 +134,39 @@ Figure 3 shows how this looks on the user interface.
 
 **Figure 3** - Left: The daily symptoms survey, shown when the user starts the task. Right: The task list showing that the two surveys have been filled in ("done").
 
-
 ### Audio App Task
 
-Another type of app tasks used in the Pulmonary Monitor app are two types of audio tasks, which sample audio from the user when coughing and reading a text alound. Both use the `audio` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
+Another type of app tasks used in the Pulmonary Monitor app are two types of audio tasks, which sample audio from the user when coughing and reading a text aloud. Both use the `AUDIO` measure defined in the [`carp_audio_package`](https://pub.dev/packages/carp_audio_package).
 
 The configuration of the coughing audio app task is defined like this:
 
 ````dart
-    // collect a coughing sample on a daily basis
-    // also collect location, and local weather and air quality of this sample
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(days: 1)),
-        AppTask(
-          type: AudioUserTask.AUDIO_TYPE,
-          title: "Coughing",
-          description:
-              'In this small exercise we would like to collect sound samples of coughing.',
-          instructions:
-              'Please press the record button below, and then cough 5 times.',
-          minutesToComplete: 3,
-          notification: true,
-        )..addMeasures(
-            [
-              Measure(type: MediaSamplingPackage.AUDIO),
-              Measure(type: ContextSamplingPackage.LOCATION),
-              Measure(type: ContextSamplingPackage.WEATHER),
-              Measure(type: ContextSamplingPackage.AIR_QUALITY),
-            ],
-          ),
-        phone);
+// collect a coughing sample on a daily basis
+// also collect location, and local weather and air quality of this sample
+protocol.addTaskControl(
+    PeriodicTrigger(period: Duration(days: 1)),
+    AppTask(
+      type: AudioUserTask.AUDIO_TYPE,
+      title: "Coughing",
+      description:
+          'In this small exercise we would like to collect sound samples of coughing.',
+      instructions:
+          'Please press the record button below, and then cough 5 times.',
+      minutesToComplete: 3,
+      notification: true,
+      measures: [
+        Measure(type: MediaSamplingPackage.AUDIO),
+        Measure(type: ContextSamplingPackage.LOCATION),
+        Measure(type: ContextSamplingPackage.WEATHER),
+        Measure(type: ContextSamplingPackage.AIR_QUALITY),
+      ],
+    ),
+    phone);
 ````
 
-This configuration adds an app task to the task list once per day of type `AUDIO_TYPE`. 
+This configuration adds an app task to the task list once per day of type `AUDIO_TYPE`.
 And it uses notifications.
-This app task will collect four types of measures when started; an `audio` recording, current `location`, local `weather`, and local `air_quality`. 
+This app task will collect four types of measures when started; an `AUDIO` recording, current `LOCATION`, local `WEATHER`, and local `AIR_QUALITY`.
 
 ![pm_7](https://user-images.githubusercontent.com/1196642/100006854-70dbdc00-2dcb-11eb-9e42-0cba30c4af07.png)
 ![pm_9](https://user-images.githubusercontent.com/1196642/100006878-776a5380-2dcb-11eb-91ca-2ee1a3aef618.png)
@@ -176,53 +175,59 @@ This app task will collect four types of measures when started; an `audio` recor
 
 ### Cognition Testing App Task
 
-The last type of app tasks used in the app is the cognitive tests from the [cognition_package](https://pub.dev/packages/cognition_package). Cognitive test are modelled just like a survey, and can be added to the protocol like a survey. 
+The last type of app tasks used in the app is the cognitive tests from the [cognition_package](https://pub.dev/packages/cognition_package). Cognitive test are modelled just like a survey, and can be added to the protocol like a survey.
 
-Below is an example of adding an assessment of Parkinson's Disease which consists of an instruction step, two cognitive tests (Flanker and Tapping tests), and collecting accelerometer and gyroscope data while perfoming the test (in order to assess tremor).
+Below is an example of adding an assessment of Parkinson's Disease which consists of an instruction step, a timer step, and two cognitive tests (Flanker and Tapping tests). Note that accelerometer and gyroscope data is collected throughput the test (in order to assess tremor).
 
 ```dart
-    // perform a Parkisons' assessment
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(hours: 2)),
-        RPAppTask(
-            type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
-            title: "Parkinsons' Assessment",
-            description: "A simple task assessing finger tapping speed.",
-            minutesToComplete: 3,
-            rpTask: RPOrderedTask(
-              identifier: "parkinsons_assessment",
-              steps: [
-                RPInstructionStep(
-                    identifier: 'parkinsons_instruction',
-                    title: "Parkinsons' Disease Assessment",
-                    text:
-                        "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
-                        "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
-                        "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
-                RPFlankerActivity(
-                  'flanker_1',
-                  lengthOfTest: 30,
-                  numberOfCards: 10,
-                ),
-                RPTappingActivity(
-                  'tapping_1',
-                  lengthOfTest: 10,
-                )
-              ],
-            ))
-          ..addMeasures([
-            Measure(type: SensorSamplingPackage.ACCELEROMETER),
-            Measure(type: SensorSamplingPackage.GYROSCOPE),
-          ]),
-        phone);
+// perform a Parkinson's assessment
+protocol.addTaskControl(
+    PeriodicTrigger(period: Duration(hours: 2)),
+    RPAppTask(
+        type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+        title: "Parkinson's' Assessment",
+        description: "A simple task assessing finger tapping speed.",
+        minutesToComplete: 3,
+        rpTask: RPOrderedTask(
+          identifier: "parkinsons_assessment",
+          steps: [
+            RPInstructionStep(
+                identifier: 'parkinsons_instruction',
+                title: "Parkinson's Disease Assessment",
+                text:
+                    "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
+                    "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
+                    "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
+            RPTimerStep(
+              identifier: 'RPTimerStepID',
+              timeout: Duration(seconds: 6),
+              title:
+                  "Please stand up and hold the phone in one hand and lift it in a straight arm until you hear the sound.",
+              playSound: true,
+            ),
+            RPFlankerActivity(
+              identifier: 'flanker_1',
+              lengthOfTest: 30,
+              numberOfCards: 10,
+            ),
+            RPTappingActivity(
+              identifier: 'tapping_1',
+              lengthOfTest: 10,
+            )
+          ],
+        ),
+        measures: [
+          Measure(type: SensorSamplingPackage.ACCELERATION),
+          Measure(type: SensorSamplingPackage.ROTATION),
+        ]),
+    phone);
 ```
-
 
 ## User Task Model
 
-As explained in the tutorial on the [`AppTask` model on the CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.5-The-AppTask-Model), the runtime of app tasks are handled by so-called [`UserTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask-class.html). 
+As explained in the tutorial on the [`AppTask` model on the CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model), the runtime of app tasks are handled by so-called [`UserTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask-class.html).
 A `UserTask` defines what happens when the user click the "PRESS HERE TO FINISH TASK" button.
-We shall not go into these details here (please see the tutorial), but just mention that the handling of the audio app tasks above, is done using a user task model specific to the PulmonaryMonitor app. 
+We shall not go into these details here (please see the tutorial), but just mention that the handling of the audio app tasks above, is done using a user task model specific to the PulmonaryMonitor app.
 
 This user task model is specified in the [`user_task.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/user_task.dart) file.
 This file defines:
@@ -238,7 +243,8 @@ The definition of `AudioUserTask` is:
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
-  StreamController<int> _countDownController = StreamController.broadcast();
+  final StreamController<int> _countDownController =
+      StreamController.broadcast();
   Stream<int> get countDownEvents => _countDownController.stream;
   Timer? _timer;
 
@@ -259,25 +265,24 @@ class AudioUserTask extends UserTask {
 
   /// Callback when recording is to start.
   void onRecord() {
-    executor.resume();
+    executor.start();
 
-    _timer = Timer.periodic(new Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
       if (recordingDuration <= 0) {
         _timer?.cancel();
         _countDownController.close();
 
-        executor.pause();
+        executor.stop();
         state = UserTaskState.done;
       }
     });
   }
 }
-```` 
+````
 
-The `onStart()` method is called when the user 'starts' the task. i.e. pushes the "PRESS HERE ..." button. 
-This method then pushes an `AudioMeasurePage` (Figure 4 left) to the UI. 
+The `onStart()` method is called when the user 'starts' the task. i.e. pushes the "PRESS HERE ..." button.
+This method then pushes an `AudioMeasurePage` (Figure 4 left) to the UI.
 When the user clicks the red button to start recording, the `onRecord()` method is called.
 This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and reports this task as "done".
-

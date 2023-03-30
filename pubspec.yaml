@@ -1,6 +1,6 @@
 name: pulmonary_monitor_app
 description: App for monitoring of pulmonary (i.e. respiratory) health build using CARP.
-version: 0.40.0
+version: 1.1.0
 homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 
 environment:
