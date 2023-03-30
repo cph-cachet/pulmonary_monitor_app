@@ -8,6 +8,7 @@ import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 import 'package:carp_survey_package/survey.dart';
+import 'package:cognition_package/cognition_package.dart';
 
 import '../lib/main.dart';
 
@@ -20,25 +21,22 @@ void main() {
   late Smartphone phone;
   late LocationService loc;
 
+  // Make sure to initialize CAMS incl. json serialization
+  CarpMobileSensing.ensureInitialized();
+  CognitionPackage.ensureInitialized();
+
   setUp(() async {
     // register the different sampling package since we're using measures from them
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
-
-    // Initialization of serialization
-    CarpMobileSensing();
-
-    // Define which devices are used for data collection.
-    phone = Smartphone();
-    loc = LocationService();
   });
 
   group("Local Study Protocol Manager", () {
     setUp(() async {
       // generate the protocol
-      protocol = await LocalStudyProtocolManager()
+      protocol ??= await LocalStudyProtocolManager()
           .getStudyProtocol('CAMS App v 0.33.0');
     });
 
@@ -61,15 +59,16 @@ void main() {
 
     test('JSON File -> StudyProtocol', () async {
       // Read the study protocol from json file
-      String plainJson = File('test/json/protocol.json').readAsStringSync();
+      final plainJson = File('test/json/protocol.json').readAsStringSync();
 
-      StudyProtocol protocol = StudyProtocol.fromJson(
+      final p = SmartphoneStudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(protocol.ownerId, 'abc@dtu.dk');
-      expect(protocol.masterDevices.first.roleName, phone.roleName);
-      expect(protocol.connectedDevices.first.roleName, loc.roleName);
-      print(_encode(protocol));
+      // need to set the id and date, since it is auto-generated each time.
+      p.id = protocol!.id;
+      p.createdOn = protocol!.createdOn;
+
+      expect(toJsonString(p), toJsonString(protocol!));
     });
   });
 }

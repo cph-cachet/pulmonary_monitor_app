@@ -14,7 +14,7 @@ class SensingBLoC {
   SensingBLoC();
 
   Future init() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     // don't store the app task queue across app restart
     Settings().saveAppTaskQueue = false;
@@ -56,14 +56,13 @@ class SensingBLoC {
     });
   }
 
-  void resume() async => Sensing().controller?.executor?.resume();
-  void pause() => Sensing().controller?.executor?.pause();
+  void start() async => Sensing().controller?.executor?.start();
   void stop() async => Sensing().controller?.stop();
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ExecutorState.resumed;
+      Sensing().controller!.executor!.state == ExecutorState.started;
 
   // /// Add a [Datum] object to the stream of events.
   // void addDatum(Datum datum) => sensing.controller.executor.addDatum(datum);

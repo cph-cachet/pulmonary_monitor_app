@@ -43,6 +43,10 @@ part 'ui/cachet.dart';
 part 'ui/audio_measure_page.dart';
 
 void main() {
+  // Make sure to initialize CAMS incl. json serialization
+  CarpMobileSensing.ensureInitialized();
+  CognitionPackage.ensureInitialized();
+
   runApp(App());
 }
 

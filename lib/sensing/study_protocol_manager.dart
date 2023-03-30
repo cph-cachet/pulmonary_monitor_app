@@ -26,9 +26,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           zip: true,
           encrypt: false,
         );
-      case DataEndPointTypes.CARP:
+      case DataEndPointTypes.CAWS:
         return CarpDataEndPoint(
-            uploadMethod: CarpUploadMethod.DATA_POINT,
+            uploadMethod: CarpUploadMethod.datapoint,
             name: 'CARP Production Server',
             uri: uri,
             clientId: clientID,
@@ -47,13 +47,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       name: 'Pulmonary Monitor',
       ownerId: 'alex@uni.dk',
     );
-    protocol.protocolDescription = StudyDescription(
+    protocol.studyDescription = StudyDescription(
         title: 'Pulmonary Monitor',
         description:
             "With the Pulmonary Monitor you can monitor your respiratory health. "
             "By using the phones sensors, including the microphone, it will try to monitor you breathing, heart rate, sleep, social contact to others, and your movement. "
             "You will also be able to fill in a simple daily survey to help us understand how you're doing. "
-            "Before you start, please also fill in the demographich survey. ",
+            "Before you start, please also fill in the demographics survey. ",
         purpose:
             'To collect basic data from users in their everyday life in order '
             'to investigate pulmonary-related symptoms.',
@@ -71,52 +71,52 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // Define the online weather service and add it as a 'device'
     WeatherService weatherService =
         WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
-    protocol.addConnectedDevice(weatherService);
+    protocol.addConnectedDevice(weatherService, phone);
 
     // Define the online air quality service and add it as a 'device'
     AirQualityService airQualityService =
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
-    protocol.addConnectedDevice(airQualityService);
+    protocol.addConnectedDevice(airQualityService, phone);
 
     // build-in measure from sensor and device sampling packages
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.LIGHT),
-            Measure(type: DeviceSamplingPackage.SCREEN),
-            Measure(type: DeviceSamplingPackage.MEMORY),
-            Measure(type: DeviceSamplingPackage.BATTERY),
-          ]),
+        BackgroundTask(measures: [
+          Measure(type: SensorSamplingPackage.STEP_COUNT),
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+          Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+        ]),
         phone);
 
     // activity measure using the phone
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
+        BackgroundTask(
+            measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
         phone);
 
     // Define the online location service and add it as a 'device'
     LocationService locationService = LocationService();
-    protocol.addConnectedDevice(locationService);
+    protocol.addConnectedDevice(locationService, phone);
 
     // Add a background task that continously collects geolocation and mobility
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
-          ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+        BackgroundTask(measures: [
+          Measure(type: ContextSamplingPackage.LOCATION),
+          Measure(type: ContextSamplingPackage.MOBILITY)
+        ]),
         locationService);
 
     // collect demographics & location once the study starts
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         RPAppTask(
             type: SurveyUserTask.SURVEY_TYPE,
@@ -129,7 +129,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // collect symptoms daily at 13:30
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         RecurrentScheduledTrigger(
           type: RecurrentType.daily,
           time: TimeOfDay(hour: 13, minute: 30),
@@ -144,8 +144,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // perform a cognitive assessment
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(hours: 2)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(hours: 2)),
         RPAppTask(
             type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
             title: surveys.cognition.title,
@@ -156,8 +156,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // perform a Parkisons' assessment
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(hours: 2)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(hours: 2)),
         RPAppTask(
             type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
             title: "Parkinsons' Assessment",
@@ -192,15 +192,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               ],
             ))
           ..addMeasures([
-            Measure(type: SensorSamplingPackage.ACCELEROMETER),
-            Measure(type: SensorSamplingPackage.GYROSCOPE),
+            Measure(type: SensorSamplingPackage.ACCELERATION),
+            Measure(type: SensorSamplingPackage.ROTATION),
           ]),
         phone);
 
     // collect a coughing sample on a daily basis
     // also collect location, and local weather and air quality of this sample
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(days: 1)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(days: 1)),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Coughing",
@@ -221,38 +221,37 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // collect a reading / audio sample on a daily basis
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(days: 1)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(days: 1)),
         AppTask(
-          type: AudioUserTask.AUDIO_TYPE,
-          title: "Reading",
-          description:
-              'In this small exercise we would like to collect sound data while you are reading.',
-          instructions:
-              'Please press the record button below, and then read the following text.\n\n'
-              'Many, many years ago lived an emperor, who thought so much of new clothes that he spent all his money in order to obtain them; his only ambition was to be always well dressed. '
-              'He did not care for his soldiers, and the theatre did not amuse him; the only thing, in fact, he thought anything of was to drive out and show a new suit of clothes. '
-              'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
-          minutesToComplete: 3,
-        )..measures.add(Measure(type: MediaSamplingPackage.AUDIO)),
+            type: AudioUserTask.AUDIO_TYPE,
+            title: "Reading",
+            description:
+                'In this small exercise we would like to collect sound data while you are reading.',
+            instructions: 'Please press the record button below, and then read the following text.\n\n'
+                'Many, many years ago lived an emperor, who thought so much of new clothes that he spent all his money in order to obtain them; his only ambition was to be always well dressed. '
+                'He did not care for his soldiers, and the theatre did not amuse him; the only thing, in fact, he thought anything of was to drive out and show a new suit of clothes. '
+                'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
+            minutesToComplete: 3,
+            measures: [Measure(type: MediaSamplingPackage.AUDIO)]),
         phone);
 
     // add a task that keeps reappearing when done
     var environmentTask = AppTask(
-      type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-      title: "Location, Weather & Air Quality",
-      description: "Collect location, weather and air quality",
-    )..addMeasures([
-        Measure(type: ContextSamplingPackage.LOCATION),
-        Measure(type: ContextSamplingPackage.WEATHER),
-        Measure(type: ContextSamplingPackage.AIR_QUALITY),
-      ]);
+        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        title: "Location, Weather & Air Quality",
+        description: "Collect location, weather and air quality",
+        measures: [
+          Measure(type: ContextSamplingPackage.LOCATION),
+          Measure(type: ContextSamplingPackage.WEATHER),
+          Measure(type: ContextSamplingPackage.AIR_QUALITY),
+        ]);
 
-    protocol.addTriggeredTask(ImmediateTrigger(), environmentTask, phone);
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(ImmediateTrigger(), environmentTask, phone);
+    protocol.addTaskControl(
         UserTaskTrigger(
             taskName: environmentTask.name,
-            resumeCondition: UserTaskState.done),
+            triggerCondition: UserTaskState.done),
         environmentTask,
         phone);
 

@@ -12,6 +12,7 @@ class Sensing {
   static final Sensing _instance = Sensing._();
   StudyDeploymentStatus? _status;
   StudyProtocol? _protocol;
+  late Study _study;
   SmartphoneDeploymentController? _controller;
   late StudyProtocolManager manager;
   late SmartPhoneClientManager client;
@@ -22,7 +23,8 @@ class Sensing {
 
   /// Get the status of the study deployment.
   StudyDeploymentStatus? get status => _status;
-  StudyProtocol? get protocol => _protocol;
+  // StudyProtocol? get protocol => _protocol;
+  Study? get study => _study;
   SmartphoneDeploymentController? get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
@@ -46,8 +48,8 @@ class Sensing {
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     // SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-    // create and register external data managers
-    DataManagerRegistry().register(CarpDataManager());
+    // create and register external data manager factory
+    DataManagerRegistry().register(CarpDataManagerFactory());
 
     // register the special-purpose audio user task factory
     AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());
@@ -59,17 +61,18 @@ class Sensing {
   Future<void> initialize() async {
     // get the protocol from the study protocol manager based on the
     // study deployment id
-    _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
+    var _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
 
-    // deploy this protocol using the on-phone deployment service
-    // reuse the study deployment id, so we have the same id on the phone deployment
-    _status = await deploymentService.createStudyDeployment(
-      _protocol!,
-      testStudyDeploymentId,
-    );
+    // // deploy this protocol using the on-phone deployment service
+    // // reuse the study deployment id, so we have the same id on the phone deployment
+    // _status = await deploymentService.createStudyDeployment(
+    //   _protocol!,
+    //   [],
+    //   testStudyDeploymentId,
+    // );
 
-    String studyDeploymentId = _status!.studyDeploymentId;
-    String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
+    // String studyDeploymentId = _status!.studyDeploymentId;
+    // String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
 
     // create and configure a client manager for this phone
     client = SmartPhoneClientManager();
@@ -78,12 +81,12 @@ class Sensing {
       deviceController: DeviceController(),
     );
 
-    // Define the study and add it to the client.
-    Study study = Study(
-      studyDeploymentId,
-      deviceRolename,
-    );
-    await client.addStudy(study);
+    // // Define the study and add it to the client.
+    // Study study = Study(
+    //   studyDeploymentId,
+    //   deviceRolename,
+    // );
+    _study = await client.addStudyProtocol(_protocol!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -92,16 +95,17 @@ class Sensing {
     // be used pr. default.
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
-    _controller = client.getStudyRuntime(study);
+    _controller = client.getStudyRuntime(study!);
     await controller?.tryDeployment(useCached: true);
 
     // Configure the controller
     await controller?.configure();
 
-    // Start samplling
+    // Start sampling
     controller?.start();
 
-    // listening on the data stream and print them as json to the debug console
-    _controller!.data.listen((data) => print(toJsonString(data)));
+    // Listening on the measurements and print them as json to the debug console
+    _controller!.measurements
+        .listen((measurement) => print(toJsonString(measurement)));
   }
 }

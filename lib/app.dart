@@ -85,9 +85,9 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
   void restart() {
     setState(() {
       if (bloc.isRunning) {
-        bloc.pause();
+        bloc.stop();
       } else {
-        bloc.resume();
+        bloc.start();
       }
     });
   }

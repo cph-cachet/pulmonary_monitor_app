@@ -6,10 +6,9 @@ class StudyDeploymentModel {
   // String get name => deployment?.name ?? '';
   String get studyDeploymentId => deployment.studyDeploymentId;
   String get title =>
-      deployment.protocolDescription?.title ?? deployment.studyDeploymentId;
+      deployment.studyDescription?.title ?? deployment.studyDeploymentId;
   String get description =>
-      deployment.protocolDescription?.description ??
-      'No description available.';
+      deployment.studyDescription?.description ?? 'No description available.';
   Image get image => Image.asset('assets/images/running.png');
   String get userID => deployment.userId ?? '';
   // String get samplingStrategy => 'NORMAL';
@@ -23,7 +22,7 @@ class StudyDeploymentModel {
   ExecutorState get studyState => Sensing().controller!.executor!.state;
 
   /// Get all sesing events (i.e. all [Datum] objects being collected).
-  Stream<DataPoint> get data => Sensing().controller!.data;
+  Stream<Measurement> get measurements => Sensing().controller!.measurements;
 
   /// The total sampling size so far since this study was started.
   int get samplingSize => Sensing().controller!.samplingSize;
