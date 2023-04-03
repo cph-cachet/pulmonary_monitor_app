@@ -63,13 +63,6 @@ class SensingBLoC {
   bool get isRunning =>
       (Sensing().controller != null) &&
       Sensing().controller!.executor!.state == ExecutorState.started;
-
-  // /// Add a [Datum] object to the stream of events.
-  // void addDatum(Datum datum) => sensing.controller.executor.addDatum(datum);
-
-  // /// Add a error to the stream of events.
-  // void addError(Object error, [StackTrace stacktrace]) =>
-  //     sensing.controller.executor.addError(error, stacktrace);
 }
 
 final bloc = SensingBLoC();

@@ -125,7 +125,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             minutesToComplete: surveys.demographics.minutesToComplete,
             notification: true,
             rpTask: surveys.demographics.survey,
-            measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
+            measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
     // collect symptoms daily at 13:30
@@ -140,7 +140,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             description: surveys.symptoms.description,
             minutesToComplete: surveys.symptoms.minutesToComplete,
             rpTask: surveys.symptoms.survey,
-            measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
+            measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
     // perform a cognitive assessment
@@ -152,7 +152,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             description: surveys.cognition.description,
             minutesToComplete: surveys.cognition.minutesToComplete,
             rpTask: surveys.cognition.survey,
-            measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
+            measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
     // perform a Parkinson's assessment
@@ -198,7 +198,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // collect a coughing sample on a daily basis
-    // also collect location, and local weather and air quality of this sample
+    // also collect current location, and local weather and air quality of this sample
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(days: 1)),
         AppTask(
@@ -212,7 +212,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           notification: true,
           measures: [
             Measure(type: MediaSamplingPackage.AUDIO),
-            Measure(type: ContextSamplingPackage.LOCATION),
+            Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
             Measure(type: ContextSamplingPackage.WEATHER),
             Measure(type: ContextSamplingPackage.AIR_QUALITY),
           ],
@@ -241,7 +241,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         title: "Location, Weather & Air Quality",
         description: "Collect location, weather and air quality",
         measures: [
-          Measure(type: ContextSamplingPackage.LOCATION),
+          Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
           Measure(type: ContextSamplingPackage.WEATHER),
           Measure(type: ContextSamplingPackage.AIR_QUALITY),
         ]);
