@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -12,7 +12,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future initialize() async {}
 
-  /// Create a new CAMS study protocol.
+  /// Create the Pulmonary Monitor study protocol.
   @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
@@ -38,10 +38,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Jakob E. Bardram',
         ));
 
-    // define the data end point , i.e., where to store data
+    // Define the data end point , i.e., where to store data.
+    // This example app only stores data locally in a SQLite DB
     protocol.dataEndPoint = SQLiteDataEndPoint();
 
-    // define which devices are used for data collection.
+    // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
@@ -55,7 +56,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
     protocol.addConnectedDevice(airQualityService, phone);
 
-    // build-in measure from sensor and device sampling packages
+    // Add the background sensing
     protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(measures: [
@@ -67,18 +68,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // activity measure using the phone
+    // Add activity measure using the phone
     protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(
             measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
         phone);
 
-    // Define the online location service and add it as a 'device'
+    // Define the online location service and add it as a 'device'.
     LocationService locationService = LocationService();
     protocol.addConnectedDevice(locationService, phone);
 
-    // Add a background task that continuously collects location and mobility
+    // Add a background task that continuously collects location
+    // and mobility features (e.g., home stay).
     protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(measures: [
@@ -87,7 +89,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         locationService);
 
-    // collect demographics & location once the study starts
+    // The following contains the definition of the app (user) tasks.
+
+    // Collect demographics & location once the study starts.
     protocol.addTaskControl(
         ImmediateTrigger(),
         RPAppTask(
@@ -100,7 +104,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
-    // collect symptoms daily at 13:30
+    // Collect symptoms daily at 13:30
     protocol.addTaskControl(
         RecurrentScheduledTrigger(
           type: RecurrentType.daily,
@@ -115,7 +119,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
-    // perform a cognitive assessment every 2nd hour
+    // Perform a cognitive assessment every 2nd hour.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(hours: 2)),
         RPAppTask(
@@ -127,7 +131,49 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
-    // perform a Parkinson's assessment
+    // Collect a coughing sample on a daily basis.
+    // Also collect current location, and local weather and air quality of this
+    // sample.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(days: 1)),
+        AppTask(
+          type: AudioUserTask.AUDIO_TYPE,
+          title: "Coughing",
+          description:
+              'In this small exercise we would like to collect sound samples of coughing.',
+          instructions:
+              'Please press the record button below, and then cough 5 times.',
+          minutesToComplete: 3,
+          notification: true,
+          measures: [
+            Measure(type: MediaSamplingPackage.AUDIO),
+            Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
+            Measure(type: ContextSamplingPackage.WEATHER),
+            Measure(type: ContextSamplingPackage.AIR_QUALITY),
+          ],
+        ),
+        phone);
+
+    // Collect a reading / audio sample on a daily basis.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(days: 1)),
+        AppTask(
+            type: AudioUserTask.AUDIO_TYPE,
+            title: "Reading",
+            description:
+                'In this small exercise we would like to collect sound data while you are reading.',
+            instructions: 'Please press the record button below, and then read the following text.\n\n'
+                'Many, many years ago lived an emperor, who thought so much of new clothes that he spent all his money in order to obtain them; his only ambition was to be always well dressed. '
+                'He did not care for his soldiers, and the theatre did not amuse him; the only thing, in fact, he thought anything of was to drive out and show a new suit of clothes. '
+                'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
+            minutesToComplete: 3,
+            measures: [Measure(type: MediaSamplingPackage.AUDIO)]),
+        phone);
+
+    // Perform a Parkinson's assessment.
+    // This is strictly speaking not part of monitoring pulmonary symptoms,
+    // but is included to illustrate the use of cognitive tests from the
+    // cognition package.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(hours: 2)),
         RPAppTask(
@@ -169,45 +215,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             ]),
         phone);
 
-    // collect a coughing sample on a daily basis
-    // also collect current location, and local weather and air quality of this sample
-    protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(days: 1)),
-        AppTask(
-          type: AudioUserTask.AUDIO_TYPE,
-          title: "Coughing",
-          description:
-              'In this small exercise we would like to collect sound samples of coughing.',
-          instructions:
-              'Please press the record button below, and then cough 5 times.',
-          minutesToComplete: 3,
-          notification: true,
-          measures: [
-            Measure(type: MediaSamplingPackage.AUDIO),
-            Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
-            Measure(type: ContextSamplingPackage.WEATHER),
-            Measure(type: ContextSamplingPackage.AIR_QUALITY),
-          ],
-        ),
-        phone);
-
-    // collect a reading / audio sample on a daily basis
-    protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(days: 1)),
-        AppTask(
-            type: AudioUserTask.AUDIO_TYPE,
-            title: "Reading",
-            description:
-                'In this small exercise we would like to collect sound data while you are reading.',
-            instructions: 'Please press the record button below, and then read the following text.\n\n'
-                'Many, many years ago lived an emperor, who thought so much of new clothes that he spent all his money in order to obtain them; his only ambition was to be always well dressed. '
-                'He did not care for his soldiers, and the theatre did not amuse him; the only thing, in fact, he thought anything of was to drive out and show a new suit of clothes. '
-                'He had a coat for every hour of the day; and as one would say of a king "He is in his cabinet," so one could say of him, "The emperor is in his dressing-room."',
-            minutesToComplete: 3,
-            measures: [Measure(type: MediaSamplingPackage.AUDIO)]),
-        phone);
-
-    // add a task that keeps reappearing when done
+    // Add a task that keeps reappearing when done.
     var environmentTask = AppTask(
         type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
         title: "Location, Weather & Air Quality",
