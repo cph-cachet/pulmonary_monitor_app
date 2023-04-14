@@ -31,7 +31,7 @@ The user-interface of the app is shown in Figure 1.
 
 ## App Tasks
 
-The task list (Figure 1 right) is created from the different `AppTask`s defined in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. There are four kind of app tasks defined:
+The task list (Figure 1 right) is created from the different `AppTask`s defined in the [`study_protocol_manager.dart`](lib/sensing/study_protocol_manager.dart) file. There are four kind of app tasks defined:
 
 1. A **sensing** task wrapped in an app task collecting weather and air quality.
 2. Two types of **survey** tasks collecting demographics and daily symptoms.
