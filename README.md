@@ -36,7 +36,7 @@ The task list (Figure 1 right) is created from the different `AppTask`s defined 
 1. A **sensing** task wrapped in an app task collecting weather and air quality.
 2. Two types of **survey** tasks collecting demographics and daily symptoms.
 3. Two types of **audio** tasks, collecting sound while the user is coughing and reading.
-4. Two type of **cognitive** tasks, assessing cognitive functioning and finger tapping speed.
+4. One **cognitive** task with two cognitive tests assessing cognitive functioning and finger tapping speed, respectively.
 
 ### Sensing App Task
 
@@ -48,26 +48,26 @@ SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
   ownerId: 'alex@uni.dk',
 );
 
-// define which devices are used for data collection
+// Define which devices are used for data collection.
 Smartphone phone = Smartphone();
-protocol.addMasterDevice(phone);
+protocol.addPrimaryDevice(phone);
 
 ...
 
 // add an app task that once pr. hour asks the user to
 // collect weather and air quality - and notify the user
-protocol.addTriggeredTask(
+protocol.addTaskControl(
     PeriodicTrigger(period: Duration(hours: 1)),
     AppTask(
-      type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-      title: "Location, Weather & Air Quality",
-      description: "Collect location, weather and air quality",
-      notification: true,
-      measures: [
-        Measure(type: ContextSamplingPackage.LOCATION),
-        Measure(type: ContextSamplingPackage.WEATHER),
-        Measure(type: ContextSamplingPackage.AIR_QUALITY),
-      ]),
+        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        title: "Location, Weather & Air Quality",
+        description: "Collect location, weather and air quality",
+        notification: true,
+        measures: [
+          Measure(type: ContextSamplingPackage.LOCATION),
+          Measure(type: ContextSamplingPackage.WEATHER),
+          Measure(type: ContextSamplingPackage.AIR_QUALITY),
+        ]),
     phone);
 ````
 
@@ -90,26 +90,26 @@ In Figure 1, there are two types of surveys; a demographics survey and a survey 
 These are configured in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file like this:
 
 ````dart
-// collect demographics & location once the study starts
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      RPAppTask(
-          type: SurveyUserTask.SURVEY_TYPE,
+// Collect demographics & location once the study starts.
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    RPAppTask(
+        type: SurveyUserTask.SURVEY_TYPE,
           title: 'Demographics',
           description: 'A short 4-item survey on your background.',
           minutesToComplete: 1,
-          notification: true,
-          rpTask: surveys.demographics.survey,
-          measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
-      phone);
+        notification: true,
+        rpTask: surveys.demographics.survey,
+        measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
+    phone);
 ````
 
-This configuration adds the demographics survey (as defined in the [`surveys.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/surveys.dart) file) immediately to the task list.  Note that a `LOCATION` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know **where** the user filled in this survey.
+This configuration adds the demographics survey (as defined in the [`surveys.dart`](lib/sensing/surveys.dart) file) immediately to the task list.  Note that a `LOCATION` measure is also added. This will have the effect that location is sampled, when the survey is done - i.e., we know **where** the user filled in this survey.
 
 The configuration of the daily symptoms survey is similar. This survey is, however, triggered once per day at 13:30 and hence added to the task list daily. Again, location is collected when the survey is filled in.
 
 ````dart
-// collect symptoms daily at 13:30
+// Collect symptoms daily at 13:30
 protocol.addTaskControl(
     RecurrentScheduledTrigger(
       type: RecurrentType.daily,
@@ -117,11 +117,11 @@ protocol.addTaskControl(
     ),
     RPAppTask(
         type: SurveyUserTask.SURVEY_TYPE,
-        title: surveys.symptoms.title,
-        description: surveys.symptoms.description,
-        minutesToComplete: surveys.symptoms.minutesToComplete,
+        title: 'Symptoms',
+        description: 'A short 1-item survey on your daily symptoms.',
+        minutesToComplete: 1,
         rpTask: surveys.symptoms.survey,
-        measures: [Measure(type: ContextSamplingPackage.LOCATION)]),
+        measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
     phone);
 ````
 
@@ -141,8 +141,9 @@ Another type of app tasks used in the Pulmonary Monitor app are two types of aud
 The configuration of the coughing audio app task is defined like this:
 
 ````dart
-// collect a coughing sample on a daily basis
-// also collect location, and local weather and air quality of this sample
+// Collect a coughing sample on a daily basis.
+// Also collect current location, and local weather and air quality of this
+// sample.
 protocol.addTaskControl(
     PeriodicTrigger(period: Duration(days: 1)),
     AppTask(
@@ -156,7 +157,7 @@ protocol.addTaskControl(
       notification: true,
       measures: [
         Measure(type: MediaSamplingPackage.AUDIO),
-        Measure(type: ContextSamplingPackage.LOCATION),
+        Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
         Measure(type: ContextSamplingPackage.WEATHER),
         Measure(type: ContextSamplingPackage.AIR_QUALITY),
       ],
@@ -180,7 +181,10 @@ The last type of app tasks used in the app is the cognitive tests from the [cogn
 Below is an example of adding an assessment of Parkinson's Disease which consists of an instruction step, a timer step, and two cognitive tests (Flanker and Tapping tests). Note that accelerometer and gyroscope data is collected throughput the test (in order to assess tremor).
 
 ```dart
-// perform a Parkinson's assessment
+// Perform a Parkinson's assessment.
+// This is strictly speaking not part of monitoring pulmonary symptoms,
+// but is included to illustrate the use of cognitive tests from the
+// cognition package.
 protocol.addTaskControl(
     PeriodicTrigger(period: Duration(hours: 2)),
     RPAppTask(
@@ -193,7 +197,7 @@ protocol.addTaskControl(
           steps: [
             RPInstructionStep(
                 identifier: 'parkinsons_instruction',
-                title: "Parkinson's Disease Assessment",
+                title: "Parkinsons' Disease Assessment",
                 text:
                     "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
                     "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
