@@ -5,8 +5,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 // the CARP packages
 import 'package:carp_core/carp_core.dart';
@@ -22,11 +20,8 @@ import 'package:carp_backend/carp_backend.dart';
 import 'package:research_package/research_package.dart';
 import 'package:cognition_package/cognition_package.dart';
 
-import 'sensing/credentials.dart';
-
 part 'app.dart';
 part 'blocs/sensing_bloc.dart';
-part 'blocs/settings_bloc.dart';
 part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
 part 'sensing/audio_user_task.dart';

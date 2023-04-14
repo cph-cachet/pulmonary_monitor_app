@@ -8,37 +8,9 @@
 part of pulmonary_monitor_app;
 
 /// This is a simple local [StudyProtocolManager].
-///
-/// This class shows how to configure a [StudyProtocol] with [Tigger]s,
-/// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future initialize() async {}
-
-  /// Get a data endpoint for this study.
-  DataEndPoint getDataEndpoint(String type) {
-    switch (type) {
-      case DataEndPointTypes.SQLITE:
-        return SQLiteDataEndPoint();
-      case DataEndPointTypes.FILE:
-        return FileDataEndPoint(
-          bufferSize: 50 * 1000,
-          zip: true,
-          encrypt: false,
-        );
-      case DataEndPointTypes.CAWS:
-        return CarpDataEndPoint(
-            uploadMethod: CarpUploadMethod.datapoint,
-            name: 'CARP Production Server',
-            uri: uri,
-            clientId: clientID,
-            clientSecret: clientSecret,
-            email: username,
-            password: password);
-      default:
-        return DataEndPoint(type: type);
-    }
-  }
 
   /// Create a new CAMS study protocol.
   @override
@@ -67,7 +39,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ));
 
     // define the data end point , i.e., where to store data
-    protocol.dataEndPoint = getDataEndpoint(DataEndPointTypes.SQLITE);
+    protocol.dataEndPoint = SQLiteDataEndPoint();
 
     // define which devices are used for data collection.
     Smartphone phone = Smartphone();

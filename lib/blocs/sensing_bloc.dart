@@ -1,6 +1,8 @@
 part of pulmonary_monitor_app;
 
 class SensingBLoC {
+  final String testStudyDeploymentId = 'ae8076a3-7170-4bcf-b66c-64639a7a9eee';
+
   SmartphoneDeployment? get deployment => Sensing().deployment;
   StudyDeploymentModel? _model;
 
