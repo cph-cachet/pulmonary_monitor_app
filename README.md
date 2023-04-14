@@ -20,7 +20,7 @@ Pulmonary Monitor is designed to sample the following data:
 * sound - coughing and reading
 * cognitive performance - using a set of cognitive tests
 
-All of this is configured in the [`study_protocol_manager.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/study_protocol_manager.dart) file. Compared to the standard CAMS example app, this app makes extensive use of `AppTask`s for collecting surveys and sound samples. However, it also illustrates how "normal" sensing measures can be wrapped in an `AppTask`. For example, there is an app task collecting weather and air quality measures. And it illustrates how background sensing can be added to an app task. For example, accelerometer and gyroscope data is collected while the user performs a cognitive assessment.
+All of this is configured in the [`study_protocol_manager.dart`](lib/sensing/study_protocol_manager.dart) file. Compared to the standard CAMS example app, this app makes extensive use of `AppTask`s for collecting surveys and sound samples. However, it also illustrates how "normal" sensing measures can be wrapped in an `AppTask`. For example, there is an app task collecting weather and air quality measures. And it illustrates how background sensing can be added to an app task. For example, accelerometer and gyroscope data is collected while the user performs a cognitive assessment.
 
 The user-interface of the app is shown in Figure 1.
 

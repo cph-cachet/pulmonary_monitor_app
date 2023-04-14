@@ -115,7 +115,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
         phone);
 
-    // perform a cognitive assessment
+    // perform a cognitive assessment every 2nd hour
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(hours: 2)),
         RPAppTask(
