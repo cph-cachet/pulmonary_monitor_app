@@ -58,13 +58,13 @@ class SensingBLoC {
     });
   }
 
-  void start() async => Sensing().controller?.executor?.start();
+  void start() async => Sensing().controller?.executor.start();
   void stop() async => Sensing().controller?.stop();
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ExecutorState.started;
+      Sensing().controller!.executor.state == ExecutorState.started;
 }
 
 final bloc = SensingBLoC();

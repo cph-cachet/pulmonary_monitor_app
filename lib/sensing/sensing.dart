@@ -26,7 +26,7 @@ class Sensing {
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
-      (_controller != null) ? _controller!.executor!.probes : [];
+      (_controller != null) ? _controller!.executor.probes : [];
 
   /// the list of connected devices.
   // List<DeviceManager> get runningDevices =>

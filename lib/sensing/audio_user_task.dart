@@ -16,14 +16,10 @@ class AudioUserTask extends UserTask {
   AudioUserTask(AppTaskExecutor executor) : super(executor);
 
   @override
-  void onStart(BuildContext context) {
-    super.onStart(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => AudioMeasurePage(audioUserTask: this)),
-    );
-  }
+  bool get hasWidget => true;
+
+  @override
+  Widget? get widget => AudioMeasurePage(audioUserTask: this);
 
   /// Callback when recording is to start.
   void onRecord() {

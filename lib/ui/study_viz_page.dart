@@ -93,7 +93,7 @@ class StudyVizState extends State<StudyVisualization> {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subtitle1!,
+        style: Theme.of(context).textTheme.titleMedium!,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -180,14 +180,15 @@ class _TaskPanel extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.subtitle1!,
+          style: Theme.of(context).textTheme.titleMedium!,
           child: SafeArea(
               top: false,
               bottom: false,
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
                   Icon(Icons.description, size: 40, color: CACHET.ORANGE),
-                  Text('  ${task!.name}', style: themeData.textTheme.headline6),
+                  Text('  ${task!.name}',
+                      style: themeData.textTheme.titleLarge),
                 ]),
                 Column(children: children)
                 //Expanded(child: Column(children: children))
@@ -216,7 +217,7 @@ class _MeasureLine extends StatelessWidget {
     final List<Widget> columnChildren = [];
     columnChildren.add(Text(name));
     columnChildren
-        .add(Text(measure.toString(), style: themeData.textTheme.caption));
+        .add(Text(measure.toString(), style: themeData.textTheme.bodySmall));
 
     final List<Widget> rowChildren = [];
     rowChildren.add(SizedBox(

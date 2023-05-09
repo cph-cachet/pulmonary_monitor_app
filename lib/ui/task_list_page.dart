@@ -74,14 +74,21 @@ class TaskListState extends State<TaskList> {
                 subtitle: Text(userTask.description),
                 trailing: taskStateIcon[userTask.state],
               ),
-              // TODO - only add button if there is a task to do. Might be an info card.
-              (userTask.state == UserTaskState.enqueued ||
-                      userTask.state == UserTaskState.canceled)
+              (userTask.availableForUser)
                   ? ButtonBar(
                       children: <Widget>[
                         TextButton(
                             child: const Text('PRESS HERE TO FINISH TASK'),
-                            onPressed: () => userTask.onStart(context)),
+                            onPressed: () {
+                              userTask.onStart();
+                              if (userTask.hasWidget) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => userTask.widget!),
+                                );
+                              }
+                            }),
                       ],
                     )
                   : Text(""),
@@ -93,16 +100,6 @@ class TaskListState extends State<TaskList> {
   }
 
   Map<String, Icon> get taskTypeIcon => {
-        SurveyUserTask.SURVEY_TYPE: Icon(
-          Icons.design_services,
-          color: CACHET.ORANGE,
-          size: 40,
-        ),
-        SurveyUserTask.SURVEY_TYPE: Icon(
-          Icons.person,
-          color: CACHET.ORANGE,
-          size: 40,
-        ),
         SurveyUserTask.SURVEY_TYPE: Icon(
           Icons.description,
           color: CACHET.ORANGE,

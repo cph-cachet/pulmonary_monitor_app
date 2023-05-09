@@ -16,12 +16,12 @@ class StudyDeploymentModel {
 
   /// Events on the state of the study executor
   Stream<ExecutorState> get studyExecutorStateEvents =>
-      Sensing().controller!.executor!.stateEvents;
+      Sensing().controller!.executor.stateEvents;
 
   /// Current state of the study executor (e.g., resumed, paused, ...)
-  ExecutorState get studyState => Sensing().controller!.executor!.state;
+  ExecutorState get studyState => Sensing().controller!.executor.state;
 
-  /// Get all sesing events (i.e. all [Datum] objects being collected).
+  /// Get all sensing events (i.e. all [Datum] objects being collected).
   Stream<Measurement> get measurements => Sensing().controller!.measurements;
 
   /// The total sampling size so far since this study was started.
