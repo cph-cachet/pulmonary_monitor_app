@@ -1,6 +1,8 @@
 part of pulmonary_monitor_app;
 
 class InformedConsentPage extends StatefulWidget {
+  const InformedConsentPage({super.key});
+
   @override
   State createState() => InformedConsentPageState();
 }
@@ -17,7 +19,7 @@ class InformedConsentPageState extends State<InformedConsentPage> {
   @override
   Widget build(BuildContext context) {
     return RPUITask(
-      task: LocalResourceManager().informedConsent,
+      task: consent.informedConsent,
       onSubmit: (result) {
         resultCallback(result, context);
       },

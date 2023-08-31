@@ -36,12 +36,8 @@ class StudyVizState extends State<StudyVisualization> {
             snap: false,
             actions: <Widget>[
               IconButton(
-                icon: Icon(
-                  Theme.of(context).platform == TargetPlatform.iOS
-                      ? Icons.more_horiz
-                      : Icons.more_vert,
-                ),
-                tooltip: 'Settings',
+                icon: const Icon(Icons.document_scanner),
+                tooltip: 'Informed Consent',
                 onPressed: _showInformedConsent,
               ),
             ],
@@ -103,7 +99,7 @@ class StudyVizState extends State<StudyVisualization> {
               Container(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   width: 72.0,
-                  child: Icon(Icons.lightbulb_outline,
+                  child: const Icon(Icons.lightbulb_outline,
                       size: 50, color: CACHET.CACHET_BLUE)),
               Expanded(
                   child: Column(
@@ -133,15 +129,15 @@ class StudyVizState extends State<StudyVisualization> {
   }
 
   void _showInformedConsent() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
+    Navigator.of(context).push(MaterialPageRoute<StatefulWidget>(
+        builder: (context) => const InformedConsentPage()));
   }
 }
 
 class _StudyControllerLine extends StatelessWidget {
   final String? line, heading;
 
-  _StudyControllerLine(this.line, {this.heading}) : super();
+  const _StudyControllerLine(this.line, {this.heading}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +151,8 @@ class _StudyControllerLine extends StatelessWidget {
                       children: <TextSpan>[
                         TextSpan(
                             text: '$heading: ',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(text: line),
                       ],
                     ),
@@ -164,7 +161,7 @@ class _StudyControllerLine extends StatelessWidget {
 }
 
 class _TaskPanel extends StatelessWidget {
-  _TaskPanel({Key? key, this.task}) : super(key: key);
+  const _TaskPanel({Key? key, this.task}) : super(key: key);
 
   final TaskConfiguration? task;
 
@@ -186,7 +183,7 @@ class _TaskPanel extends StatelessWidget {
               bottom: false,
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
-                  Icon(Icons.description, size: 40, color: CACHET.ORANGE),
+                  const Icon(Icons.description, size: 40, color: CACHET.ORANGE),
                   Text('  ${task!.name}',
                       style: themeData.textTheme.titleLarge),
                 ]),
@@ -209,7 +206,7 @@ class _MeasureLine extends StatelessWidget {
     final ThemeData themeData = Theme.of(context);
     final Icon icon = (ProbeDescription.probeTypeIcon[measure!.type] != null)
         ? Icon(ProbeDescription.probeTypeIcon[measure!.type]!.icon, size: 25)
-        : Icon(Icons.memory, size: 25, color: CACHET.GREY_4);
+        : const Icon(Icons.memory, size: 25, color: CACHET.GREY_4);
 
     final String name = ProbeDescription.descriptors[measure?.type]?.name ??
         measure.runtimeType.toString();

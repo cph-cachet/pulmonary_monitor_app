@@ -25,7 +25,7 @@ class AudioUserTask extends UserTask {
   void onRecord() {
     executor.start();
 
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
       if (recordingDuration <= 0) {

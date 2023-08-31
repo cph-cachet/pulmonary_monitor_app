@@ -20,7 +20,7 @@ class TaskListState extends State<TaskList> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Tasks'),
+        title: const Text('Tasks'),
         //TODO - move actions/settings icon to the app level.
         actions: <Widget>[
           IconButton(
@@ -40,7 +40,7 @@ class TaskListState extends State<TaskList> {
           return Scrollbar(
             child: ListView.builder(
               itemCount: tasks.length,
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               itemBuilder: (context, index) =>
                   _buildTaskCard(context, tasks[index]),
             ),
@@ -84,14 +84,14 @@ class TaskListState extends State<TaskList> {
                               if (userTask.hasWidget) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  MaterialPageRoute<Widget>(
                                       builder: (context) => userTask.widget!),
                                 );
                               }
                             }),
                       ],
                     )
-                  : Text(""),
+                  : const Text(""),
             ],
           ),
         ),
@@ -100,27 +100,27 @@ class TaskListState extends State<TaskList> {
   }
 
   Map<String, Icon> get taskTypeIcon => {
-        SurveyUserTask.SURVEY_TYPE: Icon(
+        SurveyUserTask.SURVEY_TYPE: const Icon(
           Icons.description,
           color: CACHET.ORANGE,
           size: 40,
         ),
-        SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE: Icon(
+        SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE: const Icon(
           Icons.face,
           color: CACHET.YELLOW,
           size: 40,
         ),
-        AudioUserTask.AUDIO_TYPE: Icon(
+        AudioUserTask.AUDIO_TYPE: const Icon(
           Icons.record_voice_over,
           color: CACHET.GREEN,
           size: 40,
         ),
-        BackgroundSensingUserTask.SENSING_TYPE: Icon(
+        BackgroundSensingUserTask.SENSING_TYPE: const Icon(
           Icons.settings_input_antenna,
           color: CACHET.CACHET_BLUE,
           size: 40,
         ),
-        BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE: Icon(
+        BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE: const Icon(
           Icons.settings_input_component,
           color: CACHET.CACHET_BLUE,
           size: 40,
@@ -128,13 +128,16 @@ class TaskListState extends State<TaskList> {
       };
 
   Map<UserTaskState, Icon> get taskStateIcon => {
-        UserTaskState.initialized: Icon(Icons.stream, color: CACHET.YELLOW),
-        UserTaskState.enqueued: Icon(Icons.notifications, color: CACHET.YELLOW),
+        UserTaskState.initialized:
+            const Icon(Icons.stream, color: CACHET.YELLOW),
+        UserTaskState.enqueued:
+            const Icon(Icons.notifications, color: CACHET.YELLOW),
         UserTaskState.dequeued:
-            Icon(Icons.not_interested_outlined, color: CACHET.RED),
+            const Icon(Icons.not_interested_outlined, color: CACHET.RED),
         UserTaskState.started:
-            Icon(Icons.radio_button_checked, color: CACHET.GREEN),
-        UserTaskState.canceled: Icon(Icons.radio_button_off, color: CACHET.RED),
-        UserTaskState.done: Icon(Icons.check, color: CACHET.GREEN),
+            const Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+        UserTaskState.canceled:
+            const Icon(Icons.radio_button_off, color: CACHET.RED),
+        UserTaskState.done: const Icon(Icons.check, color: CACHET.GREEN),
       };
 }

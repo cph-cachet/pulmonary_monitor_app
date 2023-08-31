@@ -10,7 +10,7 @@ part of pulmonary_monitor_app;
 /// This is a simple local [StudyProtocolManager].
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
-  Future initialize() async {}
+  Future<void> initialize() async {}
 
   /// Create the Pulmonary Monitor study protocol.
   @override
@@ -56,17 +56,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
     protocol.addConnectedDevice(airQualityService, phone);
 
-    // Add the background sensing
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: SensorSamplingPackage.STEP_COUNT),
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-          Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-        ]),
-        phone);
+    // // Add the background sensing
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: SensorSamplingPackage.STEP_COUNT),
+    //       Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+    //       Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+    //       Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+    //       Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    //     ]),
+    //     phone);
 
     // Add activity measure using the phone
     protocol.addTaskControl(
@@ -95,47 +95,50 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTaskControl(
         ImmediateTrigger(),
         RPAppTask(
-            type: SurveyUserTask.SURVEY_TYPE,
-            title: surveys.demographics.title,
-            description: surveys.demographics.description,
-            minutesToComplete: surveys.demographics.minutesToComplete,
-            notification: true,
-            rpTask: surveys.demographics.survey,
-            measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
+          type: SurveyUserTask.SURVEY_TYPE,
+          title: surveys.demographics.title,
+          description: surveys.demographics.description,
+          minutesToComplete: surveys.demographics.minutesToComplete,
+          notification: true,
+          rpTask: surveys.demographics.survey,
+          measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+        ),
         phone);
 
     // Collect symptoms daily at 13:30
     protocol.addTaskControl(
         RecurrentScheduledTrigger(
           type: RecurrentType.daily,
-          time: TimeOfDay(hour: 13, minute: 30),
+          time: const TimeOfDay(hour: 13, minute: 30),
         ),
         RPAppTask(
-            type: SurveyUserTask.SURVEY_TYPE,
-            title: surveys.symptoms.title,
-            description: surveys.symptoms.description,
-            minutesToComplete: surveys.symptoms.minutesToComplete,
-            rpTask: surveys.symptoms.survey,
-            measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
+          type: SurveyUserTask.SURVEY_TYPE,
+          title: surveys.symptoms.title,
+          description: surveys.symptoms.description,
+          minutesToComplete: surveys.symptoms.minutesToComplete,
+          rpTask: surveys.symptoms.survey,
+          measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+        ),
         phone);
 
     // Perform a cognitive assessment every 2nd hour.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(hours: 2)),
+        PeriodicTrigger(period: const Duration(hours: 2)),
         RPAppTask(
-            type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
-            title: surveys.cognition.title,
-            description: surveys.cognition.description,
-            minutesToComplete: surveys.cognition.minutesToComplete,
-            rpTask: surveys.cognition.survey,
-            measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)]),
+          type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+          title: surveys.cognition.title,
+          description: surveys.cognition.description,
+          minutesToComplete: surveys.cognition.minutesToComplete,
+          rpTask: surveys.cognition.survey,
+          measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+        ),
         phone);
 
     // Collect a coughing sample on a daily basis.
     // Also collect current location, and local weather and air quality of this
     // sample.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(days: 1)),
+        PeriodicTrigger(period: const Duration(days: 1)),
         AppTask(
           type: AudioUserTask.AUDIO_TYPE,
           title: "Coughing",
@@ -156,7 +159,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Collect a reading / audio sample on a daily basis.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(days: 1)),
+        PeriodicTrigger(period: const Duration(days: 1)),
         AppTask(
             type: AudioUserTask.AUDIO_TYPE,
             title: "Reading",
@@ -175,7 +178,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // but is included to illustrate the use of cognitive tests from the
     // cognition package.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(hours: 2)),
+        PeriodicTrigger(period: const Duration(hours: 2)),
         RPAppTask(
             type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
             title: "Parkinson's' Assessment",
@@ -193,7 +196,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
                         "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
                 RPTimerStep(
                   identifier: 'RPTimerStepID',
-                  timeout: Duration(seconds: 6),
+                  timeout: const Duration(seconds: 6),
                   title:
                       "Please stand up and hold the phone in one hand and lift it in a straight arm until you hear the sound.",
                   playSound: true,

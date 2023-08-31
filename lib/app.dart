@@ -1,6 +1,8 @@
 part of pulmonary_monitor_app;
 
 class App extends StatelessWidget {
+  const App({super.key});
+
   /// This methods is used to set up the entire app, including:
   Future<bool> init(BuildContext context) async {
     await bloc.init();
@@ -16,7 +18,7 @@ class App extends StatelessWidget {
         builder: (context, snapshot) => (!snapshot.hasData)
             ? Scaffold(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                body: Center(
+                body: const Center(
                     child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [CircularProgressIndicator()],
@@ -28,7 +30,7 @@ class App extends StatelessWidget {
 }
 
 class PulmonaryMonitorApp extends StatefulWidget {
-  PulmonaryMonitorApp({Key? key}) : super(key: key);
+  const PulmonaryMonitorApp({Key? key}) : super(key: key);
   @override
   PulmonaryMonitorAppState createState() => PulmonaryMonitorAppState();
 }
@@ -39,9 +41,9 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
   int _selectedIndex = 1;
 
   final _pages = [
-    StudyVisualization(),
-    TaskList(),
-    DataVisualization(),
+    const StudyVisualization(),
+    const TaskList(),
+    const DataVisualization(),
   ];
 
   @override
@@ -60,7 +62,7 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Study'),
           BottomNavigationBarItem(icon: Icon(Icons.spellcheck), label: 'Tasks'),
           BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'Data'),

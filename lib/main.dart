@@ -15,7 +15,7 @@ import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:carp_audio_package/media.dart';
 //import 'package:carp_health_package/health_package.dart';
-import 'package:carp_backend/carp_backend.dart';
+// import 'package:carp_backend/carp_backend.dart';
 
 import 'package:research_package/research_package.dart';
 import 'package:cognition_package/cognition_package.dart';
@@ -26,7 +26,7 @@ part 'sensing/sensing.dart';
 part 'sensing/surveys.dart';
 part 'sensing/audio_user_task.dart';
 part 'sensing/study_protocol_manager.dart';
-part 'sensing/local_resource_manager.dart';
+part 'sensing/informed_consent.dart';
 part 'models/probe_description.dart';
 part 'models/deployment_model.dart';
 part 'models/data_models.dart';
@@ -42,7 +42,7 @@ void main() {
   CarpMobileSensing.ensureInitialized();
   CognitionPackage.ensureInitialized();
 
-  runApp(App());
+  runApp(const App());
 }
 
 String toJsonString(Object object) =>

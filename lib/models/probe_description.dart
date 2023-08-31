@@ -119,19 +119,19 @@ class ProbeDescription {
 
   static Map<String, Icon> get probeTypeIcon => {
         DeviceSamplingPackage.FREE_MEMORY:
-            Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
+            const Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
         DeviceSamplingPackage.DEVICE_INFORMATION:
-            Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
+            const Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
         DeviceSamplingPackage.BATTERY_STATE:
-            Icon(Icons.battery_charging_full, size: 50, color: CACHET.GREEN),
+            const Icon(Icons.battery_charging_full, size: 50, color: CACHET.GREEN),
         SensorSamplingPackage.STEP_COUNT:
-            Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
+            const Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
         SensorSamplingPackage.ACCELERATION:
-            Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
+            const Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
         SensorSamplingPackage.ROTATION:
-            Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
+            const Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
         SensorSamplingPackage.AMBIENT_LIGHT:
-            Icon(Icons.highlight, size: 50, color: CACHET.YELLOW),
+            const Icon(Icons.highlight, size: 50, color: CACHET.YELLOW),
         // ConnectivitySamplingPackage.BLUETOOTH:
         //     Icon(Icons.bluetooth_searching, size: 50, color: CACHET.DARK_BLUE),
         // ConnectivitySamplingPackage.WIFI:
@@ -139,9 +139,9 @@ class ProbeDescription {
         // ConnectivitySamplingPackage.CONNECTIVITY:
         //     Icon(Icons.cast_connected, size: 50, color: CACHET.GREEN),
         MediaSamplingPackage.AUDIO:
-            Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
+            const Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
         MediaSamplingPackage.NOISE:
-            Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
+            const Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
         // AppsSamplingPackage.APPS:
         //     Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
         // AppsSamplingPackage.APP_USAGE:
@@ -154,20 +154,20 @@ class ProbeDescription {
         //     Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
         // CommunicationSamplingPackage.CALENDAR:
         //     Icon(Icons.event, size: 50, color: CACHET.CYAN),
-        DeviceSamplingPackage.SCREEN_EVENT: Icon(Icons.screen_lock_portrait,
+        DeviceSamplingPackage.SCREEN_EVENT: const Icon(Icons.screen_lock_portrait,
             size: 50, color: CACHET.LIGHT_PURPLE),
         ContextSamplingPackage.LOCATION:
-            Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
+            const Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.ACTIVITY:
-            Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
+            const Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
         ContextSamplingPackage.WEATHER:
-            Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
+            const Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
         ContextSamplingPackage.AIR_QUALITY:
-            Icon(Icons.air, size: 50, color: CACHET.GREY_3),
+            const Icon(Icons.air, size: 50, color: CACHET.GREY_3),
         ContextSamplingPackage.GEOFENCE:
-            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+            const Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.MOBILITY:
-            Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
+            const Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
         // ESenseSamplingPackage.ESENSE_BUTTON:
         //     Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
         // ESenseSamplingPackage.ESENSE_SENSOR:
@@ -183,12 +183,12 @@ class ProbeDescription {
       };
 
   static Map<ExecutorState, Icon> get probeStateIcon => {
-        ExecutorState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
+        ExecutorState.created: const Icon(Icons.child_care, color: CACHET.GREY_4),
         ExecutorState.initialized:
-            Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+            const Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
         ExecutorState.started:
-            Icon(Icons.radio_button_checked, color: CACHET.GREEN),
-        ExecutorState.stopped: Icon(Icons.close, color: CACHET.GREY_2),
-        ExecutorState.undefined: Icon(Icons.error_outline, color: CACHET.RED),
+            const Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+        ExecutorState.stopped: const Icon(Icons.close, color: CACHET.GREY_2),
+        ExecutorState.undefined: const Icon(Icons.error_outline, color: CACHET.RED),
       };
 }

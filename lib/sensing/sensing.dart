@@ -7,7 +7,21 @@
 
 part of pulmonary_monitor_app;
 
-/// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements the sensing layer.
+///
+/// In particular, it shown how sensing is configured locally on a phone, without
+/// the need for using the CARP Web Service infrastructure. Hence, this app shows
+/// how to create and run a protocol locally and store data locally in a SQLite
+/// database.
+///
+/// It also shows how sensing is "recovered" during app restart.
+///
+/// Mo... including:
+///
+///  * getting a [SmartphoneStudyProtocol] from the [LocalStudyProtocolManager]
+///
+///
+///  up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   static final Sensing _instance = Sensing._();
   StudyDeploymentStatus? _status;
@@ -46,7 +60,7 @@ class Sensing {
     // SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // Create and register external data manager factory
-    DataManagerRegistry().register(CarpDataManagerFactory());
+    // DataManagerRegistry().register(CarpDataManagerFactory());
 
     // Register the special-purpose audio user task factory
     AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());
@@ -60,14 +74,14 @@ class Sensing {
     // Note that the study deployment id is NOT used here.
     final protocol = await manager.getStudyProtocol('ignored');
 
-    // Deploy this protocol using the on-phone deployment service.
-    // Reuse the study deployment id, so we have the same deployment
-    // id stored on the phone across app restart.
-    _status = await deploymentService.createStudyDeployment(
-      protocol!,
-      [],
-      bloc.testStudyDeploymentId,
-    );
+    // // Deploy this protocol using the on-phone deployment service.
+    // // Reuse the study deployment id, so we have the same deployment
+    // // id stored on the phone across app restart.
+    // _status = await deploymentService.createStudyDeployment(
+    //   protocol!,
+    //   [],
+    //   bloc.testStudyDeploymentId,
+    // );
 
     // Create and configure a client manager for this phone
     client = SmartPhoneClientManager();
@@ -76,11 +90,13 @@ class Sensing {
       deviceController: DeviceController(),
     );
 
-    // Add the study to the client - note that the same deployment id is used.
-    _study = await client.addStudy(
-      status!.studyDeploymentId,
-      status!.primaryDeviceStatus!.device.roleName,
-    );
+    // // Add the study to the client - note that the same deployment id is used.
+    // _study = await client.addStudy(
+    //   status!.studyDeploymentId,
+    //   status!.primaryDeviceStatus!.device.roleName,
+    // );
+
+    _study = await client.addStudyProtocol(protocol!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -90,7 +106,7 @@ class Sensing {
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
     _controller = client.getStudyRuntime(study!);
-    await controller?.tryDeployment(useCached: true);
+    await controller?.tryDeployment(useCached: false);
 
     // Configure the controller
     await controller?.configure();

@@ -10,16 +10,13 @@ import 'package:carp_audio_package/media.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:cognition_package/cognition_package.dart';
 
-import '../lib/main.dart';
+import 'package:pulmonary_monitor_app/main.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  // creating an empty protocol to initialize json serialization
   StudyProtocol? protocol;
-  late Smartphone phone;
-  late LocationService loc;
 
   // Make sure to initialize CAMS incl. json serialization
   CarpMobileSensing.ensureInitialized();
@@ -35,7 +32,6 @@ void main() {
 
   group("Local Study Protocol Manager", () {
     setUp(() async {
-      // generate the protocol
       protocol ??= await LocalStudyProtocolManager()
           .getStudyProtocol('CAMS App v 0.33.0');
     });
@@ -58,7 +54,6 @@ void main() {
     });
 
     test('JSON File -> StudyProtocol', () async {
-      // Read the study protocol from json file
       final plainJson = File('test/json/protocol.json').readAsStringSync();
 
       final p = SmartphoneStudyProtocol.fromJson(

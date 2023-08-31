@@ -15,14 +15,13 @@ class SensingBLoC {
 
   SensingBLoC();
 
-  Future init() async {
+  Future<void> init() async {
     Settings().debugLevel = DebugLevel.debug;
 
     // don't store the app task queue across app restart
     Settings().saveAppTaskQueue = false;
 
     await Settings().init();
-    await LocalResourceManager().initialize();
     await Sensing().initialize();
     info('$runtimeType initialized');
 
@@ -52,6 +51,9 @@ class SensingBLoC {
           //
           break;
         case UserTaskState.expired:
+          //
+          break;
+        case UserTaskState.notified:
           //
           break;
       }

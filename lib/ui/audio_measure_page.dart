@@ -5,7 +5,7 @@ class AudioMeasurePage extends StatefulWidget {
 
   final AudioUserTask? audioUserTask;
 
-  AudioMeasurePage({Key? key, this.audioUserTask}) : super(key: key);
+  const AudioMeasurePage({Key? key, this.audioUserTask}) : super(key: key);
 
   @override
   AudioMeasurePageState createState() => AudioMeasurePageState(audioUserTask);
@@ -20,7 +20,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Audio Measure'),
+          title: const Text('Audio Measure'),
         ),
         body: Center(
             child: ListView(
@@ -45,7 +45,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             audioUserTask!.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 21,
               fontWeight: FontWeight.bold,
             ),
@@ -56,7 +56,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
             child: Text(
               audioUserTask!.instructions,
               softWrap: true,
-              style: TextStyle(
+              style: const TextStyle(
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -73,7 +73,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
             initialData: audioUserTask!.recordingDuration,
             builder: (context, AsyncSnapshot<int> snapshot) =>
                 Text('00:${snapshot.data.toString().padLeft(2, '0')}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 45,
                       fontWeight: FontWeight.bold,
                     ))));
@@ -105,12 +105,12 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             (audioUserTask!.state == UserTaskState.started)
-                ? Text('RECORDING...')
-                : Text('Press here to start recording...'),
+                ? const Text('RECORDING...')
+                : const Text('Press here to start recording...'),
             IconButton(
               iconSize: 80,
               color: CACHET.RED,
-              icon: Icon(Icons.radio_button_checked),
+              icon: const Icon(Icons.radio_button_checked),
               onPressed: () {
                 audioUserTask!.onRecord();
               },
@@ -125,7 +125,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('DONE!',
+            const Text('DONE!',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
