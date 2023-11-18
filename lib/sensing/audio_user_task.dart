@@ -39,6 +39,8 @@ class AudioUserTask extends UserTask {
   }
 }
 
+/// A factory that can [create] a [UserTask] based on the type of app task.
+/// In this case an [AudioUserTask].
 class PulmonaryUserTaskFactory implements UserTaskFactory {
   @override
   List<String> types = [

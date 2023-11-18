@@ -229,15 +229,15 @@ protocol.addTaskControl(
 
 ## User Task Model
 
-As explained in the tutorial on the [`AppTask` model on the CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model), the runtime of app tasks are handled by so-called [`UserTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask-class.html).
+As explained in the tutorial on the [AppTask model on the CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model), the runtime of app tasks are handled by so-called [`UserTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask-class.html).
 A `UserTask` defines what happens when the user click the "PRESS HERE TO FINISH TASK" button.
 We shall not go into these details here (please see the tutorial), but just mention that the handling of the audio app tasks above, is done using a user task model specific to the PulmonaryMonitor app.
 
-This user task model is specified in the [`user_task.dart`](https://github.com/cph-cachet/pulmonary_monitor_app/blob/master/lib/sensing/user_task.dart) file.
+This user task model is specified in the [`lib/sensing/user_task.dart`](lib/sensing/audio_user_task.dart) file.
 This file defines:
 
 * An `AudioUserTask` which defines a `UserTask` for what should happen when the audio app task is started.
-* A `PulmonaryUserTaskFactory` which is able to create a `UserTask` based on the type of app task. In this case an `AudioUserTask`.
+* A `PulmonaryUserTaskFactory` which is a [`UserTaskFactory`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTaskFactory-class.html), which can create a `UserTask` based on the type of app task. In this case an `AudioUserTask`.
 
 The definition of `AudioUserTask` is:
 
@@ -258,20 +258,16 @@ class AudioUserTask extends UserTask {
   AudioUserTask(AppTaskExecutor executor) : super(executor);
 
   @override
-  void onStart(BuildContext context) {
-    super.onStart(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => AudioMeasurePage(audioUserTask: this)),
-    );
-  }
+  bool get hasWidget => true;
+
+  @override
+  Widget? get widget => AudioMeasurePage(audioUserTask: this);
 
   /// Callback when recording is to start.
   void onRecord() {
     executor.start();
 
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
       if (recordingDuration <= 0) {
@@ -286,7 +282,6 @@ class AudioUserTask extends UserTask {
 }
 ````
 
-The `onStart()` method is called when the user 'starts' the task. i.e. pushes the "PRESS HERE ..." button.
-This method then pushes an `AudioMeasurePage` (Figure 4 left) to the UI.
+When this user task is to be shown in the UI, the [`widget`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask/widget.html) property is shown. This `AudioUserTask` returns an [`AudioMeasurePage`](lib/ui/audio_measure_page.dart) as a widget (Figure 4 left).
 When the user clicks the red button to start recording, the `onRecord()` method is called.
 This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and reports this task as "done".

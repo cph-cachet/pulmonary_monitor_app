@@ -1,5 +1,6 @@
 part of pulmonary_monitor_app;
 
+/// A UI widget that can handle a [AudioUserTask].
 class AudioMeasurePage extends StatefulWidget {
   static const String routeName = '/study/audio';
 
@@ -112,6 +113,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
               color: CACHET.RED,
               icon: const Icon(Icons.radio_button_checked),
               onPressed: () {
+                // callback to audio user task
                 audioUserTask!.onRecord();
               },
             ),
