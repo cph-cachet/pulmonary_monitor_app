@@ -284,4 +284,4 @@ class AudioUserTask extends UserTask {
 
 When this user task is to be shown in the UI, the [`widget`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask/widget.html) property is shown. This `AudioUserTask` returns an [`AudioMeasurePage`](lib/ui/audio_measure_page.dart) as a widget (Figure 4 left).
 When the user clicks the red button to start recording, the `onRecord()` method is called.
-This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and reports this task as "done".
+This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and sets the state of this task as "done".
