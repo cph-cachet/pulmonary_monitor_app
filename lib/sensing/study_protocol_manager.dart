@@ -7,12 +7,12 @@
 
 part of pulmonary_monitor_app;
 
-/// This is a simple local [StudyProtocolManager].
+/// This is a simple local [StudyProtocolManager] which
+/// creates the Pulmonary Monitor study protocol.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future<void> initialize() async {}
 
-  /// Create the Pulmonary Monitor study protocol.
   @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
@@ -56,17 +56,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
     protocol.addConnectedDevice(airQualityService, phone);
 
-    // // Add the background sensing
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: SensorSamplingPackage.STEP_COUNT),
-    //       Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-    //       Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-    //       Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-    //       Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-    //     ]),
-    //     phone);
+    // Add the background sensing
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: SensorSamplingPackage.STEP_COUNT),
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+          Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+        ]),
+        phone);
 
     // Add activity measure using the phone
     protocol.addTaskControl(
@@ -90,6 +90,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         locationService);
 
     // The following contains the definition of the app (user) tasks.
+
+    // Add an app task that once pr. hour asks the user to
+    // collect air quality and weather data - and notify the user.
+    //
+    // Note that for this to work, the air_quality and weather services needs
+    // to be defined and added as connected devices to this phone.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: const Duration(hours: 1)),
+        AppTask(
+            type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+            title: "Weather & Air Quality",
+            description: "Collect local weather and air quality data",
+            notification: true,
+            measures: [
+              Measure(type: ContextSamplingPackage.WEATHER),
+              Measure(type: ContextSamplingPackage.AIR_QUALITY),
+            ]),
+        phone);
 
     // Collect demographics & location once the study starts.
     protocol.addTaskControl(

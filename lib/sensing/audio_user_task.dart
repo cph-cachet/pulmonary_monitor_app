@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 /// A user task handling audio recordings.
-/// When started, creates a [AudioMeasurePage] and shows it to the user.
+/// The [widget] returns an [AudioMeasurePage] that can be shown on the UI.
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
@@ -13,7 +13,7 @@ class AudioUserTask extends UserTask {
   /// Duration of audio recording in seconds.
   int recordingDuration = 10;
 
-  AudioUserTask(AppTaskExecutor executor) : super(executor);
+  AudioUserTask(super.executor);
 
   @override
   bool get hasWidget => true;
