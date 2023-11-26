@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 class StudyVisualization extends StatefulWidget {
-  const StudyVisualization({Key? key}) : super(key: key);
+  const StudyVisualization({super.key});
   static const String routeName = '/study';
 
   @override
@@ -36,12 +36,8 @@ class StudyVizState extends State<StudyVisualization> {
             snap: false,
             actions: <Widget>[
               IconButton(
-                icon: Icon(
-                  Theme.of(context).platform == TargetPlatform.iOS
-                      ? Icons.more_horiz
-                      : Icons.more_vert,
-                ),
-                tooltip: 'Settings',
+                icon: const Icon(Icons.document_scanner),
+                tooltip: 'Informed Consent',
                 onPressed: _showInformedConsent,
               ),
             ],
@@ -93,7 +89,7 @@ class StudyVizState extends State<StudyVisualization> {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subtitle1!,
+        style: Theme.of(context).textTheme.titleMedium!,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -103,7 +99,7 @@ class StudyVizState extends State<StudyVisualization> {
               Container(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   width: 72.0,
-                  child: Icon(Icons.lightbulb_outline,
+                  child: const Icon(Icons.lightbulb_outline,
                       size: 50, color: CACHET.CACHET_BLUE)),
               Expanded(
                   child: Column(
@@ -116,9 +112,10 @@ class StudyVizState extends State<StudyVisualization> {
                     _StudyControllerLine(study.userID, heading: 'User ID'),
                     _StudyControllerLine(study.dataEndpoint,
                         heading: 'Data Endpoint'),
-                    StreamBuilder<DataPoint>(
-                        stream: studyDeploymentModel.data,
-                        builder: (context, AsyncSnapshot<DataPoint> snapshot) {
+                    StreamBuilder<Measurement>(
+                        stream: studyDeploymentModel.measurements,
+                        builder:
+                            (context, AsyncSnapshot<Measurement> snapshot) {
                           return _StudyControllerLine(
                               '${studyDeploymentModel.samplingSize}',
                               heading: 'Sample Size');
@@ -132,15 +129,15 @@ class StudyVizState extends State<StudyVisualization> {
   }
 
   void _showInformedConsent() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => InformedConsentPage()));
+    Navigator.of(context).push(MaterialPageRoute<StatefulWidget>(
+        builder: (context) => const InformedConsentPage()));
   }
 }
 
 class _StudyControllerLine extends StatelessWidget {
   final String? line, heading;
 
-  _StudyControllerLine(this.line, {this.heading}) : super();
+  const _StudyControllerLine(this.line, {this.heading}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +151,8 @@ class _StudyControllerLine extends StatelessWidget {
                       children: <TextSpan>[
                         TextSpan(
                             text: '$heading: ',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(text: line),
                       ],
                     ),
@@ -163,14 +161,14 @@ class _StudyControllerLine extends StatelessWidget {
 }
 
 class _TaskPanel extends StatelessWidget {
-  _TaskPanel({Key? key, this.task}) : super(key: key);
+  const _TaskPanel({this.task});
 
-  final TaskDescriptor? task;
+  final TaskConfiguration? task;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final List<Widget> children = task!.measures
+    final List<Widget> children = task!.measures!
         .map((measure) => _MeasureLine(measure: measure))
         .toList();
 
@@ -179,14 +177,15 @@ class _TaskPanel extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.subtitle1!,
+          style: Theme.of(context).textTheme.titleMedium!,
           child: SafeArea(
               top: false,
               bottom: false,
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
-                  Icon(Icons.description, size: 40, color: CACHET.ORANGE),
-                  Text('  ${task!.name}', style: themeData.textTheme.headline6),
+                  const Icon(Icons.description, size: 40, color: CACHET.ORANGE),
+                  Text('  ${task!.name}',
+                      style: themeData.textTheme.titleLarge),
                 ]),
                 Column(children: children)
                 //Expanded(child: Column(children: children))
@@ -196,19 +195,16 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({Key? key, this.measure}) : super(key: key) {
-    assert(measure != null);
-  }
-
   final Measure? measure;
+
+  const _MeasureLine({required this.measure});
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
     final Icon icon = (ProbeDescription.probeTypeIcon[measure!.type] != null)
         ? Icon(ProbeDescription.probeTypeIcon[measure!.type]!.icon, size: 25)
-        : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN as String]!.icon,
-            size: 25);
+        : const Icon(Icons.memory, size: 25, color: CACHET.GREY_4);
 
     final String name = ProbeDescription.descriptors[measure?.type]?.name ??
         measure.runtimeType.toString();
@@ -216,7 +212,7 @@ class _MeasureLine extends StatelessWidget {
     final List<Widget> columnChildren = [];
     columnChildren.add(Text(name));
     columnChildren
-        .add(Text(measure.toString(), style: themeData.textTheme.caption));
+        .add(Text(measure.toString(), style: themeData.textTheme.bodySmall));
 
     final List<Widget> rowChildren = [];
     rowChildren.add(SizedBox(

@@ -7,35 +7,31 @@ class ProbeDescriptor {
 
 class ProbeDescription {
   static Map<String, ProbeDescriptor> get descriptors => {
-        DataType.UNKNOWN.toString(): ProbeDescriptor(
-          'Unknown',
-          'Unknown Probe',
-        ),
-        DeviceSamplingPackage.MEMORY: ProbeDescriptor(
+        DeviceSamplingPackage.FREE_MEMORY: ProbeDescriptor(
           'Memory',
           'Collecting free physical and virtual memory.',
         ),
-        DeviceSamplingPackage.DEVICE: ProbeDescriptor(
+        DeviceSamplingPackage.DEVICE_INFORMATION: ProbeDescriptor(
           'Device',
           'Basic Device (Phone) Information.',
         ),
-        DeviceSamplingPackage.BATTERY: ProbeDescriptor(
+        DeviceSamplingPackage.BATTERY_STATE: ProbeDescriptor(
           'Battery',
           'Collecting battery level and charging status.',
         ),
-        SensorSamplingPackage.PEDOMETER: ProbeDescriptor(
+        SensorSamplingPackage.STEP_COUNT: ProbeDescriptor(
           'Pedometer',
           'Collecting step counts on a regular basis.',
         ),
-        SensorSamplingPackage.ACCELEROMETER: ProbeDescriptor(
+        SensorSamplingPackage.ACCELERATION: ProbeDescriptor(
           'Accelerometer',
           "Collecting sensor data from the phone's onboard accelerometer.",
         ),
-        SensorSamplingPackage.GYROSCOPE: ProbeDescriptor(
+        SensorSamplingPackage.ROTATION: ProbeDescriptor(
           'Gyroscope',
           "Collecting sensor data from the phone's onboard gyroscope.",
         ),
-        SensorSamplingPackage.LIGHT: ProbeDescriptor(
+        SensorSamplingPackage.AMBIENT_LIGHT: ProbeDescriptor(
           'Light',
           'Measures ambient light in lux on a regular basis.',
         ),
@@ -83,17 +79,13 @@ class ProbeDescription {
         //   'Calendar',
         //   'Collects entries from phone calendars.',
         // ),
-        DeviceSamplingPackage.SCREEN: ProbeDescriptor(
+        DeviceSamplingPackage.SCREEN_EVENT: ProbeDescriptor(
           'Screen',
           'Collecting screen events (on/off/unlock).',
         ),
         ContextSamplingPackage.LOCATION: ProbeDescriptor(
           'Location',
           'Collecting location information.',
-        ),
-        ContextSamplingPackage.GEOLOCATION: ProbeDescriptor(
-          'Geolocation',
-          "Listening to changes in the phone's geo-location.",
         ),
         ContextSamplingPackage.ACTIVITY: ProbeDescriptor(
           'Activity',
@@ -126,22 +118,20 @@ class ProbeDescription {
       };
 
   static Map<String, Icon> get probeTypeIcon => {
-        DataType.UNKNOWN.toString():
-            Icon(Icons.error, size: 50, color: CACHET.GREY_4),
-        DeviceSamplingPackage.MEMORY:
-            Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
-        DeviceSamplingPackage.DEVICE:
-            Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
-        DeviceSamplingPackage.BATTERY:
-            Icon(Icons.battery_charging_full, size: 50, color: CACHET.GREEN),
-        SensorSamplingPackage.PEDOMETER:
-            Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
-        SensorSamplingPackage.ACCELEROMETER:
-            Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
-        SensorSamplingPackage.GYROSCOPE:
-            Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
-        SensorSamplingPackage.LIGHT:
-            Icon(Icons.highlight, size: 50, color: CACHET.YELLOW),
+        DeviceSamplingPackage.FREE_MEMORY:
+            const Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
+        DeviceSamplingPackage.DEVICE_INFORMATION:
+            const Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
+        DeviceSamplingPackage.BATTERY_STATE:
+            const Icon(Icons.battery_charging_full, size: 50, color: CACHET.GREEN),
+        SensorSamplingPackage.STEP_COUNT:
+            const Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
+        SensorSamplingPackage.ACCELERATION:
+            const Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
+        SensorSamplingPackage.ROTATION:
+            const Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
+        SensorSamplingPackage.AMBIENT_LIGHT:
+            const Icon(Icons.highlight, size: 50, color: CACHET.YELLOW),
         // ConnectivitySamplingPackage.BLUETOOTH:
         //     Icon(Icons.bluetooth_searching, size: 50, color: CACHET.DARK_BLUE),
         // ConnectivitySamplingPackage.WIFI:
@@ -149,9 +139,9 @@ class ProbeDescription {
         // ConnectivitySamplingPackage.CONNECTIVITY:
         //     Icon(Icons.cast_connected, size: 50, color: CACHET.GREEN),
         MediaSamplingPackage.AUDIO:
-            Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
+            const Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
         MediaSamplingPackage.NOISE:
-            Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
+            const Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
         // AppsSamplingPackage.APPS:
         //     Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
         // AppsSamplingPackage.APP_USAGE:
@@ -164,22 +154,20 @@ class ProbeDescription {
         //     Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
         // CommunicationSamplingPackage.CALENDAR:
         //     Icon(Icons.event, size: 50, color: CACHET.CYAN),
-        DeviceSamplingPackage.SCREEN: Icon(Icons.screen_lock_portrait,
+        DeviceSamplingPackage.SCREEN_EVENT: const Icon(Icons.screen_lock_portrait,
             size: 50, color: CACHET.LIGHT_PURPLE),
         ContextSamplingPackage.LOCATION:
-            Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
-        ContextSamplingPackage.GEOLOCATION:
-            Icon(Icons.my_location, size: 50, color: CACHET.YELLOW),
+            const Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.ACTIVITY:
-            Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
+            const Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
         ContextSamplingPackage.WEATHER:
-            Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
+            const Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
         ContextSamplingPackage.AIR_QUALITY:
-            Icon(Icons.air, size: 50, color: CACHET.GREY_3),
+            const Icon(Icons.air, size: 50, color: CACHET.GREY_3),
         ContextSamplingPackage.GEOFENCE:
-            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+            const Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.MOBILITY:
-            Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
+            const Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
         // ESenseSamplingPackage.ESENSE_BUTTON:
         //     Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
         // ESenseSamplingPackage.ESENSE_SENSOR:
@@ -189,21 +177,18 @@ class ProbeDescription {
   static Map<ExecutorState, String> get probeStateLabel => {
         ExecutorState.created: "Created",
         ExecutorState.initialized: "Initialized",
-        ExecutorState.resumed: "Resumed",
-        ExecutorState.paused: "Paused",
+        ExecutorState.started: "Started",
         ExecutorState.stopped: "Stopped",
         ExecutorState.undefined: "Undefined",
       };
 
   static Map<ExecutorState, Icon> get probeStateIcon => {
-        ExecutorState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
+        ExecutorState.created: const Icon(Icons.child_care, color: CACHET.GREY_4),
         ExecutorState.initialized:
-            Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
-        ExecutorState.resumed:
-            Icon(Icons.radio_button_checked, color: CACHET.GREEN),
-        ExecutorState.paused:
-            Icon(Icons.radio_button_unchecked, color: CACHET.GREEN),
-        ExecutorState.stopped: Icon(Icons.close, color: CACHET.GREY_2),
-        ExecutorState.undefined: Icon(Icons.error_outline, color: CACHET.RED),
+            const Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+        ExecutorState.started:
+            const Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+        ExecutorState.stopped: const Icon(Icons.close, color: CACHET.GREY_2),
+        ExecutorState.undefined: const Icon(Icons.error_outline, color: CACHET.RED),
       };
 }

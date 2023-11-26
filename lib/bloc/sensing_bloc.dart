@@ -1,6 +1,8 @@
 part of pulmonary_monitor_app;
 
 class SensingBLoC {
+  final String testStudyDeploymentId = 'ae8076a3-7170-4bcf-b66c-64639a7a9eee';
+
   SmartphoneDeployment? get deployment => Sensing().deployment;
   StudyDeploymentModel? _model;
 
@@ -13,14 +15,13 @@ class SensingBLoC {
 
   SensingBLoC();
 
-  Future init() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+  Future<void> init() async {
+    Settings().debugLevel = DebugLevel.debug;
 
     // don't store the app task queue across app restart
     Settings().saveAppTaskQueue = false;
 
     await Settings().init();
-    await LocalResourceManager().initialize();
     await Sensing().initialize();
     info('$runtimeType initialized');
 
@@ -52,25 +53,20 @@ class SensingBLoC {
         case UserTaskState.expired:
           //
           break;
+        case UserTaskState.notified:
+          //
+          break;
       }
     });
   }
 
-  void resume() async => Sensing().controller?.executor?.resume();
-  void pause() => Sensing().controller?.executor?.pause();
+  void start() async => Sensing().controller?.executor.start();
   void stop() async => Sensing().controller?.stop();
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ExecutorState.resumed;
-
-  // /// Add a [Datum] object to the stream of events.
-  // void addDatum(Datum datum) => sensing.controller.executor.addDatum(datum);
-
-  // /// Add a error to the stream of events.
-  // void addError(Object error, [StackTrace stacktrace]) =>
-  //     sensing.controller.executor.addError(error, stacktrace);
+      Sensing().controller!.executor.state == ExecutorState.started;
 }
 
 final bloc = SensingBLoC();

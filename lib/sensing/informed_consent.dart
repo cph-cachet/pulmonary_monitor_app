@@ -7,37 +7,12 @@
 
 part of pulmonary_monitor_app;
 
-/// A local resource manager handling:
-///  * informed consent
-///  * localization
-class LocalResourceManager
-    implements InformedConsentManager, LocalizationManager {
+final consent = InformedConsent();
+
+class InformedConsent {
   RPOrderedTask? _informedConsent;
 
-  static final LocalResourceManager _instance = LocalResourceManager._();
-  factory LocalResourceManager() => _instance;
-
-  LocalResourceManager._() {
-    // to initialize json serialization for RP classes
-    RPOrderedTask(identifier: '', steps: []);
-  }
-
-  @override
-  Future initialize() async {
-    // initialize local cached values
-    await getInformedConsent();
-  }
-
-  @override
-  RPOrderedTask get informedConsent =>
-      _informedConsent ??
-      RPOrderedTask(
-        identifier: 'empty',
-        steps: [],
-      );
-
-  @override
-  Future<RPOrderedTask?> getInformedConsent() async {
+  RPOrderedTask get informedConsent {
     if (_informedConsent == null) {
       RPConsentSection overviewSection = RPConsentSection(
           type: RPConsentSectionType.Overview)
@@ -116,45 +91,7 @@ class LocalResourceManager
         ],
       );
     }
-    return _informedConsent;
-  }
 
-  @override
-  Future<bool> setInformedConsent(RPOrderedTask informedConsent) async {
-    _informedConsent = informedConsent;
-    return true;
-  }
-
-  @override
-  Future<bool> deleteInformedConsent() async {
-    _informedConsent = null;
-    return true;
-  }
-
-  @override
-  Future<bool> deleteLocalizations(Locale locale) {
-    throw UnimplementedError();
-  }
-
-  final String basePath = 'assets/lang';
-
-  @override
-  Future<Map<String, String>> getLocalizations(Locale locale) async {
-    String path = '$basePath/${locale.languageCode}.json';
-    print("$runtimeType - loading '$path'");
-    String jsonString = await rootBundle.loadString(path);
-
-    Map<String, dynamic> jsonMap =
-        json.decode(jsonString) as Map<String, dynamic>;
-    Map<String, String> translations =
-        jsonMap.map((key, value) => MapEntry(key, value.toString()));
-
-    return translations;
-  }
-
-  @override
-  Future<bool> setLocalizations(
-      Locale locale, Map<String, dynamic> localizations) {
-    throw UnimplementedError();
+    return _informedConsent!;
   }
 }

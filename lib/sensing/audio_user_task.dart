@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 /// A user task handling audio recordings.
-/// When started, creates a [AudioMeasurePage] and shows it to the user.
+/// The [widget] returns an [AudioMeasurePage] that can be shown on the UI.
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
@@ -13,36 +13,34 @@ class AudioUserTask extends UserTask {
   /// Duration of audio recording in seconds.
   int recordingDuration = 10;
 
-  AudioUserTask(AppTaskExecutor executor) : super(executor);
+  AudioUserTask(super.executor);
 
   @override
-  void onStart(BuildContext context) {
-    super.onStart(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => AudioMeasurePage(audioUserTask: this)),
-    );
-  }
+  bool get hasWidget => true;
+
+  @override
+  Widget? get widget => AudioMeasurePage(audioUserTask: this);
 
   /// Callback when recording is to start.
   void onRecord() {
-    executor.resume();
+    executor.start();
 
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
       if (recordingDuration <= 0) {
         _timer?.cancel();
         _countDownController.close();
 
-        executor.pause();
+        executor.stop();
         state = UserTaskState.done;
       }
     });
   }
 }
 
+/// A factory that can [create] a [UserTask] based on the type of app task.
+/// In this case an [AudioUserTask].
 class PulmonaryUserTaskFactory implements UserTaskFactory {
   @override
   List<String> types = [
