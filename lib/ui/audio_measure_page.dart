@@ -6,7 +6,7 @@ class AudioMeasurePage extends StatefulWidget {
 
   final AudioUserTask? audioUserTask;
 
-  const AudioMeasurePage({Key? key, this.audioUserTask}) : super(key: key);
+  const AudioMeasurePage({super.key, this.audioUserTask});
 
   @override
   AudioMeasurePageState createState() => AudioMeasurePageState(audioUserTask);

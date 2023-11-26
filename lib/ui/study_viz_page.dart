@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 class StudyVisualization extends StatefulWidget {
-  const StudyVisualization({Key? key}) : super(key: key);
+  const StudyVisualization({super.key});
   static const String routeName = '/study';
 
   @override
@@ -161,7 +161,7 @@ class _StudyControllerLine extends StatelessWidget {
 }
 
 class _TaskPanel extends StatelessWidget {
-  const _TaskPanel({Key? key, this.task}) : super(key: key);
+  const _TaskPanel({this.task});
 
   final TaskConfiguration? task;
 
@@ -195,11 +195,9 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({Key? key, this.measure}) : super(key: key) {
-    assert(measure != null);
-  }
-
   final Measure? measure;
+
+  const _MeasureLine({required this.measure});
 
   @override
   Widget build(BuildContext context) {

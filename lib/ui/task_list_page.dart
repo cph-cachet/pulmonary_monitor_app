@@ -1,7 +1,7 @@
 part of pulmonary_monitor_app;
 
 class TaskList extends StatefulWidget {
-  const TaskList({Key? key}) : super(key: key);
+  const TaskList({super.key});
 
   static const String routeName = '/tasklist';
 
