@@ -10,7 +10,7 @@ class StudyDeploymentModel {
   String get description =>
       deployment.studyDescription?.description ?? 'No description available.';
   Image get image => Image.asset('assets/images/running.png');
-  String get userID => deployment.userId ?? '';
+  String get userID => deployment.participantId ?? '';
   // String get samplingStrategy => 'NORMAL';
   String get dataEndpoint => deployment.dataEndPoint.toString();
 

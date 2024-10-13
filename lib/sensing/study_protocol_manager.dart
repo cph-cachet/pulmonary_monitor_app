@@ -76,7 +76,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // Define the online location service and add it as a 'device'.
-    LocationService locationService = LocationService();
+    LocationService locationService = LocationService(
+      // used for debugging when the phone is laying still on the table
+      distance: 0,
+    );
+
     protocol.addConnectedDevice(locationService, phone);
 
     // Add a background task that continuously collects location

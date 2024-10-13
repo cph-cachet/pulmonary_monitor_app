@@ -51,16 +51,12 @@ class Sensing {
 
   Sensing._() {
     // Create and register external sampling packages
-    // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
+    // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
-    // SamplingPackageRegistry().register(ESenseSamplingPackage());
-
-    // Create and register external data manager factory
-    // DataManagerRegistry().register(CarpDataManagerFactory());
 
     // Register the special-purpose audio user task factory
     AppTaskController().registerUserTaskFactory(PulmonaryUserTaskFactory());
@@ -70,18 +66,9 @@ class Sensing {
 
   /// Initialize and setup sensing.
   Future<void> initialize() async {
-    // Get the protocol from the study protocol manager.
-    // Note that the study deployment id is NOT used here.
+    // Get the protocol from the local study protocol manager.
+    // Note that the study id is NOT used here.
     final protocol = await manager.getStudyProtocol('ignored');
-
-    // // Deploy this protocol using the on-phone deployment service.
-    // // Reuse the study deployment id, so we have the same deployment
-    // // id stored on the phone across app restart.
-    // _status = await deploymentService.createStudyDeployment(
-    //   protocol!,
-    //   [],
-    //   bloc.testStudyDeploymentId,
-    // );
 
     // Create and configure a client manager for this phone
     client = SmartPhoneClientManager();
@@ -90,13 +77,8 @@ class Sensing {
       deviceController: DeviceController(),
     );
 
-    // // Add the study to the client - note that the same deployment id is used.
-    // _study = await client.addStudy(
-    //   status!.studyDeploymentId,
-    //   status!.primaryDeviceStatus!.device.roleName,
-    // );
-
-    _study = await client.addStudyProtocol(protocol!);
+    // Add the study to the client directly from the protocol
+    _study = await client.addStudyFromProtocol(protocol!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -105,7 +87,7 @@ class Sensing {
     // be used pr. default.
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
-    _controller = client.getStudyRuntime(study!);
+    _controller = client.getStudyRuntime(study!.studyDeploymentId);
     await controller?.tryDeployment(useCached: false);
 
     // Configure the controller

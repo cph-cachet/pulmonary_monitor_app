@@ -23,7 +23,7 @@ class AudioUserTask extends UserTask {
 
   /// Callback when recording is to start.
   void onRecord() {
-    executor.start();
+    backgroundTaskExecutor.start();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
@@ -32,8 +32,8 @@ class AudioUserTask extends UserTask {
         _timer?.cancel();
         _countDownController.close();
 
-        executor.stop();
-        state = UserTaskState.done;
+        backgroundTaskExecutor.stop();
+        super.onDone();
       }
     });
   }

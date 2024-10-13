@@ -13,8 +13,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:carp_audio_package/media.dart';
-//import 'package:carp_health_package/health_package.dart';
-//import 'package:carp_backend/carp_backend.dart';
 
 import 'package:research_package/research_package.dart';
 import 'package:cognition_package/cognition_package.dart';
@@ -36,8 +34,9 @@ part 'ui/cachet.dart';
 part 'ui/audio_measure_page.dart';
 
 void main() {
-  // Make sure to initialize CAMS incl. json serialization
+  // Make sure to initialize CAMS and packages for json serialization
   CarpMobileSensing.ensureInitialized();
+  ResearchPackage.ensureInitialized();
   CognitionPackage.ensureInitialized();
 
   runApp(const App());
