@@ -1,7 +1,11 @@
 part of pulmonary_monitor_app;
 
 /// A user task handling audio recordings.
+///
 /// The [widget] returns an [AudioMeasurePage] that can be shown on the UI.
+///
+/// When the recording is started (calling the [onRecord] method),
+/// the background task collecting sensor measures is started.
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
@@ -13,7 +17,7 @@ class AudioUserTask extends UserTask {
   /// Duration of audio recording in seconds.
   int recordingDuration = 10;
 
-  AudioUserTask(super.executor);
+  AudioUserTask(super.executor, [this.recordingDuration = 10]);
 
   @override
   bool get hasWidget => true;
@@ -22,9 +26,11 @@ class AudioUserTask extends UserTask {
   Widget? get widget => AudioMeasurePage(audioUserTask: this);
 
   /// Callback when recording is to start.
+  /// When recording is started, background sensing is also started.
   void onRecord() {
     backgroundTaskExecutor.start();
 
+    // start the countdown, once tick pr. second.
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
@@ -32,6 +38,7 @@ class AudioUserTask extends UserTask {
         _timer?.cancel();
         _countDownController.close();
 
+        // stop the background sensing and mark this task as done
         backgroundTaskExecutor.stop();
         super.onDone();
       }

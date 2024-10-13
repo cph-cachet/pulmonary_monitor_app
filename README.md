@@ -243,7 +243,11 @@ The definition of `AudioUserTask` is:
 
 ````dart
 /// A user task handling audio recordings.
-/// When started, creates a [AudioMeasurePage] and shows it to the user.
+///
+/// The [widget] returns an [AudioMeasurePage] that can be shown on the UI.
+///
+/// When the recording is started (calling the [onRecord] method),
+/// the background task collecting sensor measures is started.
 class AudioUserTask extends UserTask {
   static const String AUDIO_TYPE = 'audio';
 
@@ -255,7 +259,7 @@ class AudioUserTask extends UserTask {
   /// Duration of audio recording in seconds.
   int recordingDuration = 10;
 
-  AudioUserTask(AppTaskExecutor executor) : super(executor);
+  AudioUserTask(super.executor, [this.recordingDuration = 10]);
 
   @override
   bool get hasWidget => true;
@@ -264,9 +268,11 @@ class AudioUserTask extends UserTask {
   Widget? get widget => AudioMeasurePage(audioUserTask: this);
 
   /// Callback when recording is to start.
+  /// When recording is started, background sensing is also started.
   void onRecord() {
-    executor.start();
+    backgroundTaskExecutor.start();
 
+    // start the countdown, once tick pr. second.
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _countDownController.add(--recordingDuration);
 
@@ -274,8 +280,9 @@ class AudioUserTask extends UserTask {
         _timer?.cancel();
         _countDownController.close();
 
-        executor.stop();
-        state = UserTaskState.done;
+        // stop the background sensing and mark this task as done
+        backgroundTaskExecutor.stop();
+        super.onDone();
       }
     });
   }
@@ -284,4 +291,4 @@ class AudioUserTask extends UserTask {
 
 When this user task is to be shown in the UI, the [`widget`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/UserTask/widget.html) property is shown. This `AudioUserTask` returns an [`AudioMeasurePage`](lib/ui/audio_measure_page.dart) as a widget (Figure 4 left).
 When the user clicks the red button to start recording, the `onRecord()` method is called.
-This method resumes sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - pauses the sampling and sets the state of this task as "done".
+This method starts background sampling (i.e. starts collecting all the measures defined in the task) and starts a count-down, which - when finished - stops the sampling and marks this task as "done".
