@@ -83,15 +83,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     protocol.addConnectedDevice(locationService, phone);
 
-    // Add a background task that continuously collects location
-    // and mobility features (e.g., home stay).
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: ContextSamplingPackage.LOCATION),
-          Measure(type: ContextSamplingPackage.MOBILITY)
-        ]),
-        locationService);
+    // // Add a background task that continuously collects location
+    // // and mobility features (e.g., home stay).
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: ContextSamplingPackage.LOCATION),
+    //       Measure(type: ContextSamplingPackage.MOBILITY)
+    //     ]),
+    //     locationService);
 
     // The following contains the definition of the app (user) tasks.
 
