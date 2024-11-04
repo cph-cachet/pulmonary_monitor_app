@@ -56,24 +56,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
     protocol.addConnectedDevice(airQualityService, phone);
 
-    // Add the background sensing
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: SensorSamplingPackage.STEP_COUNT),
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-          Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-        ]),
-        phone);
+    // // Add the background sensing
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: SensorSamplingPackage.STEP_COUNT),
+    //       Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+    //       Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+    //       Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+    //       Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    //     ]),
+    //     phone);
 
-    // Add activity measure using the phone
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(
-            measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
-        phone);
+    // // Add activity measure using the phone
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(
+    //         measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
+    //     phone);
 
     // Define the online location service and add it as a 'device'.
     LocationService locationService = LocationService(
@@ -95,89 +95,98 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // The following contains the definition of the app (user) tasks.
 
-    // Add an app task that once pr. hour asks the user to
-    // collect air quality and weather data - and notify the user.
-    //
-    // Note that for this to work, the air_quality and weather services needs
-    // to be defined and added as connected devices to this phone.
+    // // Add an app task that once pr. hour asks the user to
+    // // collect air quality and weather data - and notify the user.
+    // //
+    // // Note that for this to work, the air_quality and weather services needs
+    // // to be defined and added as connected devices to this phone.
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: const Duration(hours: 1)),
+    //     AppTask(
+    //         type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //         title: "Weather & Air Quality",
+    //         description: "Collect local weather and air quality data",
+    //         notification: true,
+    //         measures: [
+    //           Measure(type: ContextSamplingPackage.WEATHER),
+    //           Measure(type: ContextSamplingPackage.AIR_QUALITY),
+    //         ]),
+    //     phone);
+
+    // // Collect demographics & location once the study starts.
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     RPAppTask(
+    //       type: SurveyUserTask.SURVEY_TYPE,
+    //       title: surveys.demographics.title,
+    //       description: surveys.demographics.description,
+    //       minutesToComplete: surveys.demographics.minutesToComplete,
+    //       notification: true,
+    //       rpTask: surveys.demographics.survey,
+    //       measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+    //     ),
+    //     phone);
+
+    var symptomsTask = RPAppTask(
+      type: SurveyUserTask.SURVEY_TYPE,
+      title: surveys.symptoms.title,
+      description: surveys.symptoms.description,
+      minutesToComplete: surveys.symptoms.minutesToComplete,
+      rpTask: surveys.symptoms.survey,
+      measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+    );
+
+    // // Collect symptoms daily at 13:30
+    // protocol.addTaskControl(
+    //     RecurrentScheduledTrigger(
+    //       type: RecurrentType.daily,
+    //       time: const TimeOfDay(hour: 13, minute: 30),
+    //     ),
+    //     symptomsTask,
+    //     phone);
+
+    protocol.addTaskControl(ImmediateTrigger(), symptomsTask, phone);
     protocol.addTaskControl(
-        PeriodicTrigger(period: const Duration(hours: 1)),
-        AppTask(
-            type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-            title: "Weather & Air Quality",
-            description: "Collect local weather and air quality data",
-            notification: true,
-            measures: [
-              Measure(type: ContextSamplingPackage.WEATHER),
-              Measure(type: ContextSamplingPackage.AIR_QUALITY),
-            ]),
+        UserTaskTrigger(
+            taskName: symptomsTask.name, triggerCondition: UserTaskState.done),
+        symptomsTask,
         phone);
 
-    // Collect demographics & location once the study starts.
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        RPAppTask(
-          type: SurveyUserTask.SURVEY_TYPE,
-          title: surveys.demographics.title,
-          description: surveys.demographics.description,
-          minutesToComplete: surveys.demographics.minutesToComplete,
-          notification: true,
-          rpTask: surveys.demographics.survey,
-          measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
-        ),
-        phone);
+    // // Perform a cognitive assessment every 2nd hour.
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: const Duration(hours: 2)),
+    //     RPAppTask(
+    //       type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+    //       title: surveys.cognition.title,
+    //       description: surveys.cognition.description,
+    //       minutesToComplete: surveys.cognition.minutesToComplete,
+    //       rpTask: surveys.cognition.survey,
+    //       measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+    //     ),
+    //     phone);
 
-    // Collect symptoms daily at 13:30
-    protocol.addTaskControl(
-        RecurrentScheduledTrigger(
-          type: RecurrentType.daily,
-          time: const TimeOfDay(hour: 13, minute: 30),
-        ),
-        RPAppTask(
-          type: SurveyUserTask.SURVEY_TYPE,
-          title: surveys.symptoms.title,
-          description: surveys.symptoms.description,
-          minutesToComplete: surveys.symptoms.minutesToComplete,
-          rpTask: surveys.symptoms.survey,
-          measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
-        ),
-        phone);
-
-    // Perform a cognitive assessment every 2nd hour.
-    protocol.addTaskControl(
-        PeriodicTrigger(period: const Duration(hours: 2)),
-        RPAppTask(
-          type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
-          title: surveys.cognition.title,
-          description: surveys.cognition.description,
-          minutesToComplete: surveys.cognition.minutesToComplete,
-          rpTask: surveys.cognition.survey,
-          measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
-        ),
-        phone);
-
-    // Collect a coughing sample on a daily basis.
-    // Also collect current location, and local weather and air quality of this
-    // sample.
-    protocol.addTaskControl(
-        PeriodicTrigger(period: const Duration(days: 1)),
-        AppTask(
-          type: AudioUserTask.AUDIO_TYPE,
-          title: "Coughing",
-          description:
-              'In this small exercise we would like to collect sound samples of coughing.',
-          instructions:
-              'Please press the record button below, and then cough 5 times.',
-          minutesToComplete: 3,
-          notification: true,
-          measures: [
-            Measure(type: MediaSamplingPackage.AUDIO),
-            Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
-            Measure(type: ContextSamplingPackage.WEATHER),
-            Measure(type: ContextSamplingPackage.AIR_QUALITY),
-          ],
-        ),
-        phone);
+    // // Collect a coughing sample on a daily basis.
+    // // Also collect current location, and local weather and air quality of this
+    // // sample.
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: const Duration(days: 1)),
+    //     AppTask(
+    //       type: AudioUserTask.AUDIO_TYPE,
+    //       title: "Coughing",
+    //       description:
+    //           'In this small exercise we would like to collect sound samples of coughing.',
+    //       instructions:
+    //           'Please press the record button below, and then cough 5 times.',
+    //       minutesToComplete: 3,
+    //       notification: true,
+    //       measures: [
+    //         Measure(type: MediaSamplingPackage.AUDIO),
+    //         Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
+    //         Measure(type: ContextSamplingPackage.WEATHER),
+    //         Measure(type: ContextSamplingPackage.AIR_QUALITY),
+    //       ],
+    //     ),
+    //     phone);
 
     // // Add audio measure in the background
     // protocol.addTaskControl(
@@ -188,50 +197,50 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ),
     //     phone);
 
-    // Perform a Parkinson's assessment.
-    // This is strictly speaking not part of monitoring pulmonary symptoms,
-    // but is included to illustrate the use of cognitive tests from the
-    // cognition package.
-    protocol.addTaskControl(
-        PeriodicTrigger(period: const Duration(hours: 2)),
-        RPAppTask(
-            type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
-            title: "Parkinson's' Assessment",
-            description: "A simple task assessing finger tapping speed.",
-            minutesToComplete: 3,
-            rpTask: RPOrderedTask(
-              identifier: "parkinsons_assessment",
-              steps: [
-                RPInstructionStep(
-                    identifier: 'parkinsons_instruction',
-                    title: "Parkinsons' Disease Assessment",
-                    text:
-                        "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
-                        "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
-                        "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
-                RPTimerStep(
-                  identifier: 'RPTimerStepID',
-                  timeout: const Duration(seconds: 6),
-                  title:
-                      "Please stand up and hold the phone in one hand and lift it in a straight arm until you hear the sound.",
-                  playSound: true,
-                ),
-                RPFlankerActivity(
-                  identifier: 'flanker_1',
-                  lengthOfTest: 30,
-                  numberOfCards: 10,
-                ),
-                RPTappingActivity(
-                  identifier: 'tapping_1',
-                  lengthOfTest: 10,
-                )
-              ],
-            ),
-            measures: [
-              Measure(type: SensorSamplingPackage.ACCELERATION),
-              Measure(type: SensorSamplingPackage.ROTATION),
-            ]),
-        phone);
+    // // Perform a Parkinson's assessment.
+    // // This is strictly speaking not part of monitoring pulmonary symptoms,
+    // // but is included to illustrate the use of cognitive tests from the
+    // // cognition package.
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: const Duration(hours: 2)),
+    //     RPAppTask(
+    //         type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+    //         title: "Parkinson's' Assessment",
+    //         description: "A simple task assessing finger tapping speed.",
+    //         minutesToComplete: 3,
+    //         rpTask: RPOrderedTask(
+    //           identifier: "parkinsons_assessment",
+    //           steps: [
+    //             RPInstructionStep(
+    //                 identifier: 'parkinsons_instruction',
+    //                 title: "Parkinsons' Disease Assessment",
+    //                 text:
+    //                     "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
+    //                     "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
+    //                     "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
+    //             RPTimerStep(
+    //               identifier: 'RPTimerStepID',
+    //               timeout: const Duration(seconds: 6),
+    //               title:
+    //                   "Please stand up and hold the phone in one hand and lift it in a straight arm until you hear the sound.",
+    //               playSound: true,
+    //             ),
+    //             RPFlankerActivity(
+    //               identifier: 'flanker_1',
+    //               lengthOfTest: 30,
+    //               numberOfCards: 10,
+    //             ),
+    //             RPTappingActivity(
+    //               identifier: 'tapping_1',
+    //               lengthOfTest: 10,
+    //             )
+    //           ],
+    //         ),
+    //         measures: [
+    //           Measure(type: SensorSamplingPackage.ACCELERATION),
+    //           Measure(type: SensorSamplingPackage.ROTATION),
+    //         ]),
+    //     phone);
 
     // Add a task that keeps reappearing when done.
     var environmentTask = AppTask(

@@ -77,8 +77,10 @@ class Sensing {
       deviceController: DeviceController(),
     );
 
-    // Add the study to the client directly from the protocol
-    _study = await client.addStudyFromProtocol(protocol!);
+    // Add the study to the client directly from the protocol,
+    // using the same deployment id across app restart.
+    _study = await client.addStudyFromProtocol(
+        protocol!, bloc.testStudyDeploymentId);
 
     // Get the study controller and try to deploy the study.
     //
@@ -88,7 +90,7 @@ class Sensing {
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
     _controller = client.getStudyRuntime(study!.studyDeploymentId);
-    await controller?.tryDeployment(useCached: false);
+    await controller?.tryDeployment(useCached: true);
 
     // Configure the controller
     await controller?.configure();

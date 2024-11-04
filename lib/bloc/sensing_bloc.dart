@@ -1,7 +1,17 @@
 part of pulmonary_monitor_app;
 
 class SensingBLoC {
-  final String testStudyDeploymentId = 'ae8076a3-7170-4bcf-b66c-64639a7a9eee';
+  // -------------------------------------------------------------------- //
+  //                      TESTING PARAMETERS                              //
+  // -------------------------------------------------------------------- //
+
+  /// Deployment ID used for testing. This is used across app restart if not null.
+  final String? testStudyDeploymentId = 'ae8076a3-7170-4bcf-b66c-64639a7a9eee';
+
+  /// Should we save the app task queue across app restart
+  bool get saveAppTaskQueueAcrossAppRestart => testStudyDeploymentId != null;
+
+  // -------------------------------------------------------------------- //
 
   SmartphoneDeployment? get deployment => Sensing().deployment;
   StudyDeploymentModel? _model;
@@ -18,8 +28,7 @@ class SensingBLoC {
   Future<void> init() async {
     Settings().debugLevel = DebugLevel.debug;
 
-    // don't store the app task queue across app restart
-    Settings().saveAppTaskQueue = false;
+    Settings().saveAppTaskQueue = saveAppTaskQueueAcrossAppRestart;
 
     await Settings().init();
     await Sensing().initialize();

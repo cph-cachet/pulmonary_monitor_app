@@ -13,11 +13,11 @@ dependencies:
     sdk: flutter
 
   carp_core: ^1.8.0
-  carp_mobile_sensing: ^1.11.0
+  # carp_mobile_sensing: ^1.11.0
   carp_context_package: ^1.10.0
   carp_connectivity_package: ^1.4.0
-  carp_survey_package: ^1.8.0
-  carp_audio_package: ^1.4.0
+  # carp_survey_package: ^1.8.0
+  # carp_audio_package: ^1.4.0
   carp_communication_package: ^1.4.0
   
   research_package: ^1.7.0
@@ -29,22 +29,21 @@ dependencies:
 dependency_overrides:
   # carp_core:
   #   path: ../carp/carp.sensing-flutter/carp_core/
-  # carp_mobile_sensing:
-  #   path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
+  carp_mobile_sensing:
+    path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
   # carp_context_package:
   #   path: ../carp/carp.sensing-flutter/packages/carp_context_package/
   # carp_connectivity_package:
   #   path: ../carp/carp.sensing-flutter/packages/carp_connectivity_package/
-  # carp_audio_package:
-  #   path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
-  # carp_survey_package:
-  #   path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
+  carp_audio_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
+  carp_survey_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
 
   # cognition_package:
   #   path: ../cognition_package/  
 
 # Overriding carp libraries to use github branch
-# Remove this before release of app
 # dependency_overrides:  
 #   carp_core:
 #     git:
@@ -80,10 +79,6 @@ dependency_overrides:
 #     git:
 #       url: https://github.com/cph-cachet/research.package.git
 #       ref: dev-carp-core-0_40_0
-
-
-
-
 
 dev_dependencies:
 #  flutter_test:
