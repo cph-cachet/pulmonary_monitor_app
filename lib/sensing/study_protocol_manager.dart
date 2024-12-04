@@ -113,6 +113,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //         ]),
     //     phone);
 
+    var symptomsTask = RPAppTask(
+      type: SurveyUserTask.SURVEY_TYPE,
+      title: surveys.symptoms.title,
+      description: surveys.symptoms.description,
+      minutesToComplete: surveys.symptoms.minutesToComplete,
+      rpTask: surveys.symptoms.survey,
+      measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+    );
+
     var demographicsTask = RPAppTask(
       type: SurveyUserTask.SURVEY_TYPE,
       title: surveys.demographics.title,
@@ -123,18 +132,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
     );
 
-    var symptomsTask = RPAppTask(
-      type: SurveyUserTask.SURVEY_TYPE,
-      title: surveys.symptoms.title,
-      description: surveys.symptoms.description,
-      minutesToComplete: surveys.symptoms.minutesToComplete,
-      rpTask: surveys.symptoms.survey,
-      measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
-    );
-
     // always have a symptoms task on the list
     protocol.addTaskControl(
-      NoUserTaskTrigger(taskName: demographicsTask.name),
+      NoUserTaskTrigger(taskName: symptomsTask.name),
       symptomsTask,
       phone,
     );
