@@ -113,19 +113,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //         ]),
     //     phone);
 
-    // // Collect demographics & location once the study starts.
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     RPAppTask(
-    //       type: SurveyUserTask.SURVEY_TYPE,
-    //       title: surveys.demographics.title,
-    //       description: surveys.demographics.description,
-    //       minutesToComplete: surveys.demographics.minutesToComplete,
-    //       notification: true,
-    //       rpTask: surveys.demographics.survey,
-    //       measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
-    //     ),
-    //     phone);
+    var demographicsTask = RPAppTask(
+      type: SurveyUserTask.SURVEY_TYPE,
+      title: surveys.demographics.title,
+      description: surveys.demographics.description,
+      minutesToComplete: surveys.demographics.minutesToComplete,
+      notification: true,
+      rpTask: surveys.demographics.survey,
+      measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
+    );
 
     var symptomsTask = RPAppTask(
       type: SurveyUserTask.SURVEY_TYPE,
@@ -136,6 +132,20 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       measures: [Measure(type: ContextSamplingPackage.CURRENT_LOCATION)],
     );
 
+    // always have a symptoms task on the list
+    protocol.addTaskControl(
+      NoUserTaskTrigger(taskName: demographicsTask.name),
+      symptomsTask,
+      phone,
+    );
+
+    // when a symptoms task is filled, add the demographics task
+    protocol.addTaskControl(
+        UserTaskTrigger(
+            taskName: symptomsTask.name, triggerCondition: UserTaskState.done),
+        demographicsTask,
+        phone);
+
     // // Collect symptoms daily at 13:30
     // protocol.addTaskControl(
     //     RecurrentScheduledTrigger(
@@ -144,13 +154,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ),
     //     symptomsTask,
     //     phone);
-
-    protocol.addTaskControl(ImmediateTrigger(), symptomsTask, phone);
-    protocol.addTaskControl(
-        UserTaskTrigger(
-            taskName: symptomsTask.name, triggerCondition: UserTaskState.done),
-        symptomsTask,
-        phone);
 
     // // Perform a cognitive assessment every 2nd hour.
     // protocol.addTaskControl(
