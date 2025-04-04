@@ -43,6 +43,9 @@ doc/
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+.cxx/
+.gradle/
+.externalNativeBuild/
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

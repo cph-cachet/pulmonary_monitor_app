@@ -5,7 +5,9 @@ class App extends StatelessWidget {
 
   /// This methods is used to set up the entire app, including:
   Future<bool> init(BuildContext context) async {
+    await LocationManager().requestPermission();
     await bloc.init();
+
     return true;
   }
 
@@ -45,11 +47,6 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
     const TaskList(),
     const DataVisualization(),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {

@@ -17,6 +17,8 @@ import 'package:carp_audio_package/media.dart';
 import 'package:research_package/research_package.dart';
 import 'package:cognition_package/cognition_package.dart';
 
+import 'package:permission_handler/permission_handler.dart';
+
 part 'app.dart';
 part 'bloc/sensing_bloc.dart';
 part 'sensing/sensing.dart';
