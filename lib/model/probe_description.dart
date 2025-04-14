@@ -1,4 +1,4 @@
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 class ProbeDescriptor {
   String name, description;
@@ -122,10 +122,12 @@ class ProbeDescription {
             const Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
         DeviceSamplingPackage.DEVICE_INFORMATION:
             const Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
-        DeviceSamplingPackage.BATTERY_STATE:
-            const Icon(Icons.battery_charging_full, size: 50, color: CACHET.GREEN),
-        SensorSamplingPackage.STEP_COUNT:
-            const Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
+        DeviceSamplingPackage.BATTERY_STATE: const Icon(
+            Icons.battery_charging_full,
+            size: 50,
+            color: CACHET.GREEN),
+        SensorSamplingPackage.STEP_COUNT: const Icon(Icons.directions_walk,
+            size: 50, color: CACHET.LIGHT_PURPLE),
         SensorSamplingPackage.ACCELERATION:
             const Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
         SensorSamplingPackage.ROTATION:
@@ -154,8 +156,10 @@ class ProbeDescription {
         //     Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
         // CommunicationSamplingPackage.CALENDAR:
         //     Icon(Icons.event, size: 50, color: CACHET.CYAN),
-        DeviceSamplingPackage.SCREEN_EVENT: const Icon(Icons.screen_lock_portrait,
-            size: 50, color: CACHET.LIGHT_PURPLE),
+        DeviceSamplingPackage.SCREEN_EVENT: const Icon(
+            Icons.screen_lock_portrait,
+            size: 50,
+            color: CACHET.LIGHT_PURPLE),
         ContextSamplingPackage.LOCATION:
             const Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.ACTIVITY:
@@ -183,12 +187,14 @@ class ProbeDescription {
       };
 
   static Map<ExecutorState, Icon> get probeStateIcon => {
-        ExecutorState.created: const Icon(Icons.child_care, color: CACHET.GREY_4),
+        ExecutorState.created:
+            const Icon(Icons.child_care, color: CACHET.GREY_4),
         ExecutorState.initialized:
             const Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
         ExecutorState.started:
             const Icon(Icons.radio_button_checked, color: CACHET.GREEN),
         ExecutorState.stopped: const Icon(Icons.close, color: CACHET.GREY_2),
-        ExecutorState.undefined: const Icon(Icons.error_outline, color: CACHET.RED),
+        ExecutorState.undefined:
+            const Icon(Icons.error_outline, color: CACHET.RED),
       };
 }

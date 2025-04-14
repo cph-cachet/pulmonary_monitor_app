@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter
 
   carp_core: ^1.8.0
-  # carp_mobile_sensing: ^1.11.0
+  carp_mobile_sensing: ^1.12.0
   carp_context_package: ^1.10.0
   carp_connectivity_package: ^1.4.0
   carp_survey_package: ^1.8.0
@@ -33,8 +33,8 @@ dependencies:
 dependency_overrides:
   # carp_core:
   #   path: ../carp/carp.sensing-flutter/carp_core/
-  carp_mobile_sensing:
-    path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
+  # carp_mobile_sensing:
+  #   path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
   # carp_context_package:
   #   path: ../carp/carp.sensing-flutter/packages/carp_context_package/
   # carp_connectivity_package:

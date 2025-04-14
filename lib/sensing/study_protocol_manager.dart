@@ -1,11 +1,4 @@
-/*
- * Copyright 2021-2023 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 /// This is a simple local [StudyProtocolManager] which
 /// creates the Pulmonary Monitor study protocol.
@@ -93,10 +86,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         locationService);
 
+    // // Add audio measure in the background
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: Duration(seconds: 40)),
+    //     BackgroundTask(
+    //       measures: [Measure(type: MediaSamplingPackage.AUDIO)],
+    //       duration: const Duration(seconds: 5),
+    //     ),
+    //     phone);
+
     // The following contains the definition of the app (user) tasks.
 
     // Create an app task that collects air quality and weather data,
-    //and notify the user.
+    // and notify the user.
     //
     // Note that for this to work, the air_quality and weather services needs
     // to be defined and added as connected devices to this phone.
@@ -130,7 +132,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       measures: [Measure(type: ContextSamplingPackage.LOCATION)],
     );
 
-    // Collect a coughing sample on a daily basis.
+    // Collect a coughing sample.
     // Also collect current location, and local weather and air quality of this
     // sample.
     var coughingTask = AppTask(
@@ -237,15 +239,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       phone,
     );
 
-    // // Add audio measure in the background
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(period: Duration(seconds: 40)),
-    //     BackgroundTask(
-    //       measures: [Measure(type: MediaSamplingPackage.AUDIO)],
-    //       duration: const Duration(seconds: 5),
-    //     ),
-    //     phone);
+    // Always keep a coughing task on the list.
+    protocol.addTaskControl(
+      NoUserTaskTrigger(taskName: coughingTask.name),
+      coughingTask,
+      phone,
+    );
 
+    // Always keep a Parkinson's task on the list.
     protocol.addTaskControl(
       NoUserTaskTrigger(taskName: parkinsonsTask.name),
       parkinsonsTask,

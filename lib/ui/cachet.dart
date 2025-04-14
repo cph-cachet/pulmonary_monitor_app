@@ -1,4 +1,4 @@
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 class CACHET {
   static const Color CACHET_BLUE = Color.fromRGBO(97, 195, 217, 1.0);

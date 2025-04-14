@@ -1,4 +1,4 @@
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 /// A UI widget that can handle a [AudioUserTask].
 class AudioMeasurePage extends StatefulWidget {
@@ -9,13 +9,13 @@ class AudioMeasurePage extends StatefulWidget {
   const AudioMeasurePage({super.key, this.audioUserTask});
 
   @override
-  AudioMeasurePageState createState() => AudioMeasurePageState(audioUserTask);
+  AudioMeasurePageState createState() => AudioMeasurePageState();
 }
 
 class AudioMeasurePageState extends State<AudioMeasurePage> {
-  AudioUserTask? audioUserTask;
+  AudioUserTask? get audioUserTask => widget.audioUserTask;
 
-  AudioMeasurePageState(this.audioUserTask) : super();
+  AudioMeasurePageState() : super();
 
   @override
   Widget build(BuildContext context) {

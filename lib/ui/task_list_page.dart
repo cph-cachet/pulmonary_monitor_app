@@ -1,4 +1,4 @@
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -75,7 +75,7 @@ class TaskListState extends State<TaskList> {
                 trailing: taskStateIcon[userTask.state],
               ),
               (userTask.availableForUser)
-                  ? ButtonBar(
+                  ? OverflowBar(
                       children: <Widget>[
                         TextButton(
                             child: const Text('PRESS HERE TO FINISH TASK'),

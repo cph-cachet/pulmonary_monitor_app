@@ -1,11 +1,11 @@
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 class StudyVisualization extends StatefulWidget {
   const StudyVisualization({super.key});
   static const String routeName = '/study';
 
   @override
-  StudyVizState createState() => StudyVizState(bloc.studyDeploymentModel);
+  StudyVizState createState() => StudyVizState();
 }
 
 class StudyVizState extends State<StudyVisualization> {
@@ -13,9 +13,9 @@ class StudyVizState extends State<StudyVisualization> {
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
-  final StudyDeploymentModel studyDeploymentModel;
+  StudyDeploymentModel get model => bloc.studyDeploymentModel;
 
-  StudyVizState(this.studyDeploymentModel) : super();
+  StudyVizState() : super();
 
   @override
   Widget build(BuildContext context) =>
@@ -74,7 +74,7 @@ class StudyVizState extends State<StudyVisualization> {
       child: _buildStudyControllerPanel(context, study),
     ));
 
-    for (var task in studyDeploymentModel.deployment.tasks) {
+    for (var task in model.deployment.tasks) {
       children.add(_TaskPanel(task: task));
     }
 
@@ -113,11 +113,10 @@ class StudyVizState extends State<StudyVisualization> {
                     _StudyControllerLine(study.dataEndpoint,
                         heading: 'Data Endpoint'),
                     StreamBuilder<Measurement>(
-                        stream: studyDeploymentModel.measurements,
+                        stream: model.measurements,
                         builder:
                             (context, AsyncSnapshot<Measurement> snapshot) {
-                          return _StudyControllerLine(
-                              '${studyDeploymentModel.samplingSize}',
+                          return _StudyControllerLine('${model.samplingSize}',
                               heading: 'Sample Size');
                         }),
                   ]))

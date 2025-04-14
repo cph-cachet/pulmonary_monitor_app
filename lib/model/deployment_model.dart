@@ -1,4 +1,4 @@
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 class StudyDeploymentModel {
   SmartphoneDeployment deployment;

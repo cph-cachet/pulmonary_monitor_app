@@ -1,11 +1,4 @@
-/*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
-part of pulmonary_monitor_app;
+part of '../main.dart';
 
 /// This class implements the sensing layer.
 ///

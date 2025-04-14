@@ -1,4 +1,10 @@
-library pulmonary_monitor_app;
+/*
+ * Copyright 2021 the Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
+library;
 
 import 'dart:convert';
 import 'dart:async';
