@@ -40,7 +40,7 @@ The task list (Figure 1 right) is created from the different `AppTask`s defined 
 
 ### Sensing App Task
 
-The sensing app task collects `weather` and `air_quality` measures (both defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list in Figure 1. This app task is defined like this:
+The sensing app task collects `location`, `weather` and `air_quality` measures (all defined in the [`carp_context_package`](https://pub.dev/packages/carp_context_package)). This app task appears at the bottom of the task list in Figure 1. This app task is defined like this:
 
 ````dart
 SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
@@ -59,7 +59,7 @@ protocol.addPrimaryDevice(phone);
 protocol.addTaskControl(
     PeriodicTrigger(period: Duration(hours: 1)),
     AppTask(
-        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        type: BackgroundSensingUserTask.SENSING_TYPE,
         title: "Location, Weather & Air Quality",
         description: "Collect location, weather and air quality",
         notification: true,
@@ -71,9 +71,9 @@ protocol.addTaskControl(
     phone);
 ````
 
-The above code adds an [`PeriodicTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/PeriodicTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `ONE_TIME_SENSING_TYPE`.
+The above code adds an [`PeriodicTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/PeriodicTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `sensing`.
 This app task contains the three measures of location, weather, and air quality.
-The result of this sensing configuration is that an app task is added to the task list every hour, and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measurements are collected exactly once. When the measurements have been collected, the app task is marked as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
+The result of this sensing configuration is that an app task is added to the task list every hour, and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measurements are collected during a 10-second window. When the measurements have been collected, the app task is marked as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
 
 ![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 

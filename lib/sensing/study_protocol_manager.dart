@@ -103,7 +103,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Note that for this to work, the air_quality and weather services needs
     // to be defined and added as connected devices to this phone.
     var environmentTask = AppTask(
-        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        type: BackgroundSensingUserTask.SENSING_TYPE,
         title: "Location, Weather & Air Quality",
         description: "Collect location, weather and air quality",
         notification: true,

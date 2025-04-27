@@ -80,13 +80,23 @@ class TaskListState extends State<TaskList> {
                         TextButton(
                             child: const Text('PRESS HERE TO FINISH TASK'),
                             onPressed: () {
+                              // Mark the task as started.
                               userTask.onStart();
+
                               if (userTask.hasWidget) {
+                                // Push the task widget to the app.
+                                // Note that the widget is responsible for calling the onDone method
+                                // when the task is done.
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute<Widget>(
                                       builder: (context) => userTask.widget!),
                                 );
+                              } else {
+                                // A non-UI sensing task that collects sensor data.
+                                // Automatically stops after 10 seconds.
+                                Timer(const Duration(seconds: 10),
+                                    () => userTask.onDone());
                               }
                             }),
                       ],
@@ -117,11 +127,6 @@ class TaskListState extends State<TaskList> {
         ),
         BackgroundSensingUserTask.SENSING_TYPE: const Icon(
           Icons.settings_input_antenna,
-          color: CACHET.CACHET_BLUE,
-          size: 40,
-        ),
-        BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE: const Icon(
-          Icons.settings_input_component,
           color: CACHET.CACHET_BLUE,
           size: 40,
         ),
